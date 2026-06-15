@@ -3,250 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đạo Tràng Giải Trí - Trò Chơi Học Tiếng Nhật | Lớp Thầy Sơn</title>
+    <title>Đạo Tràng Giải Trí - Trò Chơi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Lora:ital,wght@0,400;0,700;1,400&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
-
     <style>
-        :root {
-            --jp-red: #8B0000;
-            --jp-cream: #FDFBF7;
-            --jp-ink: #1A1A1A;
-            --jp-gold: #C5A059;
-            --game-glow: #FF6B35;
-            --game-dark: #1A1A2E;
-        }
-
-        body {
-            font-family: 'Lora', 'Noto Serif JP', serif;
-            background-color: var(--jp-cream);
-            color: var(--jp-ink);
-        }
-
-        .washi-pattern {
-            background-color: var(--jp-cream);
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
-        }
-
-        .card-antique {
-            background-color: #fff;
-            border: 2px solid var(--jp-ink);
-            box-shadow: 6px 6px 0px var(--jp-ink);
-            transition: all 0.3s ease;
-        }
-
-        .card-antique:hover {
-            transform: translate(-4px, -4px);
-            box-shadow: 10px 10px 0px var(--jp-red);
-        }
-
-        .card-locked {
-            background-color: #f5f0eb;
-            border: 2px dashed #999;
-            box-shadow: 4px 4px 0px #ccc;
-            opacity: 0.7;
-            transition: all 0.3s ease;
-        }
-
-        .card-locked:hover {
-            opacity: 0.85;
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px #bbb;
-        }
-
-        .hanko-seal {
-            border: 2px solid var(--jp-red);
-            color: var(--jp-red);
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .tategaki {
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            letter-spacing: 0.2em;
-        }
-
-        .game-card-active {
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            border: 2px solid var(--game-glow);
-            box-shadow: 6px 6px 0px var(--jp-ink), 0 0 30px rgba(255, 107, 53, 0.2);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .game-card-active::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(45deg, transparent 60%, rgba(255, 107, 53, 0.05) 100%);
-            pointer-events: none;
-        }
-
-        .game-card-active:hover {
-            transform: translate(-4px, -4px);
-            box-shadow: 10px 10px 0px var(--jp-ink), 0 0 50px rgba(255, 107, 53, 0.4);
-            border-color: #FF8C5A;
-        }
-
-        .game-title-glow {
-            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 5px rgba(255, 107, 53, 0.3); }
-            50% { box-shadow: 0 0 25px rgba(255, 107, 53, 0.6), 0 0 50px rgba(255, 107, 53, 0.2); }
-        }
-
-        .btn-play-now {
-            animation: pulse-glow 2s infinite;
-        }
-
-        .tag-new { background: var(--game-glow); color: white; font-weight: bold; font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.1em; }
-        .tag-dev { background: #666; color: white; font-weight: bold; font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.1em; }
-        .tag-soon { background: #999; color: white; font-weight: bold; font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.1em; }
-
-        .games-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
-        @media (min-width: 768px) { .games-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .games-grid { grid-template-columns: repeat(3, 1fr); } }
+        :root { --jp-red: #8B0000; --jp-cream: #FDFBF7; --jp-ink: #1A1A1A; --game-glow: #FF6B35; }
+        body { font-family: 'Lora', 'Noto Serif JP', serif; background-color: var(--jp-cream); color: var(--jp-ink); }
+        .washi-pattern { background-color: var(--jp-cream); background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"); }
+        .game-card-active { background: linear-gradient(145deg, #1a1a2e, #16213e); border: 2px solid var(--game-glow); box-shadow: 6px 6px 0px var(--jp-ink); transition: all 0.3s ease; }
+        .game-card-active:hover { transform: translate(-4px, -4px); box-shadow: 10px 10px 0px var(--jp-ink), 0 0 40px rgba(255, 107, 53, 0.4); border-color: #FF8C5A; }
+        .card-locked { background-color: #f5f0eb; border: 2px dashed #999; box-shadow: 4px 4px 0px #ccc; opacity: 0.7; }
     </style>
 </head>
-<body class="washi-pattern min-h-screen flex flex-col selection:bg-[#8B0000] selection:text-white p-4 md:p-6">
+<body class="washi-pattern flex flex-col p-4 md:p-6">
 
     <div id="sync-alert" class="max-w-6xl mx-auto w-full mb-6 p-4 bg-amber-50 border-2 border-dashed border-amber-500 text-amber-800 rounded-lg flex items-center justify-between shadow-sm">
-        <div class="flex items-center space-x-2">
-            <span class="text-xl">👹</span>
-            <p id="sync-text" class="text-sm font-bold">Trạng thái hạ cấp: Chưa đồng bộ tài khoản HIGHUB. Thành tích kỷ lục chơi game của ngươi sẽ không được lưu!</p>
-        </div>
+        <p id="sync-text" class="text-sm font-bold">⚠️ Trạng thái: Chưa đồng bộ tài khoản HIGHUB. Thành tích kỷ lục chơi game sẽ không được lưu!</p>
     </div>
 
-    <main class="max-w-6xl mx-auto flex-grow w-full">
-        <section class="mb-20 flex flex-col md:flex-row items-stretch gap-10 bg-white p-8 md:p-12 border-4 border-[#1A1A1A] relative shadow-[8px_8px_0px_#8B0000]">
-            <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#8B0000]"></div>
-            <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-[#8B0000]"></div>
-            <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-[#8B0000]"></div>
-            <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-[#8B0000]"></div>
+    <main class="max-w-6xl mx-auto w-full flex-grow">
+        <button onclick="window.parent.postMessage({type: 'HIGHUB_FRAME_NAVIGATE', url: ''}, '*')" class="mb-4 font-bold text-sm text-gray-800 hover:text-orange-600 transition">← Tắt Đạo Tràng Trò Chơi</button>
 
-            <div class="w-48 h-48 flex-shrink-0 overflow-hidden flex items-center justify-center relative border-4 border-[#8B0000] rounded-full bg-[#1A0000] mx-auto md:mx-0 shadow-inner">
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full transform scale-110">
-                    <circle cx="100" cy="100" r="100" fill="#2A0000" />
-                    <circle cx="100" cy="100" r="85" fill="#FF6B35" opacity="0.9" />
-                    <path d="M 50 80 Q 100 200 150 80 Q 100 50 50 80 Z" fill="#D32F2F" stroke="#000" stroke-width="3" />
-                    <path d="M 60 70 Q 50 20 40 10 Q 70 30 75 60 Z" fill="#FFFDE7" stroke="#000" stroke-width="2" />
-                    <path d="M 140 70 Q 150 20 160 10 Q 130 30 125 60 Z" fill="#FFFDE7" stroke="#000" stroke-width="2" />
-                    <circle cx="80" cy="95" r="12" fill="#FFEB3B" stroke="#000" stroke-width="2" />
-                    <circle cx="120" cy="95" r="12" fill="#FFEB3B" stroke="#000" stroke-width="2" />
-                    <circle cx="80" cy="95" r="5" fill="#000" />
-                    <circle cx="120" cy="95" r="5" fill="#000" />
-                    <path d="M 70 125 Q 100 155 130 125" fill="none" stroke="#000" stroke-width="4" />
-                    <text x="100" y="75" font-family="'Noto Serif JP', serif" font-size="18" fill="#FFCC00" text-anchor="middle" font-weight="900">GAME</text>
-                </svg>
-            </div>
-
+        <section class="mb-12 flex flex-col md:flex-row items-stretch gap-10 bg-white p-8 border-4 border-[#1A1A1A] relative shadow-[8px_8px_0px_#8B0000]">
             <div class="flex-1 flex flex-col justify-center text-center md:text-left">
-                <div class="hanko-seal px-3 py-1 text-xs font-black mb-4 tracking-widest w-max mx-auto md:mx-0 bg-[#8B0000]/10">ĐẠO TRÀNG GIẢI TRÍ</div>
-                <h1 class="text-4xl md:text-5xl font-black text-[#1A1A1A] mb-6 leading-tight" style="font-family: 'Noto Serif JP', serif;">Trò Chơi Học Tập</h1>
-                <p class="text-lg text-gray-700 italic border-l-4 border-[#8B0000] pl-5 leading-relaxed bg-gray-50/50 py-2">
-                    "Ngươi nghĩ học tiếng Nhật chỉ có sách vở ư? NGU NGỐC! Hãy thư giãn đầu óc với những trò chơi do chính tay ta thiết kế. Nhưng nhớ: chơi mà vẫn phải học, không thì TA SẼ ĐẾN TẬN NHÀ NGƯƠI!"
-                </p>
-            </div>
-
-            <div class="hidden lg:flex items-center border-l-2 border-[#1A1A1A] pl-8 ml-4">
-                <h2 class="tategaki text-3xl font-black text-[#8B0000] opacity-90" style="font-family: 'Noto Serif JP', serif;">
-                    遊びながら学べ
-                </h2>
+                <h1 class="text-4xl font-black text-[#1A1A1A] mb-4">Trò Chơi Học Tập Tương Tác</h1>
+                <p class="text-gray-700 italic border-l-4 border-[#8B0000] pl-5 leading-relaxed bg-gray-50/50 py-2">"Chơi mà vẫn phải học, vận dụng kiến thức linh hoạt để sinh tồn phá giải trận pháp!"</p>
             </div>
         </section>
 
-        <section class="max-w-5xl mx-auto">
-            <div class="text-center mb-12">
-                <div class="inline-block border-y-2 border-[#1A1A1A] py-2 px-8">
-                    <h2 class="text-3xl font-black text-[#1A1A1A] tracking-wider" style="font-family: 'Noto Serif JP', serif;">
-                        DANH MỤC TRÒ CHƠI
-                    </h2>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <button onclick="requestNavigation('game-sonkuro-drift.html')" class="text-left block game-card-active p-8 rounded-lg">
+                <h3 class="text-2xl font-black text-white" style="font-family: 'Rajdhani', sans-serif;">SONKURO DRIFT</h3>
+                <p class="text-[#FF6B35] text-xs font-bold mb-4">ĐUA XE · LUYỆN NGỮ PHÁP</p>
+                <p class="text-gray-400 text-sm">Đua xe tốc độ cao qua phố Tokyo. Mỗi cú drift là một cấu trúc câu ngữ pháp.</p>
+            </button>
+
+            <button onclick="requestNavigation('game-hac-tong-han-tu.html')" class="text-left block game-card-active p-8 rounded-lg">
+                <h3 class="text-2xl font-black text-white" style="font-family: 'Rajdhani', sans-serif;">HẠC TÔNG HÁN TỰ</h3>
+                <p class="text-[#FF6B35] text-xs font-bold mb-4">SINH TỒN · KANJI PHẢN XẠ</p>
+                <p class="text-gray-400 text-sm">Vận dụng ý nghĩa bộ thủ và cách đọc âm On-Kun của Kanji để vượt ải sinh tồn.</p>
+            </button>
+
+            <div class="card-locked p-8 rounded-lg text-center flex flex-col justify-center items-center">
+                <h3 class="text-xl font-bold text-gray-500">🔮 BÍ MẬT BẬC CAO</h3>
+                <p class="text-xs text-gray-400 mt-2 italic">Hệ thống ma trận tiếp theo đang được phát triển nâng cấp.</p>
             </div>
-
-            <div class="games-grid">
-
-                <button onclick="requestNavigation('game-sonkuro-drift.html')" class="text-left block game-card-active group h-full flex flex-col relative overflow-hidden rounded-lg w-full">
-                    <div class="absolute top-3 right-3 z-10 flex gap-2"><span class="tag-new">MỚI</span></div>
-                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#FF6B35] opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition"></div>
-                    <div class="p-8 flex flex-col h-full relative z-10 w-full">
-                        <div class="w-16 h-16 border-2 border-[#FF6B35] rounded-full flex items-center justify-center text-3xl mb-6 text-white bg-[#1a1a2e]">🏎️</div>
-                        <h3 class="text-2xl font-black mb-1 text-white game-title-glow" style="font-family: 'Rajdhani', sans-serif;">SONKURO DRIFT</h3>
-                        <p class="text-[#FF6B35] text-xs font-bold tracking-widest mb-3">ĐUA XE · LUYỆN NGỮ PHÁP</p>
-                        <div class="h-0.5 w-12 bg-[#FF6B35] mb-5"></div>
-                        <p class="text-gray-400 font-medium flex-grow mb-6 text-sm leading-relaxed">Đua xe tốc độ cao qua những con phố Tokyo. Mỗi cú drift là một lần ghi nhớ từ vựng. Nitro Kanji bùng nổ giúp ngươi vượt mọi đối thủ!</p>
-                        <div class="flex justify-between text-xs text-gray-500 mb-6"><span>🎯 N4 · ĐUA XE</span> <span>⏱️ ~5 phút/lượt</span> <span>👥 1 người</span></div>
-                        <span class="btn-play-now inline-block px-6 py-3 bg-[#FF6B35] text-white font-bold w-full text-center uppercase tracking-wider text-sm rounded">▶ Chơi Ngay</span>
-                    </div>
-                </button>
-
-                <button onclick="requestNavigation('game-hac-tong-han-tu.html')" class="text-left block game-card-active group h-full flex flex-col relative overflow-hidden rounded-lg w-full">
-                    <div class="absolute top-3 right-3 z-10 flex gap-2"><span class="tag-new">MỚI</span></div>
-                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#FF6B35] opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition"></div>
-                    <div class="p-8 flex flex-col h-full relative z-10 w-full">
-                        <div class="w-16 h-16 border-2 border-[#FF6B35] rounded-full flex items-center justify-center text-3xl mb-6 text-white bg-[#1a1a2e]">🦅</div>
-                        <h3 class="text-2xl font-black mb-1 text-white game-title-glow" style="font-family: 'Rajdhani', sans-serif;">HẠC TÔNG HÁN TỰ</h3>
-                        <p class="text-[#FF6B35] text-xs font-bold tracking-widest mb-3">SINH TỒN · KHẮC PHỤC KANJI</p>
-                        <div class="h-0.5 w-12 bg-[#FF6B35] mb-5"></div>
-                        <p class="text-gray-400 font-medium flex-grow mb-6 text-sm leading-relaxed">Vận dụng chuẩn xác ý nghĩa bộ thủ và cách đọc âm On-Kun của Kanji để phá giải phong ấn trận pháp cổ xưa.</p>
-                        <div class="flex justify-between text-xs text-gray-500 mb-6"><span>⛩️ KANJI · PHẢN XẠ</span> <span>⏱️ ~7 phút/lượt</span> <span>👥 1 người</span></div>
-                        <span class="btn-play-now inline-block px-6 py-3 bg-[#FF6B35] text-white font-bold w-full text-center uppercase tracking-wider text-sm rounded">▶ Chơi Ngay</span>
-                    </div>
-                </button>
-
-                <div class="card-locked group h-full flex flex-col relative overflow-hidden rounded-lg">
-                    <div class="absolute top-3 right-3 z-10"><span class="tag-soon">LÊN KẾ HOẠCH</span></div>
-                    <div class="p-8 flex flex-col items-center text-center h-full">
-                        <div class="w-16 h-16 border-2 border-dashed border-gray-400 rounded-full flex items-center justify-center text-3xl mb-6 text-gray-400 bg-gray-100 mx-auto">🔮</div>
-                        <h3 class="text-2xl font-black mb-3 text-gray-500" style="font-family: 'Noto Serif JP', serif;">??? HUYỀN THOẠI ???</h3>
-                        <div class="h-0.5 w-12 bg-gray-400 mb-5"></div>
-                        <p class="text-gray-400 font-medium flex-grow mb-8 italic text-sm">"Một tựa game huyền thoại sắp ra đời. Ngươi sẽ phải dùng cả Hán tự lẫn ngữ pháp để sinh tồn!"</p>
-                        <div class="bg-gray-400 px-6 py-3 text-white font-bold w-full uppercase tracking-wider text-sm rounded">Sắp Ra Mắt</div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
+        </div>
     </main>
 
-    <footer class="bg-[#1A1A1A] text-white border-t-4 border-[#8B0000] py-12 mt-24">
-        <div class="max-w-6xl mx-auto px-4 text-center">
-            <p class="font-black text-xl tracking-widest mb-2" style="font-family: 'Noto Serif JP', serif;">LỚP HỌC THẦY SƠN</p>
-            <p class="text-gray-400 text-sm font-medium italic">Không khoan nhượng với sự lười biếng. Kể cả trong lúc chơi game!</p>
-        </div>
-    </footer>
-
     <script>
-        // 1. Phát tín hiệu mở giao diện trò chơi cụ thể ra ngoài Iframe mẹ
-        function requestNavigation(targetPageUrl) {
-            window.parent.postMessage({
-                type: 'HIGHUB_FRAME_NAVIGATE',
-                url: targetPageUrl
-            }, '*');
-        }
-
-        // 2. Nhận tín hiệu đồng bộ tài khoản đổ về từ Trang Chủ lớn
+        function requestNavigation(url) { window.parent.postMessage({ type: 'HIGHUB_FRAME_NAVIGATE', url: url }, '*'); }
         window.addEventListener('message', function(event) {
             const message = event.data;
             if (message && message.type === 'HIGHUB_AUTH_SYNC') {
-                const authState = message.payload;
-                const alertBox = document.getElementById('sync-alert');
-                const alertText = document.getElementById('sync-text');
-
-                if (authState.isLoggedIn && authState.data) {
-                    alertBox.classList.replace('bg-amber-50', 'bg-emerald-50');
-                    alertBox.classList.replace('border-amber-500', 'border-emerald-600');
-                    alertBox.classList.replace('text-amber-800', 'text-emerald-800');
-                    alertText.innerText = `👹 Sư tôn ghi nhận: Hệ thống đã đồng bộ. Chào mừng game thủ ${authState.data.name} vào máy chủ đạo tràng giải trí!`;
-                } else {
-                    alertBox.classList.replace('bg-emerald-50', 'bg-amber-50');
-                    alertBox.classList.replace('border-emerald-600', 'border-amber-500');
-                    alertBox.classList.replace('text-emerald-800', 'text-amber-800');
-                    alertText.innerText = "Trạng thái hạ cấp: Chưa đồng bộ tài khoản HIGHUB. Thành tích kỷ lục chơi game của ngươi sẽ không được lưu!";
+                const auth = message.payload;
+                if (auth.isLoggedIn) {
+                    document.getElementById('sync-alert').className = "max-w-6xl mx-auto w-full mb-6 p-4 bg-emerald-50 border-2 border-emerald-600 text-emerald-800 rounded-lg flex items-center justify-between shadow-sm";
+                    document.getElementById('sync-text').innerText = `👹 Hệ thống: Đã kết nối đồng bộ tài khoản game thủ ${auth.data.name}!`;
                 }
             }
         });
