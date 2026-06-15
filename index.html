@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lớp Học Thầy Sơn - Nhật Ngữ Tương Tác</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Quicksand:wght@300;400;600;700&family=Noto+Serif+JP:wght@400;700;900&family=Lora:ital,wght@0,400;0,700;1,400&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Quicksand:wght@300;400;600;700&family=Noto+Serif+JP:wght=400;700;900&family=Lora:ital,wght@0,400;0,700;1,400&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --jp-red: #BC002D;
@@ -37,91 +37,6 @@
             border-bottom: 3px solid var(--jp-red);
             color: var(--jp-red);
         }
-        .washi-pattern {
-            background-color: #FDFBF7;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
-        }
-        .card-antique {
-            background-color: #fff;
-            border: 2px solid #1A1A1A;
-            box-shadow: 6px 6px 0px #1A1A1A;
-            transition: all 0.3s ease;
-        }
-        .card-antique:hover {
-            transform: translate(-4px, -4px);
-            box-shadow: 10px 10px 0px #8B0000;
-        }
-        .card-locked {
-            background-color: #f5f0eb;
-            border: 2px dashed #999;
-            box-shadow: 4px 4px 0px #ccc;
-            opacity: 0.7;
-            transition: all 0.3s ease;
-        }
-        .card-locked:hover {
-            opacity: 0.85;
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px #bbb;
-        }
-        .hanko-seal {
-            border: 2px solid #8B0000;
-            color: #8B0000;
-            border-radius: 4px;
-            display: inline-block;
-        }
-        .tategaki {
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            letter-spacing: 0.2em;
-        }
-        .game-card-active, .card-recommended {
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            border: 2px solid var(--game-glow);
-            box-shadow: 6px 6px 0px #1A1A1A, 0 0 30px rgba(255, 107, 53, 0.2);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .game-card-active::before, .card-recommended::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(45deg, transparent 60%, rgba(255, 107, 53, 0.05) 100%);
-            pointer-events: none;
-        }
-        .game-card-active:hover, .card-recommended:hover {
-            transform: translate(-4px, -4px);
-            box-shadow: 10px 10px 0px #1A1A1A, 0 0 50px rgba(255, 107, 53, 0.4);
-            border-color: #FF8C5A;
-        }
-        .game-title-glow, .knowledge-title-glow {
-            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
-        }
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 5px rgba(255, 107, 53, 0.3); }
-            50% { box-shadow: 0 0 25px rgba(255, 107, 53, 0.6), 0 0 50px rgba(255, 107, 53, 0.2); }
-        }
-        .btn-play-now, .btn-read-more {
-            animation: pulse-glow 2s infinite;
-        }
-        .tag-new, .tag-essential {
-            background: var(--game-glow); color: white; font-weight: bold; font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.1em;
-        }
-        .tag-dev, .tag-soon {
-            background: #666; color: white; font-weight: bold; font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.1em;
-        }
-        .tag-practical {
-            background: #D4AF37; color: white; font-weight: bold; font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.1em;
-        }
-        .games-grid, .knowledge-grid {
-            display: grid; gap: 2rem; grid-template-columns: 1fr;
-        }
-        @media (min-width: 768px) {
-            .games-grid, .knowledge-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (min-width: 1024px) {
-            .games-grid, .knowledge-grid { grid-template-columns: repeat(3, 1fr); }
-        }
     </style>
 </head>
 <body class="japanese-pattern min-h-screen">
@@ -141,8 +56,8 @@
             <div class="hidden md:flex space-x-8 font-medium">
                 <button onclick="switchTab('home')" id="btn-home" class="nav-active pb-1">Trang Chủ</button>
                 <button onclick="switchTab('courses')" id="btn-courses" class="pb-1">Khóa Học</button>
-                <button onclick="switchTab('knowledge')" id="btn-knowledge" class="pb-1">Có Thể Bạn Muốn Học</button>
-                <button onclick="switchTab('games')" id="btn-games" class="pb-1">Trò Chơi</button>
+                <button onclick="loadEmbedPage('bo-tro-home.html', 'Bí Kíp Bổ Trợ - Có Thể Bạn Muốn Học')" id="btn-knowledge" class="pb-1">Có Thể Bạn Muốn Học</button>
+                <button onclick="loadEmbedPage('game-home.html', 'Đạo Tràng Giải Trí - Trò Chơi')" id="btn-games" class="pb-1">Trò Chơi</button>
             </div>
             <div class="flex space-x-4 items-center">
                 <button class="md:hidden" onclick="toggleMobileMenu()">☰</button>
@@ -151,23 +66,25 @@
         <div id="mobile-menu" class="hidden md:hidden mt-3 flex flex-col space-y-3 pb-2 border-t border-gray-100 pt-2 font-medium">
             <button onclick="switchTab('home'); toggleMobileMenu()" class="text-left px-2 py-1">Trang Chủ</button>
             <button onclick="switchTab('courses'); toggleMobileMenu()" class="text-left px-2 py-1">Khóa Học</button>
-            <button onclick="switchTab('knowledge'); toggleMobileMenu()" class="text-left px-2 py-1">Có Thể Bạn Muốn Học</button>
-            <button onclick="switchTab('games'); toggleMobileMenu()" class="text-left px-2 py-1">Trò Chơi</button>
+            <button onclick="loadEmbedPage('bo-tro-home.html', 'Bí Kíp Bổ Trợ'); toggleMobileMenu()" class="text-left px-2 py-1">Có Thể Bạn Muốn Học</button>
+            <button onclick="loadEmbedPage('game-home.html', 'Đạo Tràng Giải Trí'); toggleMobileMenu()" class="text-left px-2 py-1">Trò Chơi</button>
         </div>
     </nav>
 
     <main class="max-w-6xl mx-auto px-4 py-8">
 
+        <!-- CORE IFRAME VIEWER (Khung kết nối HIGHUB toàn diện) -->
         <section id="tab-viewer" class="hidden space-y-4">
             <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                <span id="viewer-title" class="font-bold text-gray-700">Đang tải học liệu...</span>
-                <button onclick="closeViewer()" class="px-4 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-lg text-sm transition">❌ Đóng bài học</button>
+                <span id="viewer-title" class="font-bold text-gray-700">Đang nạp dữ liệu trận pháp...</span>
+                <button onclick="closeViewer()" class="px-4 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-lg text-sm transition">❌ Đóng khung học</button>
             </div>
             <div class="w-full bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-gray-800">
                 <iframe id="highub-core-frame" src="" class="w-full h-[750px] border-none"></iframe>
             </div>
         </section>
 
+        <!-- TAB 1: TRANG CHỦ -->
         <section id="tab-home" class="space-y-12">
             <div class="flex flex-col md:flex-row items-center gap-8 bg-white p-8 rounded-3xl card-shadow">
                 <div class="w-48 h-48 flex-shrink-0 rounded-full overflow-hidden flex items-center justify-center relative border-4 border-gray-100 shadow-md bg-gray-50">
@@ -175,7 +92,7 @@
                         <rect width="200" height="200" fill="#1A0000"/>
                         <circle cx="100" cy="100" r="90" fill="#8B0000"/>
                         <path d="M 20,200 Q 100,120 180,200" fill="#111"/>
-                        <path d="M 50,200 L 100,150 L 150,200" fill="#222"/>
+                        <path d="M 50,200 L 100 150 L 150 200" fill="#222"/>
                         <path d="M 70,200 L 100,165 L 130,200" fill="#600000"/>
                         <path d="M 65,70 Q 30,20 60,10 Q 75,30 80,50 Z" fill="#D4C4A8"/>
                         <path d="M 135,70 Q 170,20 140,10 Q 125,30 120,50 Z" fill="#D4C4A8"/>
@@ -206,208 +123,60 @@
                 </div>
             </div>
             <div class="bg-gray-50 border-l-4 border-red-600 p-6 rounded-r-lg">
-                <p class="text-gray-700 leading-relaxed">
-                    Đây là không gian dành cho những ai đang đam mê chinh phục ngôn ngữ xứ sở Mặt trời mọc. Tại đây, chúng tôi không chỉ cung cấp kiến thức từ trình độ Nhập môn đến N3 mà còn xây dựng lộ trình rèn luyện bài bản. Ác Quỷ Tôn Sư sẽ là người giám sát nghiêm ngặt, mưu mô tạo ra các thử thách để ép bạn hệ thống hóa từ vựng, ngữ pháp và Hán tự một cách khoa học nhất.
-                </p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-2xl card-shadow text-center">
-                    <div class="text-3xl mb-3">📚</div>
-                    <h3 class="font-bold mb-2">Học Liệu Phong Phú</h3>
-                    <p class="text-sm text-gray-500">Tổng hợp đầy đủ các tài liệu Hán tự, Ngữ pháp cho từng cấp độ.</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl card-shadow text-center">
-                    <div class="text-3xl mb-3">📈</div>
-                    <h3 class="font-bold mb-2">Theo Dõi Tiến Độ</h3>
-                    <p class="text-sm text-gray-500">Hệ thống ghi nhận quá trình học tập của bạn qua từng bài học.</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl card-shadow text-center">
-                    <div class="text-3xl mb-3">👹</div>
-                    <h3 class="font-bold mb-2">Giám Sát Khắc Nghiệt</h3>
-                    <p class="text-sm text-gray-500">Ác Quỷ Tôn Sư luôn đưa ra những cái bẫy mưu mô để rèn luyện tư duy của bạn.</p>
-                </div>
+                <p class="text-gray-700 leading-relaxed">Đây là không gian dành cho những ai đang đam mê chinh phục ngôn ngữ xứ sở Mặt trời mọc. Tại đây, chúng tôi không chỉ cung cấp kiến thức từ trình độ Nhập môn đến N3 mà còn xây dựng lộ trình rèn luyện bài bản. Ác Quỷ Tôn Sư sẽ là người giám sát nghiêm ngặt, mưu mô tạo ra các thử thách để ép bạn hệ thống hóa từ vựng, ngữ pháp và Hán tự một cách khoa học nhất.</p>
             </div>
         </section>
 
+        <!-- TAB 2: KHÓA HỌC PHÂN TẦNG -->
         <section id="tab-courses" class="hidden space-y-8">
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-bold mb-2">Khoá Học Nhật Ngữ</h2>
-                <p class="text-gray-500 italic">Chọn bài học để hiển thị nội dung đồng bộ qua HIGHUB</p>
+                <p class="text-gray-500 italic">Lựa chọn cửa ải tu luyện tương tác qua hệ thống HIGHUB</p>
             </div>
-
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-3xl overflow-hidden card-shadow border border-gray-100 flex flex-col justify-between">
-                    <div class="h-24 bg-red-100 flex items-center justify-center text-red-600 text-3xl font-bold">Cấp Độ N5</div>
-                    <div class="p-6 space-y-2 flex-grow">
-                        <button onclick="loadEmbedPage('n5-nhap-mon.html', 'N5 - Nhập Môn')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition border-b flex justify-between"><span>🔰 Nhập môn</span> <span>➔</span></button>
-                        <button onclick="loadEmbedPage('n5-tu-vung.html', 'N5 - Từ Vựng')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition border-b flex justify-between"><span>📖 Từ vựng N5</span> <span>➔</span></button>
-                        <button onclick="loadEmbedPage('n5-han-tu.html', 'N5 - Hán Tự')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition border-b flex justify-between"><span>⛩️ Hán tự N5</span> <span>➔</span></button>
-                        <button onclick="loadEmbedPage('n5-ngu-phap.html', 'N5 - Ngữ Pháp')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition border-b flex justify-between"><span>📝 Ngữ pháp N5</span> <span>➔</span></button>
-                        <button onclick="loadEmbedPage('n5-chia-the.html', 'N5 - Chia Thể')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition flex justify-between"><span>🔄 Chia thể N5</span> <span>➔</span></button>
-                    </div>
+                <!-- N5 -->
+                <div class="bg-white rounded-3xl overflow-hidden card-shadow border border-gray-100 p-6 flex flex-col justify-between">
+                    <div class="h-24 bg-red-100 flex items-center justify-center text-red-600 text-3xl font-bold rounded-2xl mb-4">N5</div>
+                    <h3 class="text-xl font-bold mb-2">Cơ Bản & Nhập Môn</h3>
+                    <p class="text-gray-600 text-sm mb-6 flex-grow">Dành cho người mới bắt đầu, nắm vững bảng chữ cái và giao tiếp cốt lõi.</p>
+                    <button onclick="loadEmbedPage('n5-home.html', 'Đạo Tràng N5 - Cửa Ải Nhập Môn')" class="w-full py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition">Học N5 ngay</button>
                 </div>
-
-                <div class="bg-white rounded-3xl overflow-hidden card-shadow border border-gray-100 flex flex-col justify-between">
-                    <div class="h-24 bg-blue-100 flex items-center justify-center text-blue-600 text-3xl font-bold">Cấp Độ N4</div>
-                    <div class="p-6 space-y-2 flex-grow">
-                        <button onclick="loadEmbedPage('n4-tu-vung.html', 'N4 - Từ Vựng')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition border-b flex justify-between"><span>📖 Từ vựng N4</span> <span>➔</span></button>
-                        <button onclick="loadEmbedPage('n4-han-tu.html', 'N4 - Hán Tự')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition border-b flex justify-between"><span>⛩️ Hán tự N4</span> <span>➔</span></button>
-                        <button onclick="loadEmbedPage('n4-ngu-phap.html', 'N4 - Ngữ Pháp')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition border-b flex justify-between"><span>📝 Ngữ pháp N4</span> <span>➔</span></button>
-                        <button onclick="loadEmbedPage('n4-chia-the.html', 'N4 - Chia Thể')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition border-b flex justify-between"><span>🔄 Chia thể N4</span> <span>➔</span></button>
-                        <button onclick="loadEmbedPage('n4-thi-thu.html', 'N4 - Thi Thử')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition flex justify-between"><span>🎯 Thi thử N4</span> <span>➔</span></button>
-                    </div>
+                <!-- N4 -->
+                <div class="bg-white rounded-3xl overflow-hidden card-shadow border border-gray-100 p-6 flex flex-col justify-between">
+                    <div class="h-24 bg-blue-100 flex items-center justify-center text-blue-600 text-3xl font-bold rounded-2xl mb-4">N4</div>
+                    <h3 class="text-xl font-bold mb-2">Sơ Trung Cấp</h3>
+                    <p class="text-gray-600 text-sm mb-6 flex-grow">Mở rộng vốn từ vựng ngữ cảnh và cấu trúc phức hợp đời sống.</p>
+                    <button onclick="loadEmbedPage('n4-home.html', 'Đạo Tràng N4 - Cửa Ải Rèn Đúc')" class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition">Học N4 ngay</button>
                 </div>
-
-                <div class="bg-white rounded-3xl overflow-hidden card-shadow border border-gray-100 flex flex-col justify-between">
-                    <div class="h-24 bg-purple-100 flex items-center justify-center text-purple-600 text-3xl font-bold">Cấp Độ N3</div>
-                    <div class="p-6 space-y-2 flex-grow">
-                        <button onclick="loadEmbedPage('n3-tu-vung.html', 'N3 - Từ Vựng')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition border-b flex justify-between"><span>📖 Từ vựng N3</span> <span>➔</span></button>
-                        <button onclick="loadEmbedPage('n3-han-tu.html', 'N3 - Hán Tự')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition border-b flex justify-between"><span>⛩️ Hán tự N3</span> <span>➔</span></button>
-                        <button onclick="loadEmbedPage('n3-ngu-phap.html', 'N3 - Ngữ Pháp')" class="w-full text-left py-2 px-3 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition flex justify-between"><span>📝 Ngữ pháp N3</span> <span>➔</span></button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="tab-knowledge" class="hidden space-y-12">
-            <div class="flex flex-col md:flex-row items-stretch gap-10 bg-white p-8 md:p-12 border-4 border-[#1A1A1A] relative shadow-[8px_8px_0px_#8B0000]">
-                <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#8B0000]"></div>
-                <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-[#8B0000]"></div>
-                <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-[#8B0000]"></div>
-                <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-[#8B0000]"></div>
-
-                <div class="w-48 h-48 flex-shrink-0 overflow-hidden flex items-center justify-center relative border-4 border-[#8B0000] rounded-full bg-[#1A0000] mx-auto md:mx-0 shadow-inner">
-                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full transform scale-110">
-                        <circle cx="100" cy="100" r="100" fill="#2A0000"/>
-                        <circle cx="100" cy="100" r="85" fill="#C5A059" opacity="0.9"/>
-                        <path d="M 70 60 L 100 130 L 130 60 Z" fill="#8B0000" stroke="#000" stroke-width="3"/>
-                        <circle cx="100" cy="85" r="12" fill="#FFEB3B" stroke="#000" stroke-width="2"/>
-                        <path d="M 85 110 Q 100 125 115 110" fill="none" stroke="#000" stroke-width="3"/>
-                        <text x="100" y="155" font-family="'Noto Serif JP', serif" font-size="16" fill="#FFFDE7" text-anchor="middle" font-weight="900">知識</text>
-                    </svg>
-                </div>
-
-                <div class="flex-1 flex flex-col justify-center text-center md:text-left">
-                    <div class="hanko-seal px-3 py-1 text-xs font-black mb-4 tracking-widest w-max mx-auto md:mx-0 bg-[#8B0000]/10">KIẾN THỨC BỔ ÍCH</div>
-                    <h1 class="text-4xl md:text-5xl font-black text-[#1A1A1A] mb-6 leading-tight" style="font-family: 'Noto Serif JP', serif;">Có Thể Bạn Muốn Học</h1>
-                    <p class="text-lg text-gray-700 italic border-l-4 border-[#8B0000] pl-5 leading-relaxed bg-gray-50/50 py-2">
-                        "Những kiến thức này không có trong sách giáo khoa, nhưng cực kỳ hữu ích khi ngươi sống và làm việc tại Nhật. Ta đã tổng hợp từ kinh nghiệm thực tế của chính mình. Hãy đọc kỹ và áp dụng ngay!"
-                    </p>
-                </div>
-            </div>
-
-            <div class="knowledge-grid max-w-5xl mx-auto">
-                <div onclick="loadEmbedPage('bo-tro-so-dem.html', 'Kiến thức - Sổ Tay Số Đếm')" class="card-recommended group cursor-pointer h-full flex flex-col relative overflow-hidden rounded-lg">
-                    <div class="absolute top-3 right-3 z-10"><span class="tag-essential">THIẾT YẾU</span></div>
-                    <div class="p-8 flex flex-col h-full relative z-10">
-                        <div class="w-16 h-16 border-2 border-[#C5A059] rounded-full flex items-center justify-center text-3xl mb-6 text-white bg-[#1a1a2e]">🔢</div>
-                        <h3 class="text-2xl font-black mb-1 text-white knowledge-title-glow" style="font-family: 'Rajdhani', sans-serif;">SỔ TAY SỐ ĐẾM TOÀN TẬP</h3>
-                        <p class="text-gray-400 font-medium flex-grow mb-6 text-sm">Tổng hợp đầy đủ cách đếm số trong tiếng Nhật: đếm người, vật, tuổi, thời gian, tiền bạc...</p>
-                        <span class="btn-read-more inline-block px-6 py-3 bg-[#C5A059] text-white font-bold w-full text-center uppercase tracking-wider text-sm rounded">Đọc Ngay</span>
-                    </div>
-                </div>
-
-                <div onclick="loadEmbedPage('bo-tro-tu-tha-dong-tu.html', 'Kiến thức - Tự & Tha Động Từ')" class="card-recommended group cursor-pointer h-full flex flex-col relative overflow-hidden rounded-lg">
-                    <div class="absolute top-3 right-3 z-10"><span class="tag-practical">THỰC TẾ</span></div>
-                    <div class="p-8 flex flex-col h-full relative z-10">
-                        <div class="w-16 h-16 border-2 border-[#C5A059] rounded-full flex items-center justify-center text-3xl mb-6 text-white bg-[#1a1a2e]">🔄</div>
-                        <h3 class="text-2xl font-black mb-1 text-white knowledge-title-glow" style="font-family: 'Rajdhani', sans-serif;">SỔ TAY TỰ - THA ĐỘNG TỪ</h3>
-                        <p class="text-gray-400 font-medium flex-grow mb-6 text-sm">Phân biệt rõ ràng tự động từ và tha động từ. Bảng so sánh 70 cặp động từ phổ biến nhất.</p>
-                        <span class="btn-read-more inline-block px-6 py-3 bg-[#C5A059] text-white font-bold w-full text-center uppercase tracking-wider text-sm rounded">Đọc Ngay</span>
-                    </div>
-                </div>
-
-                <div onclick="loadEmbedPage('bo-tro-tro-tu.html', 'Kiến thức - Trợ Từ')" class="card-recommended group cursor-pointer h-full flex flex-col relative overflow-hidden rounded-lg">
-                    <div class="absolute top-3 right-3 z-10"><span class="tag-essential">THIẾT YẾU</span></div>
-                    <div class="p-8 flex flex-col h-full relative z-10">
-                        <div class="w-16 h-16 border-2 border-[#C5A059] rounded-full flex items-center justify-center text-3xl mb-6 text-white bg-[#1a1a2e]">🎯</div>
-                        <h3 class="text-2xl font-black mb-1 text-white knowledge-title-glow" style="font-family: 'Rajdhani', sans-serif;">BÍ KÍP LÀM CHỦ TRỢ TỪ</h3>
-                        <p class="text-gray-400 font-medium flex-grow mb-6 text-sm">Giải mã toàn bộ cách dùng các trợ từ cốt lõi như は, が, を, に, で, へ một cách có hệ thống.</p>
-                        <span class="btn-read-more inline-block px-6 py-3 bg-[#C5A059] text-white font-bold w-full text-center uppercase tracking-wider text-sm rounded">Đọc Ngay</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="tab-games" class="hidden">
-            <div class="mb-20 flex flex-col md:flex-row items-stretch gap-10 bg-white p-8 md:p-12 border-4 border-[#1A1A1A] relative shadow-[8px_8px_0px_#8B0000]">
-                <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#8B0000]"></div>
-                <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-[#8B0000]"></div>
-                <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-[#8B0000]"></div>
-                <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-[#8B0000]"></div>
-
-                <div class="w-48 h-48 flex-shrink-0 overflow-hidden flex items-center justify-center relative border-4 border-[#8B0000] rounded-full bg-[#1A0000] mx-auto md:mx-0 shadow-inner">
-                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full transform scale-110">
-                        <circle cx="100" cy="100" r="100" fill="#2A0000" />
-                        <circle cx="100" cy="100" r="85" fill="#FF6B35" opacity="0.9" />
-                        <path d="M 50 80 Q 100 200 150 80 Q 100 50 50 80 Z" fill="#D32F2F" stroke="#000" stroke-width="3" />
-                        <circle cx="80" cy="95" r="12" fill="#FFEB3B" stroke="#000" stroke-width="2" />
-                        <circle cx="120" cy="95" r="12" fill="#FFEB3B" stroke="#000" stroke-width="2" />
-                        <circle cx="80" cy="95" r="5" fill="#000" />
-                        <circle cx="120" cy="95" r="5" fill="#000" />
-                        <path d="M 70 125 Q 100 155 130 125" fill="none" stroke="#000" stroke-width="4" />
-                        <text x="100" y="75" font-family="'Noto Serif JP', serif" font-size="18" fill="#FFCC00" text-anchor="middle" font-weight="900">GAME</text>
-                    </svg>
-                </div>
-
-                <div class="flex-1 flex flex-col justify-center text-center md:text-left">
-                    <div class="hanko-seal px-3 py-1 text-xs font-black mb-4 tracking-widest w-max mx-auto md:mx-0 bg-[#8B0000]/10">ĐẠO TRÀNG GIẢI TRÍ</div>
-                    <h1 class="text-4xl md:text-5xl font-black text-[#1A1A1A] mb-6 leading-tight" style="font-family: 'Noto Serif JP', serif;">Trò Chơi Học Tập</h1>
-                    <p class="text-lg text-gray-700 italic border-l-4 border-[#8B0000] pl-5 leading-relaxed bg-gray-50/50 py-2">
-                        "Ngươi nghĩ học tiếng Nhật chỉ có sách vở ư? NGU NGỐC! Hãy thư giãn đầu óc với những trò chơi do chính tay ta thiết kế."
-                    </p>
-                </div>
-            </div>
-
-            <div class="games-grid max-w-5xl mx-auto">
-                <div onclick="loadEmbedPage('game-sonkuro-drift.html', 'Trò Chơi - Sonkuro Drift')" class="game-card-active group cursor-pointer h-full flex flex-col relative overflow-hidden rounded-lg">
-                    <div class="absolute top-3 right-3 z-10"><span class="tag-new">MỚI</span></div>
-                    <div class="p-8 flex flex-col h-full relative z-10">
-                        <div class="w-16 h-16 border-2 border-[#FF6B35] rounded-full flex items-center justify-center text-3xl mb-6 text-white bg-[#1a1a2e]">🏎️</div>
-                        <h3 class="text-2xl font-black mb-1 text-white game-title-glow" style="font-family: 'Rajdhani', sans-serif;">SONKURO DRIFT</h3>
-                        <p class="text-[#FF6B35] text-xs font-bold tracking-widest mb-3">ĐUA XE · LUYỆN NGỮ PHÁP</p>
-                        <p class="text-gray-400 font-medium flex-grow mb-6 text-sm">Đua xe tốc độ cao qua những con phố Tokyo. Mỗi cú drift là một lần ghi nhớ cấu trúc từ vựng, ngữ pháp.</p>
-                        <span class="btn-play-now inline-block px-6 py-3 bg-[#FF6B35] text-white font-bold w-full text-center uppercase tracking-wider text-sm rounded">▶ Chơi Ngay</span>
-                    </div>
-                </div>
-
-                <div onclick="loadEmbedPage('game-hac-tong-han-tu.html', 'Trò Chơi - Hạc Tông Hán Tự')" class="game-card-active group cursor-pointer h-full flex flex-col relative overflow-hidden rounded-lg">
-                    <div class="absolute top-3 right-3 z-10"><span class="tag-new">MỚI</span></div>
-                    <div class="p-8 flex flex-col h-full relative z-10">
-                        <div class="w-16 h-16 border-2 border-[#FF6B35] rounded-full flex items-center justify-center text-3xl mb-6 text-white bg-[#1a1a2e]">🦅</div>
-                        <h3 class="text-2xl font-black mb-1 text-white game-title-glow" style="font-family: 'Rajdhani', sans-serif;">HẠC TÔNG HÁN TỰ</h3>
-                        <p class="text-[#FF6B35] text-xs font-bold tracking-widest mb-3">SINH TỒN · KHẮC PHỤC KANJI</p>
-                        <p class="text-gray-400 font-medium flex-grow mb-6 text-sm">Vận dụng chuẩn xác ý nghĩa bộ thủ và cách đọc âm On-Kun của Kanji để phá giải phong ấn trận pháp.</p>
-                        <span class="btn-play-now inline-block px-6 py-3 bg-[#FF6B35] text-white font-bold w-full text-center uppercase tracking-wider text-sm rounded">▶ Chơi Ngay</span>
-                    </div>
+                <!-- N3 -->
+                <div class="bg-white rounded-3xl overflow-hidden card-shadow border border-gray-100 p-6 flex flex-col justify-between">
+                    <div class="h-24 bg-purple-100 flex items-center justify-center text-purple-600 text-3xl font-bold rounded-2xl mb-4">N3</div>
+                    <h3 class="text-xl font-bold mb-2">Trung Cấp Chiến Binh</h3>
+                    <p class="text-gray-600 text-sm mb-6 flex-grow">Nâng cao tư duy đọc dịch và làm chủ các văn bản công việc thực tế.</p>
+                    <button onclick="loadEmbedPage('n3-home.html', 'Đạo Tràng N3 - Cửa Ải Trung Cấp')" class="w-full py-3 bg-purple-600 text-white rounded-xl font-bold hover:bg-purple-700 transition">Học N3 ngay</button>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-[#1A1A1A] text-white border-t-4 border-[#8B0000] py-12 mt-12">
+    <footer class="bg-[#1A1A1A] text-white border-t-4 border-[#8B0000] py-12 mt-24">
         <div class="max-w-6xl mx-auto px-4 text-center">
             <div class="w-12 h-12 bg-gray-200 rounded-full mx-auto flex items-center justify-center mb-4 text-gray-500">👹</div>
             <p class="font-black text-xl tracking-widest mb-2" style="font-family: 'Noto Serif JP', serif;">LỚP HỌC THẦY SƠN</p>
-            <p class="text-gray-400 text-sm font-medium italic">Không khoan nhượng với sự lười biếng. Kể cả trong lúc chơi game!</p>
+            <p class="text-gray-400 text-sm font-medium italic">Không khoan nhượng với sự lười biếng.</p>
         </div>
     </footer>
 
     <script>
-        // 1. Quản lý trạng thái đăng nhập hệ thống công khai
-        let currentAuthUser = {
-            isLoggedIn: false,
-            data: null
-        };
+        let currentAuthUser = { isLoggedIn: false, data: null };
 
-        // Giả lập cơ chế Đăng nhập từ HIGHUB
+        // Xử lý cơ chế đăng nhập tập trung
         document.getElementById('btn-sync-auth').addEventListener('click', function() {
             if (!currentAuthUser.isLoggedIn) {
                 currentAuthUser.isLoggedIn = true;
-                currentAuthUser.data = { id: "HS999", name: "Học Viên Tương Tác", level: "N5" };
-                
-                document.getElementById('user-display').innerText = `👤 ${currentAuthUser.data.name} (Cấp độ: ${currentAuthUser.data.level})`;
+                currentAuthUser.data = { id: "SON_SENSEI_01", name: "Giáo Viên Thân Thiện", level: "Admin" };
+                document.getElementById('user-display').innerText = `👤 ${currentAuthUser.data.name}`;
                 this.innerText = "Đăng xuất";
                 this.classList.replace('bg-red-600', 'bg-gray-500');
             } else {
@@ -417,58 +186,64 @@
                 this.innerText = "Đăng nhập";
                 this.classList.replace('bg-gray-500', 'bg-red-600');
             }
-            // Đồng bộ trạng thái mới sang trang con ngay lập tức nếu iframe đang mở
             syncAuthToEmbedPage();
         });
 
-        // 2. Hàm kích hoạt mở mã nhúng iframe của HIGHUB
         function loadEmbedPage(pageUrl, title) {
+            // Loại bỏ class nav-active cũ, highlight chính xác trên menu mẹ
+            ['home', 'courses', 'knowledge', 'games'].forEach(id => document.getElementById('btn-' + id)?.classList.remove('nav-active'));
+            if(pageUrl.includes('bo-tro')) document.getElementById('btn-knowledge')?.classList.add('nav-active');
+            else if(pageUrl.includes('game')) document.getElementById('btn-games')?.classList.add('nav-active');
+            else document.getElementById('btn-courses')?.classList.add('nav-active');
+
+            document.getElementById('tab-home').classList.add('hidden');
+            document.getElementById('tab-courses').classList.add('hidden');
+            
             const viewer = document.getElementById('tab-viewer');
             const frame = document.getElementById('highub-core-frame');
             
-            document.getElementById('viewer-title').innerText = ` đang hiển thị: ${title}`;
-            frame.src = pageUrl; // Kích hoạt nạp file HTML rời rạc
+            document.getElementById('viewer-title').innerText = `Kết giới hiển thị: ${title}`;
+            frame.src = pageUrl;
             viewer.classList.remove('hidden');
-            
-            // Cuộn màn hình lên đầu khu vực hiển thị bài học một cách trực quan
             viewer.scrollIntoView({ behavior: 'smooth' });
 
-            // Khi trang con tải xong, tự động đẩy gói dữ liệu đồng bộ tài khoản sang
-            frame.onload = function() {
-                syncAuthToEmbedPage();
-            };
+            frame.onload = function() { syncAuthToEmbedPage(); };
         }
 
-        // 3. Hàm cốt lõi: Gửi phát tín hiệu dữ liệu sang trang con (Web Messaging API)
         function syncAuthToEmbedPage() {
             const frame = document.getElementById('highub-core-frame');
             if (frame && frame.src !== "") {
-                frame.contentWindow.postMessage({
-                    type: 'HIGHUB_AUTH_SYNC',
-                    payload: currentAuthUser
-                }, '*');
+                frame.contentWindow.postMessage({ type: 'HIGHUB_AUTH_SYNC', payload: currentAuthUser }, '*');
             }
         }
 
-        // 4. Các hàm chuyển đổi giao diện cũ
         function closeViewer() {
             document.getElementById('tab-viewer').classList.add('hidden');
             document.getElementById('highub-core-frame').src = "";
+            switchTab('home');
         }
 
         function switchTab(tabId) {
-            closeViewer(); // Đóng khung xem khi đổi Tab chính
-            ['home', 'courses', 'knowledge', 'games'].forEach(id => {
-                document.getElementById('tab-' + id).classList.add('hidden');
-                document.getElementById('btn-' + id).classList.remove('nav-active');
-            });
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
-            document.getElementById('btn-' + tabId).classList.add('nav-active');
+            document.getElementById('tab-viewer').classList.add('hidden');
+            document.getElementById('highub-core-frame').src = "";
+            
+            ['home', 'courses'].forEach(id => document.getElementById('tab-' + id).classList.add('hidden'));
+            ['home', 'courses', 'knowledge', 'games'].forEach(id => document.getElementById('btn-' + id)?.classList.remove('nav-active'));
+            
+            document.getElementById('tab-' + tabId)?.classList.remove('hidden');
+            document.getElementById('btn-' + tabId)?.classList.add('nav-active');
         }
 
-        function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        }
+        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+
+        // Bộ lọc bắt tín hiệu yêu cầu nhảy trang con phát ra từ Iframe con
+        window.addEventListener('message', function(event) {
+            const data = event.data;
+            if (data && data.type === 'HIGHUB_FRAME_NAVIGATE') {
+                if(data.url === '') { closeViewer(); } 
+                else { loadEmbedPage(data.url, 'Học Liệu Chân Truyền'); }
+            }
+        });
     </script>
 </body>
 </html>
