@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cửa Ải N3 - Ác Quỷ Tôn Sư</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --jp-red: #8B0000; 
+            --jp-cream: #FDFBF7; 
+            --jp-ink: #1A1A1A; 
+            --jp-gold: #C5A059; 
+        }
+        body {
+            font-family: 'Lora', 'Noto Serif JP', serif;
+            background-color: var(--jp-cream);
+            color: var(--jp-ink);
+        }
+        .washi-pattern {
+            background-color: var(--jp-cream);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+        .card-antique {
+            background-color: #fff;
+            border: 2px solid var(--jp-ink);
+            box-shadow: 6px 6px 0px var(--jp-ink);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card-antique:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 10px 10px 0px var(--jp-red);
+        }
+        .hanko-seal {
+            border: 2px solid var(--jp-red);
+            color: var(--jp-red);
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .tategaki {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 0.2em;
+        }
+    </style>
+</head>
+<body class="washi-pattern min-h-screen selection:bg-[#8B0000] selection:text-white flex flex-col p-4 md:p-6">
+
+    <div id="sync-alert" class="max-w-6xl mx-auto w-full mb-6 p-4 bg-amber-50 border-2 border-dashed border-amber-500 text-amber-800 rounded-lg flex items-center justify-between shadow-sm">
+        <div class="flex items-center space-x-2">
+            <span class="text-xl">👹</span>
+            <p id="sync-text" class="text-sm font-bold">Trạng thái hạ cấp: Chưa đồng bộ tài khoản HIGHUB. Tiến độ tu luyện N3 của ngươi sẽ không được ghi nhận!</p>
+        </div>
+    </div>
+
+    <main class="max-w-6xl mx-auto flex-grow w-full">
+        <section class="mb-20 flex flex-col md:flex-row items-stretch gap-10 bg-white p-8 md:p-12 border-4 border-[#1A1A1A] relative shadow-[8px_8px_0px_#8B0000]">
+            <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#8B0000]"></div>
+            <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-[#8B0000]"></div>
+            <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-[#8B0000]"></div>
+            <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-[#8B0000]"></div>
+
+            <div class="w-48 h-48 flex-shrink-0 overflow-hidden flex items-center justify-center relative border-4 border-[#8B0000] rounded-full bg-[#1A0000] mx-auto md:mx-0 shadow-inner">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full transform scale-110">
+                    <circle cx="100" cy="100" r="100" fill="#2A0000" />
+                    <circle cx="100" cy="100" r="85" fill="#8B0000" />
+                    <path d="M 50 80 Q 100 200 150 80 Q 100 50 50 80 Z" fill="#D32F2F" stroke="#000" stroke-width="3"/>
+                    <path d="M 60 70 Q 50 20 40 10 Q 70 30 75 60 Z" fill="#FFFDE7" stroke="#000" stroke-width="2"/>
+                    <path d="M 140 70 Q 150 20 160 10 Q 130 30 125 60 Z" fill="#FFFDE7" stroke="#000" stroke-width="2"/>
+                    <path d="M 65 95 Q 80 85 90 95 Q 80 100 65 95 Z" fill="#FFEB3B" stroke="#000" stroke-width="2"/>
+                    <path d="M 135 95 Q 120 85 110 95 Q 120 100 135 95 Z" fill="#FFEB3B" stroke="#000" stroke-width="2"/>
+                    <path d="M 70 120 Q 100 140 130 120" fill="none" stroke="#000" stroke-width="4"/>
+                    <path d="M 75 125 L 80 135 L 85 127" fill="#FFF" stroke="#000" stroke-width="1"/>
+                    <path d="M 125 125 L 120 135 L 115 127" fill="#FFF" stroke="#000" stroke-width="1"/>
+                    <text x="100" y="70" font-family="'Noto Serif JP', serif" stroke="#000" stroke-width="0.5" font-size="20" fill="#FFCC00" text-anchor="middle" font-weight="900">山</text>
+                </svg>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-center text-center md:text-left">
+                <div class="hanko-seal px-3 py-1 text-xs font-black mb-4 tracking-widest w-max mx-auto md:mx-0 bg-[#8B0000]/10">CẤP ĐỘ N3</div>
+                <h1 class="text-4xl md:text-5xl font-black text-[#1A1A1A] mb-6 leading-tight" style="font-family: 'Noto Serif JP', serif;">Cửa Ải Trung Cấp</h1>
+                <p class="text-lg text-gray-700 italic border-l-4 border-[#8B0000] pl-5 leading-relaxed bg-gray-50/50 py-2">
+                    "Ngươi đã sống sót qua N4? Khá khen. Nhưng N3 không phải là trò trẻ con. Đây là ranh giới giữa kẻ nghiệp dư và một chiến binh thực thụ. Trút bỏ sự yếu đuối và chuẩn bị tinh thần đón nhận những thử thách khốc liệt nhất đi!"
+                </p>
+            </div>
+            
+            <div class="hidden lg:flex items-center border-l-2 border-[#1A1A1A] pl-8 ml-4">
+                <h2 class="tategaki text-3xl font-black text-[#8B0000] opacity-90" style="font-family: 'Noto Serif JP', serif;">
+                    限界を超えよ
+                </h2>
+            </div>
+        </section>
+
+        <section class="max-w-5xl mx-auto">
+            <div class="text-center mb-12">
+                <div class="inline-block border-y-2 border-[#1A1A1A] py-2 px-8">
+                    <h2 class="text-3xl font-black text-[#1A1A1A] tracking-wider" style="font-family: 'Noto Serif JP', serif;">
+                        TAM ĐẠI BÍ KÍP N3
+                    </h2>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                
+                <button onclick="requestNavigation('n3-tu-vung.html')" class="text-left block card-antique group h-full flex flex-col relative overflow-hidden w-full">
+                    <div class="absolute top-0 right-0 bg-[#8B0000] text-white text-xs font-bold px-3 py-1 transform translate-x-2 -translate-y-0.5 shadow-md">Quyển I</div>
+                    <div class="p-8 flex flex-col items-center text-center h-full w-full">
+                        <div class="w-16 h-16 border-2 border-[#1A1A1A] rounded-full flex items-center justify-center text-3xl mb-6 text-[#1A1A1A] font-serif group-hover:bg-[#8B0000] group-hover:text-white transition group-hover:border-[#8B0000] bg-[#FDFBF7]">詞</div>
+                        <h3 class="text-2xl font-black mb-3 text-[#1A1A1A]" style="font-family: 'Noto Serif JP', serif;">Từ Vựng N3</h3>
+                        <div class="h-0.5 w-12 bg-[#8B0000] mb-5"></div>
+                        <p class="text-gray-600 font-medium flex-grow mb-8">Hệ thống ngôn từ thâm sâu. Mỗi từ vựng là một đòn đánh hiểm hóc, hãy mài giũa cho sắc bén.</p>
+                        <span class="inline-block px-6 py-3 border-2 border-[#1A1A1A] text-[#1A1A1A] font-bold group-hover:bg-[#1A1A1A] group-hover:text-white transition w-full uppercase tracking-wider text-sm">Mở Khóa Ấn</span>
+                    </div>
+                </button>
+
+                <button onclick="requestNavigation('n3-ngu-phap.html')" class="text-left block card-antique group h-full flex flex-col relative overflow-hidden w-full">
+                    <div class="absolute top-0 right-0 bg-[#8B0000] text-white text-xs font-bold px-3 py-1 transform translate-x-2 -translate-y-0.5 shadow-md">Quyển II</div>
+                    <div class="p-8 flex flex-col items-center text-center h-full w-full">
+                        <div class="w-16 h-16 border-2 border-[#1A1A1A] rounded-full flex items-center justify-center text-3xl mb-6 text-[#1A1A1A] font-serif group-hover:bg-[#8B0000] group-hover:text-white transition group-hover:border-[#8B0000] bg-[#FDFBF7]">法</div>
+                        <h3 class="text-2xl font-black mb-3 text-[#1A1A1A]" style="font-family: 'Noto Serif JP', serif;">Ngữ Pháp N3</h3>
+                        <div class="h-0.5 w-12 bg-[#8B0000] mb-5"></div>
+                        <p class="text-gray-600 font-medium flex-grow mb-8">Trận pháp vạn biến. Kẻ lĩnh ngộ được nó sẽ kiểm soát nhịp độ của toàn bộ trận chiến.</p>
+                        <span class="inline-block px-6 py-3 border-2 border-[#1A1A1A] text-[#1A1A1A] font-bold group-hover:bg-[#1A1A1A] group-hover:text-white transition w-full uppercase tracking-wider text-sm">Mở Khóa Ấn</span>
+                    </div>
+                </button>
+
+                <button onclick="requestNavigation('n3-han-tu.html')" class="text-left block card-antique group h-full flex flex-col relative overflow-hidden w-full">
+                    <div class="absolute top-0 right-0 bg-[#8B0000] text-white text-xs font-bold px-3 py-1 transform translate-x-2 -translate-y-0.5 shadow-md">Quyển III</div>
+                    <div class="p-8 flex flex-col items-center text-center h-full w-full">
+                        <div class="w-16 h-16 border-2 border-[#1A1A1A] rounded-full flex items-center justify-center text-3xl mb-6 text-[#1A1A1A] font-serif group-hover:bg-[#8B0000] group-hover:text-white transition group-hover:border-[#8B0000] bg-[#FDFBF7]">漢</div>
+                        <h3 class="text-2xl font-black mb-3 text-[#1A1A1A]" style="font-family: 'Noto Serif JP', serif;">Hán Tự N3</h3>
+                        <div class="h-0.5 w-12 bg-[#8B0000] mb-5"></div>
+                        <p class="text-gray-600 font-medium flex-grow mb-8">Chân ngôn của người Nhật. Nắm được Hán tự là nắm được chìa khóa của sức mạnh tối thượng.</p>
+                        <span class="inline-block px-6 py-3 border-2 border-[#1A1A1A] text-[#1A1A1A] font-bold group-hover:bg-[#1A1A1A] group-hover:text-white transition w-full uppercase tracking-wider text-sm">Mở Khóa Ấn</span>
+                    </div>
+                </button>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-[#1A1A1A] text-white border-t-4 border-[#8B0000] py-12 mt-24">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="font-black text-xl tracking-widest mb-2" style="font-family: 'Noto Serif JP', serif;">LỚP HỌC THẦY SƠN</p>
+            <p class="text-gray-400 text-sm font-medium italic">Không khoan nhượng với sự lười biếng.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 1. Gửi thông điệp điều hướng trực tiếp ra trang chủ chính mẹ chứa iframe
+        function requestNavigation(targetPageUrl) {
+            window.parent.postMessage({
+                type: 'HIGHUB_FRAME_NAVIGATE',
+                url: targetPageUrl
+            }, '*');
+        }
+
+        // 2. Nhận tín hiệu trạng thái đăng nhập đồng bộ từ trang chủ mẹ bắn xuống
+        window.addEventListener('message', function(event) {
+            const message = event.data;
+            if (message && message.type === 'HIGHUB_AUTH_SYNC') {
+                const authState = message.payload;
+                const alertBox = document.getElementById('sync-alert');
+                const alertText = document.getElementById('sync-text');
+
+                if (authState.isLoggedIn && authState.data) {
+                    alertBox.classList.replace('bg-amber-50', 'bg-emerald-50');
+                    alertBox.classList.replace('border-amber-500', 'border-emerald-600');
+                    alertBox.classList.replace('text-amber-800', 'text-emerald-800');
+                    alertText.innerText = `👹 Sư tôn nhận diện: Đã kết nối HIGHUB đồng bộ hệ thống. Học viên ${authState.data.name} chuẩn bị phá giải kết giới N3!`;
+                } else {
+                    alertBox.classList.replace('bg-emerald-50', 'bg-amber-50');
+                    alertBox.classList.replace('border-emerald-600', 'border-amber-500');
+                    alertBox.classList.replace('text-emerald-800', 'text-amber-800');
+                    alertText.innerText = "Trạng thái hạ cấp: Chưa đồng bộ tài khoản HIGHUB. Tiến độ tu luyện N3 của ngươi sẽ không được ghi nhận!";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
