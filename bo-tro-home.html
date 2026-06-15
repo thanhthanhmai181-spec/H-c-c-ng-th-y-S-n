@@ -3,274 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Có Thể Bạn Muốn Học - Kiến Thức Hữu Ích | Lớp Thầy Sơn</title>
+    <title>Có Thể Bạn Muốn Học</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Lora:ital,wght@0,400;0,700;1,400&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
-
     <style>
-        :root {
-            --jp-red: #8B0000;
-            --jp-cream: #FDFBF7;
-            --jp-ink: #1A1A1A;
-            --jp-gold: #C5A059;
-            --game-glow: #FF6B35;
-            --game-dark: #1A1A2E;
-        }
-
-        body {
-            font-family: 'Lora', 'Noto Serif JP', serif;
-            background-color: var(--jp-cream);
-            color: var(--jp-ink);
-        }
-
-        .washi-pattern {
-            background-color: var(--jp-cream);
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
-        }
-
-        .card-antique {
-            background-color: #fff;
-            border: 2px solid var(--jp-ink);
-            box-shadow: 6px 6px 0px var(--jp-ink);
-            transition: all 0.3s ease;
-        }
-
-        .card-antique:hover {
-            transform: translate(-4px, -4px);
-            box-shadow: 10px 10px 0px var(--jp-red);
-        }
-
-        .card-recommended {
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            border: 2px solid var(--jp-gold);
-            box-shadow: 6px 6px 0px var(--jp-ink), 0 0 30px rgba(197, 160, 89, 0.2);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-recommended::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(45deg, transparent 60%, rgba(197, 160, 89, 0.05) 100%);
-            pointer-events: none;
-        }
-
-        .card-recommended:hover {
-            transform: translate(-4px, -4px);
-            box-shadow: 10px 10px 0px var(--jp-ink), 0 0 50px rgba(197, 160, 89, 0.4);
-            border-color: #D4AF6A;
-        }
-
-        .card-locked {
-            background-color: #f5f0eb;
-            border: 2px dashed #999;
-            box-shadow: 4px 4px 0px #ccc;
-            opacity: 0.7;
-            transition: all 0.3s ease;
-        }
-
-        .card-locked:hover {
-            opacity: 0.85;
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px #bbb;
-        }
-
-        .hanko-seal {
-            border: 2px solid var(--jp-red);
-            color: var(--jp-red);
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .tategaki {
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            letter-spacing: 0.2em;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 5px rgba(197, 160, 89, 0.3); }
-            50% { box-shadow: 0 0 25px rgba(197, 160, 89, 0.6), 0 0 50px rgba(197, 160, 89, 0.2); }
-        }
-
-        .btn-read-more {
-            animation: pulse-glow 2s infinite;
-        }
-
-        .tag-essential { background: var(--jp-red); color: white; font-weight: bold; font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.1em; }
-        .tag-practical { background: var(--jp-gold); color: white; font-weight: bold; font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.1em; }
-        .tag-soon { background: #666; color: white; font-weight: bold; font-size: 0.7rem; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.1em; }
-
-        .knowledge-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
-        @media (min-width: 768px) { .knowledge-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .knowledge-grid { grid-template-columns: repeat(3, 1fr); } }
-        .knowledge-title-glow { text-shadow: 0 0 20px rgba(197, 160, 89, 0.5); }
+        :root { --jp-red: #8B0000; --jp-cream: #FDFBF7; --jp-ink: #1A1A1A; --jp-gold: #C5A059; }
+        body { font-family: 'Lora', 'Noto Serif JP', serif; background-color: var(--jp-cream); color: var(--jp-ink); }
+        .washi-pattern { background-color: var(--jp-cream); background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"); }
+        .card-recommended { background: linear-gradient(145deg, #1a1a2e, #16213e); border: 2px solid var(--jp-gold); box-shadow: 6px 6px 0px var(--jp-ink); transition: all 0.3s ease; }
+        .card-recommended:hover { transform: translate(-4px, -4px); box-shadow: 10px 10px 0px var(--jp-ink), 0 0 40px rgba(197, 160, 89, 0.4); border-color: #D4AF6A; }
     </style>
 </head>
-<body class="washi-pattern min-h-screen flex flex-col selection:bg-[#8B0000] selection:text-white p-4 md:p-6">
+<body class="washi-pattern flex flex-col p-4 md:p-6">
 
-    <!-- THANH THÔNG BÁO ĐỒNG BỘ TRẠNG THÁI TÀI KHOẢN -->
     <div id="sync-alert" class="max-w-6xl mx-auto w-full mb-6 p-4 bg-amber-50 border-2 border-dashed border-amber-500 text-amber-800 rounded-lg flex items-center justify-between shadow-sm">
-        <div class="flex items-center space-x-2">
-            <span class="text-xl">👹</span>
-            <p id="sync-text" class="text-sm font-bold">Trạng thái hạ cấp: Chưa đồng bộ tài khoản HIGHUB. Tiến trình tích lũy học thức của ngươi sẽ không được ghi nhận!</p>
-        </div>
+        <p id="sync-text" class="text-sm font-bold">⚠️ Trạng thái: Chưa đồng bộ tài khoản HIGHUB. Tiến trình tích lũy học thức không được ghi nhận!</p>
     </div>
 
-    <main class="max-w-6xl mx-auto flex-grow w-full">
-        <section class="mb-20 flex flex-col md:flex-row items-stretch gap-10 bg-white p-8 md:p-12 border-4 border-[#1A1A1A] relative shadow-[8px_8px_0px_#8B0000]">
-            <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#8B0000]"></div>
-            <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-[#8B0000]"></div>
-            <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-[#8B0000]"></div>
-            <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-[#8B0000]"></div>
+    <main class="max-w-6xl mx-auto w-full flex-grow">
+        <button onclick="window.parent.postMessage({type: 'HIGHUB_FRAME_NAVIGATE', url: ''}, '*')" class="mb-4 font-bold text-sm text-gray-800 hover:text-amber-600 transition">← Đóng Mục Kiến Thức</button>
 
-            <div class="w-48 h-48 flex-shrink-0 overflow-hidden flex items-center justify-center relative border-4 border-[#8B0000] rounded-full bg-[#1A0000] mx-auto md:mx-0 shadow-inner">
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full transform scale-110">
-                    <circle cx="100" cy="100" r="100" fill="#2A0000"/>
-                    <circle cx="100" cy="100" r="85" fill="#C5A059" opacity="0.9"/>
-                    <path d="M 70 60 L 100 130 L 130 60 Z" fill="#8B0000" stroke="#000" stroke-width="3"/>
-                    <circle cx="100" cy="85" r="12" fill="#FFEB3B" stroke="#000" stroke-width="2"/>
-                    <path d="M 85 110 Q 100 125 115 110" fill="none" stroke="#000" stroke-width="3"/>
-                    <text x="100" y="155" font-family="'Noto Serif JP', serif" font-size="16" fill="#FFFDE7" text-anchor="middle" font-weight="900">知識</text>
-                </svg>
-            </div>
-
+        <section class="mb-12 flex flex-col md:flex-row items-stretch gap-10 bg-white p-8 border-4 border-[#1A1A1A] relative shadow-[8px_8px_0px_#8B0000]">
             <div class="flex-1 flex flex-col justify-center text-center md:text-left">
-                <div class="hanko-seal px-3 py-1 text-xs font-black mb-4 tracking-widest w-max mx-auto md:mx-0 bg-[#8B0000]/10">KIẾN THỨC BỔ ÍCH</div>
-                <h1 class="text-4xl md:text-5xl font-black text-[#1A1A1A] mb-6 leading-tight" style="font-family: 'Noto Serif JP', serif;">Có Thể Bạn Muốn Học</h1>
-                <p class="text-lg text-gray-700 italic border-l-4 border-[#8B0000] pl-5 leading-relaxed bg-gray-50/50 py-2">
-                    "Những kiến thức này không có trong sách giáo khoa, nhưng cực kỳ hữu ích khi ngươi sống và làm việc tại Nhật. Ta đã tổng hợp từ kinh nghiệm thực tế của chính mình. Hãy đọc kỹ và áp dụng ngay!"
-                </p>
-            </div>
-
-            <div class="hidden lg:flex items-center border-l-2 border-[#1A1A1A] pl-8 ml-4">
-                <h2 class="tategaki text-3xl font-black text-[#8B0000] opacity-90" style="font-family: 'Noto Serif JP', serif;">
-                    役立つ知識
-                </h2>
+                <h1 class="text-4xl font-black text-[#1A1A1A] mb-4">Sổ Tay Kiến Thức Thực Tế</h1>
+                <p class="text-gray-700 italic border-l-4 border-[#8B0000] pl-5 leading-relaxed bg-gray-50/50 py-2">"Tổng hợp từ kinh nghiệm thực tế của chính thầy Sơn. Hãy đọc kỹ, ghi nhớ và áp dụng ngay để sống tốt hơn tại Nhật!"</p>
             </div>
         </section>
 
-        <section class="max-w-5xl mx-auto">
-            <div class="text-center mb-12">
-                <div class="inline-block border-y-2 border-[#1A1A1A] py-2 px-8">
-                    <h2 class="text-3xl font-black text-[#1A1A1A] tracking-wider" style="font-family: 'Noto Serif JP', serif;">
-                        KIẾN THỨC ĐỀ XUẤT
-                    </h2>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <button onclick="requestNavigation('bo-tro-so-dem.html')" class="text-left block card-recommended p-8 rounded-lg w-full">
+                <h3 class="text-xl font-black text-white" style="font-family: 'Rajdhani', sans-serif;">SỔ TAY SỐ ĐẾM TOÀN TẬP</h3>
+                <p class="text-[#C5A059] text-xs font-bold mb-4">SỐ ĐẾM · NGỮ PHÁP</p>
+                <p class="text-gray-400 text-sm">Tổng hợp bảng counter chi tiết: đếm người, vật, tuổi, thời gian, tiền bạc mượt mà.</p>
+            </button>
 
-            <div class="knowledge-grid">
+            <button onclick="requestNavigation('bo-tro-tu-tha-dong-tu.html')" class="text-left block card-recommended p-8 rounded-lg w-full">
+                <h3 class="text-xl font-black text-white" style="font-family: 'Rajdhani', sans-serif;">SỔ TAY TỰ - THA ĐỘNG TỪ</h3>
+                <p class="text-[#C5A059] text-xs font-bold mb-4">ĐỘNG TỪ · NGỮ PHÁP</p>
+                <p class="text-gray-400 text-sm">Phân biệt tự động từ và tha động từ với bảng so sánh 70 cặp từ phổ biến nhất.</p>
+            </button>
 
-                <!-- KIẾN THỨC 1: SỐ ĐẾM -->
-                <button onclick="requestNavigation('bo-tro-so-dem.html')" class="text-left block card-recommended group h-full flex flex-col relative overflow-hidden rounded-lg w-full">
-                    <div class="absolute top-3 right-3 z-10 flex gap-2"><span class="tag-essential">THIẾT YẾU</span></div>
-                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#C5A059] opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition"></div>
-                    <div class="p-8 flex flex-col h-full relative z-10 w-full">
-                        <div class="w-16 h-16 border-2 border-[#C5A059] rounded-full flex items-center justify-center text-3xl mb-6 text-white bg-[#1a1a2e]">🔢</div>
-                        <h3 class="text-2xl font-black mb-1 text-white knowledge-title-glow" style="font-family: 'Rajdhani', sans-serif;">SỔ TAY SỐ ĐẾM TOÀN TẬP</h3>
-                        <p class="text-[#C5A059] text-xs font-bold tracking-widest mb-3">SỐ ĐẾM · NGỮ PHÁP</p>
-                        <div class="h-0.5 w-12 bg-[#C5A059] mb-5"></div>
-                        <p class="text-gray-400 font-medium flex-grow mb-6 text-sm leading-relaxed">Tổng hợp đầy đủ cách đếm số trong tiếng Nhật: đếm người, vật, tuổi, thời gian, tiền bạc. Bảng counter (助数詞) chi tiết với ví dụ thực tế và mẹo ghi nhớ.</p>
-                        <div class="flex justify-between text-xs text-gray-500 mb-6"><span>📊 24+ Counter</span> <span>⏱️ 25 phút đọc</span> <span>⭐ Độ khó: Trung bình</span></div>
-                        <span class="btn-read-more inline-block px-6 py-3 bg-[#C5A059] text-white font-bold w-full text-center uppercase tracking-wider text-sm rounded">Đọc Ngay</span>
-                    </div>
-                </button>
-
-                <!-- KIẾN THỨC 2: TỰ - THA ĐỘNG TỪ -->
-                <button onclick="requestNavigation('bo-tro-tu-tha-dong-tu.html')" class="text-left block card-recommended group h-full flex flex-col relative overflow-hidden rounded-lg w-full">
-                    <div class="absolute top-3 right-3 z-10 flex gap-2"><span class="tag-practical">THỰC TẾ</span></div>
-                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#C5A059] opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition"></div>
-                    <div class="p-8 flex flex-col h-full relative z-10 w-full">
-                        <div class="w-16 h-16 border-2 border-[#C5A059] rounded-full flex items-center justify-center text-3xl mb-6 text-white bg-[#1a1a2e]">🔄</div>
-                        <h3 class="text-2xl font-black mb-1 text-white knowledge-title-glow" style="font-family: 'Rajdhani', sans-serif;">SỔ TAY TỰ - THA ĐỘNG TỪ</h3>
-                        <p class="text-[#C5A059] text-xs font-bold tracking-widest mb-3">ĐỘNG TỪ · NGỮ PHÁP</p>
-                        <div class="h-0.5 w-12 bg-[#C5A059] mb-5"></div>
-                        <p class="text-gray-400 font-medium flex-grow mb-6 text-sm leading-relaxed">Phân biệt rõ ràng tự động từ và tha động từ. Bảng so sánh 70 cặp động từ phổ biến nhất, quy tắc chuyển đổi và bài tập thực hành kèm đáp án chi tiết.</p>
-                        <div class="flex justify-between text-xs text-gray-500 mb-6"><span>📝 70 cặp từ</span> <span>⏱️ 30 phút đọc</span> <span>⭐ Độ khó: Khó</span></div>
-                        <span class="btn-read-more inline-block px-6 py-3 bg-[#C5A059] text-white font-bold w-full text-center uppercase tracking-wider text-sm rounded">Đọc Ngay</span>
-                    </div>
-                </button>
-
-                <!-- KIẾN THỨC 3: TRỢ TỪ -->
-                <button onclick="requestNavigation('bo-tro-tro-tu.html')" class="text-left block card-recommended group h-full flex flex-col relative overflow-hidden rounded-lg w-full">
-                    <div class="absolute top-3 right-3 z-10 flex gap-2"><span class="tag-essential">THIẾT YẾU</span></div>
-                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#C5A059] opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition"></div>
-                    <div class="p-8 flex flex-col h-full relative z-10 w-full">
-                        <div class="w-16 h-16 border-2 border-[#C5A059] rounded-full flex items-center justify-center text-3xl mb-6 text-white bg-[#1a1a2e]">🎯</div>
-                        <h3 class="text-2xl font-black mb-1 text-white knowledge-title-glow" style="font-family: 'Rajdhani', sans-serif;">BÍ KÍP LÀM CHỦ TRỢ TỪ</h3>
-                        <p class="text-[#C5A059] text-xs font-bold tracking-widest mb-3">TRỢ TỪ · CỐT LÕI</p>
-                        <div class="h-0.5 w-12 bg-[#C5A059] mb-5"></div>
-                        <p class="text-gray-400 font-medium flex-grow mb-6 text-sm leading-relaxed">Phá giải toàn bộ điểm mù cách dùng trợ từ は, が, を, に, で. Sắp xếp tư duy câu văn logic để giao tiếp chuẩn xác như người bản xứ.</p>
-                        <div class="flex justify-between text-xs text-gray-500 mb-6"><span>📚 Hệ thống cốt lõi</span> <span>⏱️ 20 phút đọc</span> <span>⭐ Độ khó: Trung bình</span></div>
-                        <span class="btn-read-more inline-block px-6 py-3 bg-[#C5A059] text-white font-bold w-full text-center uppercase tracking-wider text-sm rounded">Đọc Ngay</span>
-                    </div>
-                </button>
-
-            </div>
-        </section>
-
-        <!-- Personal Note Section -->
-        <section class="mt-20 max-w-3xl mx-auto bg-white p-8 border-4 border-[#1A1A1A] relative shadow-[6px_6px_0px_#8B0000]">
-            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#8B0000] text-white px-6 py-2 font-black text-sm tracking-widest" style="font-family: 'Noto Serif JP', serif;">
-                LỜI NHẮN TỪ THẦY SƠN
-            </div>
-            
-            <div class="pt-4">
-                <p class="text-lg text-gray-700 italic leading-relaxed mb-6">
-                    "Số đếm, Tự-Tha động từ và Trợ từ là các chủ điểm mà hầu hết học viên đều gặp khó khăn. Ta đã biên soạn những sổ tay này dựa trên kinh nghiệm nhiều năm giảng dạy để ép các ngươi phải tư duy một cách khoa học nhất!"
-                </p>
-                
-                <div class="flex items-center justify-end space-x-4">
-                    <div class="text-right">
-                        <p class="font-black text-[#8B0000]" style="font-family: 'Noto Serif JP', serif;">Thầy Sơn</p>
-                        <p class="text-xs text-gray-500">Giáo viên tiếng Nhật</p>
-                    </div>
-                    <div class="w-16 h-16 border-2 border-[#8B0000] rounded-full flex items-center justify-center bg-[#8B0000]/10">
-                        <span class="text-2xl font-black text-[#8B0000]" style="font-family: 'Noto Serif JP', serif;">山</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+            <button onclick="requestNavigation('bo-tro-tro-tu.html')" class="text-left block card-recommended p-8 rounded-lg w-full">
+                <h3 class="text-xl font-black text-white" style="font-family: 'Rajdhani', sans-serif;">BÍ KÍP LÀM CHỦ TRỢ TỪ</h3>
+                <p class="text-[#C5A059] text-xs font-bold mb-4">TRỢ TỪ · CỐT LÕI</p>
+                <p class="text-gray-400 text-sm">Hệ thống hóa cách xử lý chuẩn xác cấu trúc trợ từ nền tảng は, が, を, に, で.</p>
+            </button>
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-[#1A1A1A] text-white border-t-4 border-[#8B0000] py-12 mt-24">
-        <div class="max-w-6xl mx-auto px-4 text-center">
-            <p class="font-black text-xl tracking-widest mb-2" style="font-family: 'Noto Serif JP', serif;">LỚP HỌC THẦY SƠN</p>
-            <p class="text-gray-400 text-sm font-medium italic">Kiến thức thực tế - Áp dụng ngay - Sống tốt hơn tại Nhật!</p>
-        </div>
-    </footer>
-
-    <!-- LOGIC GIAO TIẾP VỚI HỆ THỐNG MẸ -->
     <script>
-        // 1. Hàm phát thông điệp điều hướng lên khung chứa iframe mẹ
-        function requestNavigation(targetPageUrl) {
-            window.parent.postMessage({
-                type: 'HIGHUB_FRAME_NAVIGATE',
-                url: targetPageUrl
-            }, '*');
-        }
-
-        // 2. Lắng nghe gói đồng bộ tài khoản từ trang mẹ bắn xuống
+        function requestNavigation(url) { window.parent.postMessage({ type: 'HIGHUB_FRAME_NAVIGATE', url: url }, '*'); }
         window.addEventListener('message', function(event) {
             const message = event.data;
             if (message && message.type === 'HIGHUB_AUTH_SYNC') {
-                const authState = message.payload;
-                const alertBox = document.getElementById('sync-alert');
-                const alertText = document.getElementById('sync-text');
-
-                if (authState.isLoggedIn && authState.data) {
-                    alertBox.classList.replace('bg-amber-50', 'bg-emerald-50');
-                    alertBox.classList.replace('border-amber-500', 'border-emerald-600');
-                    alertBox.classList.replace('text-amber-800', 'text-emerald-800');
-                    alertText.innerText = `👹 Sư tôn nhận diện: Đã đồng bộ tài khoản HIGHUB. Chào mừng học viên ${authState.data.name} đến với mật viện học thuật!`;
-                } else {
-                    alertBox.classList.replace('bg-emerald-50', 'bg-amber-50');
-                    alertBox.classList.replace('border-emerald-600', 'border-amber-500');
-                    alertBox.classList.replace('text-emerald-800', 'text-amber-800');
-                    alertText.innerText = "Trạng thái hạ cấp: Chưa đồng bộ tài khoản HIGHUB. Tiến trình tích lũy học thức của ngươi sẽ không được ghi nhận!";
+                const auth = message.payload;
+                if (auth.isLoggedIn) {
+                    document.getElementById('sync-alert').className = "max-w-6xl mx-auto w-full mb-6 p-4 bg-emerald-50 border-2 border-emerald-600 text-emerald-800 rounded-lg flex items-center justify-between shadow-sm";
+                    document.getElementById('sync-text').innerText = `👹 Sư tôn nhận diện: Học viên ${auth.data.name} đã kết nối dữ liệu thư viện thành công!`;
                 }
             }
         });
