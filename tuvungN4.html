@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>N4 Zen Master - Ultimate 500 Quizzes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F9FAFB;
+            --text-main: #1F2937;
+            --text-light: #6B7280;
+            --primary: #10B981;
+            --primary-light: #D1FAE5;
+            --warning: #F59E0B;
+            --warning-light: #FEF3C7;
+            --danger: #EF4444;
+            --danger-light: #FEE2E2;
+            --card-bg: #FFFFFF;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main);
+            display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+        }
+
+        .app-container {
+            width: 100%; max-width: 100%; background-color: var(--bg-color);
+            flex-grow: 1; display: flex; flex-direction: column; position: relative; overflow: hidden;
+        }
+
+        header {
+            padding: 20px; background-color: var(--card-bg); flex-shrink: 0; z-index: 10;
+            border-bottom: 1px solid #E5E7EB; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+        .header-sub { font-size: 13px; color: var(--primary); font-weight: 600; }
+
+        .view {
+            display: none; padding: 24px; 
+            flex-grow: 1; overflow-y: auto; animation: fadeIn 0.3s ease;
+            max-width: 1200px; width: 100%; margin: 0 auto; padding-bottom: 100px;
+        }
+
+        .view.active { display: flex; flex-direction: column; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .stat-card { background: var(--card-bg); border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); text-align: center; margin-bottom: 24px; border: 1px solid #E5E7EB; }
+        .stat-block { flex: 1; text-align: center; cursor: pointer; padding: 8px; border-radius: 8px; transition: all 0.2s ease; }
+        .stat-block:hover { background: #F3F4F6; transform: translateY(-2px); }
+        .stat-block:active { transform: scale(0.95); }
+
+        select.lesson-dropdown { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #E5E7EB; font-family: inherit; font-size: 15px; font-weight: 600; margin-bottom: 16px; background-color: #F9FAFB; outline: none; cursor: pointer; color: var(--text-main); }
+
+        .btn-large { background: var(--primary); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); transition: transform 0.1s; }
+        .btn-large:active { transform: scale(0.98); }
+        .btn-large:disabled { background: #9CA3AF; box-shadow: none; cursor: not-allowed; }
+
+        .fc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; width: 100%; }
+        .scene { width: 100%; max-width: 500px; height: 320px; perspective: 1000px; margin: 0 auto 24px; flex-shrink: 0;}
+        .card { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; cursor: pointer; }
+        .card.is-flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px; text-align: center; border: 1px solid #E5E7EB; }
+        .card-back { transform: rotateY(180deg); }
+
+        .jp-text { font-family: 'Noto Sans JP', sans-serif; }
+        .kanji { font-size: 48px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; line-height: 1.2; }
+        .furigana { font-size: 16px; color: var(--text-light); margin-bottom: 8px; }
+        .meaning { font-size: 20px; font-weight: 600; color: var(--text-main); margin-bottom: 16px; }
+        .collocation { font-size: 14px; color: var(--primary); background: var(--primary-light); padding: 8px 16px; border-radius: 8px; font-weight: 600; display: inline-block;}
+
+        .audio-btn { position: absolute; top: 16px; right: 16px; background: #F3F4F6; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .audio-btn:hover { background: #E5E7EB; }
+        .audio-btn svg { width: 20px; height: 20px; fill: var(--text-main); }
+
+        .actions { display: flex; gap: 12px; opacity: 0; pointer-events: none; transition: opacity 0.3s; width: 100%; max-width: 500px; margin: 0 auto; }
+        .actions.show { opacity: 1; pointer-events: auto; }
+        .actions button { flex: 1; padding: 14px 8px; border-radius: 12px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; }
+        .btn-h { background: var(--danger-light); color: var(--danger); }
+        .btn-e { background: var(--primary-light); color: var(--primary); }
+
+        .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; background: #E5E7EB; color: var(--text-light); font-weight: 600; cursor: pointer; }
+        .tab-btn.active { background: var(--text-main); color: white; }
+
+        .word-list { display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px; }
+        .word-item { background: var(--card-bg); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #F3F4F6; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .word-item-main h4 { font-size: 18px; margin-bottom: 4px; }
+        .word-item-main p { font-size: 13px; color: var(--text-light); }
+        .status-badge { font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 600; white-space: nowrap; margin-left: 10px; }
+        .status-new { background: #E5E7EB; color: #4B5563; }
+        .status-learning { background: var(--warning-light); color: var(--warning); }
+        .status-mastered { background: var(--primary-light); color: var(--primary); }
+
+        .quiz-card { background: var(--card-bg); padding: 24px; border-radius: 16px; text-align: center; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); border: 1px solid #E5E7EB; width: 100%; max-width: 600px; margin: 0 auto; }
+        .quiz-question { font-size: 18px; font-weight: 600; margin-bottom: 24px; line-height: 1.5; color: var(--text-main); }
+        .text-primary { color: var(--primary); }
+        .quiz-options { display: flex; flex-direction: column; gap: 12px; }
+        .quiz-btn { padding: 14px; border: 2px solid #E5E7EB; background: white; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', 'Noto Sans JP', sans-serif; text-align: left; padding-left: 20px; color: var(--text-main); }
+        .quiz-btn.correct { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+        .quiz-btn.wrong { background: var(--danger-light); color: var(--danger); border-color: var(--danger); }
+        .quiz-feedback { margin-top: 16px; font-size: 14px; font-weight: 500; min-height: 20px; text-align: left; line-height: 1.4; padding: 12px; background: #F9FAFB; border-radius: 8px; display: none; }
+        .quiz-feedback.show { display: block; }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-bg); border-top: 1px solid #E5E7EB; display: flex; justify-content: space-around; padding: 12px 0 calc(12px + env(safe-area-inset-bottom)); z-index: 20; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-light); text-decoration: none; font-size: 11px; font-weight: 600; cursor: pointer; transition: color 0.2s; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
+
+        .hidden { display: none !important; }
+
+        /* SỬA PHẦN ĐỂ BÀN MÁY TÍNH CHUẨN GRID */
+        @media (min-width: 768px) {
+            body { overflow: hidden; height: 100vh; }
+            .app-container {
+                display: grid;
+                grid-template-columns: 260px 1fr;
+                grid-template-rows: 100px 1fr;
+                height: 100%;
+                flex-grow: 1;
+            }
+            header {
+                grid-column: 1; grid-row: 1;
+                border-bottom: none; border-right: 1px solid #E5E7EB;
+                width: 100%; height: 100%; position: static; background: var(--card-bg);
+            }
+            .bottom-nav {
+                grid-column: 1; grid-row: 2;
+                position: static; height: 100%; width: 100%;
+                flex-direction: column; justify-content: flex-start; gap: 16px; padding: 24px 16px;
+                border-top: none; border-right: 1px solid #E5E7EB; background: var(--card-bg);
+            }
+            .nav-item { flex-direction: row; gap: 12px; width: 100%; padding: 12px 16px; border-radius: 10px; font-size: 14px; }
+            .nav-item:hover { background: #F3F4F6; }
+            .nav-item.active { background: var(--primary-light); color: var(--primary); }
+
+            .view {
+                grid-column: 2; grid-row: 1 / span 2;
+                height: 100%; overflow-y: auto; padding: 40px; padding-bottom: 60px;
+            }
+            #view-dashboard.view.active { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-content: center; }
+            #view-dashboard .stat-card { margin-bottom: 0; height: fit-content; }
+            .word-list { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+            #view-library .tabs, #view-library select.lesson-dropdown { grid-column: span 2; }
+            .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+            .quiz-card { max-width: 800px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="header-title" id="header-title">Trang chủ</div>
+            <div class="header-sub">Hệ thống Luyện thi N4 Toàn diện</div>
+        </header>
+
+        <main id="view-dashboard" class="view active">
+            <div class="stat-card" style="padding: 20px;">
+                <h3 style="margin-bottom: 16px; font-size: 16px; text-align: left; color: var(--text-main);">Tiến độ tổng quan</h3>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                    <div class="stat-block" onclick="startLearning('mastered')" title="Học lại từ đã thuộc">
+                        <div style="font-size: 22px; font-weight: 700; color: var(--primary);" id="ov-mastered">0</div>
+                        <div style="font-size: 11px; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-top: 4px;">Đã thuộc</div>
+                    </div>
+                    <div style="width: 1px; background: #E5E7EB; margin: 10px 0;"></div>
+                    <div class="stat-block" onclick="startLearning('learning')" title="Ôn các từ đang học">
+                        <div style="font-size: 22px; font-weight: 700; color: var(--warning);" id="ov-learning">0</div>
+                        <div style="font-size: 11px; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-top: 4px;">Cần ôn tập</div>
+                    </div>
+                    <div style="width: 1px; background: #E5E7EB; margin: 10px 0;"></div>
+                    <div class="stat-block" onclick="startLearning('new')" title="Học từ mới">
+                        <div style="font-size: 22px; font-weight: 700; color: #9CA3AF;" id="ov-new">0</div>
+                        <div style="font-size: 11px; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-top: 4px;">Chưa học</div>
+                    </div>
+                </div>
+                <div style="width: 100%; background-color: #F3F4F6; height: 10px; border-radius: 5px; overflow: hidden; display: flex; margin-bottom: 8px;">
+                    <div id="ov-bar-mastered" style="height: 100%; background-color: var(--primary); width: 0%; transition: width 0.5s ease;"></div>
+                    <div id="ov-bar-learning" style="height: 100%; background-color: var(--warning); width: 0%; transition: width 0.5s ease;"></div>
+                </div>
+                <div style="font-size: 13px; color: var(--text-light); display: flex; justify-content: space-between;">
+                    <span>Hoàn thành: <strong id="ov-pct-text" style="color: var(--primary);">0%</strong></span>
+                    <span>Tổng: <strong id="ov-total">0</strong> từ</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <h3 style="margin-bottom: 16px; font-size: 16px; text-align: left;">Học từ vựng theo bài</h3>
+                <select id="dash-lesson-select" class="lesson-dropdown" onchange="updateDashboardStats()"></select>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px; background: #F9FAFB; padding: 12px; border-radius: 8px;">
+                    <span>Số lượng: <strong id="dash-total">0</strong> từ</span>
+                    <span style="color: var(--primary)">Đã thuộc: <strong id="dash-mastered">0</strong></span>
+                </div>
+                <button class="btn-large" id="btn-start-learn" onclick="startLearning()">Bắt đầu học tất cả</button>
+            </div>
+        </main>
+
+        <main id="view-flashcard" class="view">
+            <div class="fc-header">
+                <span style="font-size: 14px; font-weight: 600; color: var(--text-light);" id="fc-counter">0 / 0</span>
+                <button onclick="switchView('dashboard')" style="background:none;border:none;color:var(--text-light);font-weight:600;cursor:pointer;">Đóng ✕</button>
+            </div>
+            <div class="scene">
+                <div class="card" id="flashcard" onclick="flipCard()">
+                    <div class="card-face">
+                        <button class="audio-btn" onclick="playAudio(event)"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
+                        <div class="jp-text kanji" id="fc-kanji">...</div>
+                        <div style="font-size: 13px; color: #9CA3AF;">Chạm thẻ để xem nghĩa</div>
+                    </div>
+                    <div class="card-face card-back">
+                        <button class="audio-btn" onclick="playAudio(event)"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
+                        <div class="jp-text furigana" id="fc-furigana">...</div>
+                        <div class="meaning" id="fc-meaning">...</div>
+                        <div class="jp-text collocation" id="fc-collocation">...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="actions" id="fc-actions">
+                <button class="btn-h" onclick="gradeCard('learning')">Chưa thuộc<br><small>Học lại</small></button>
+                <button class="btn-e" onclick="gradeCard('mastered')">Đã thuộc<br><small>Bỏ qua</small></button>
+            </div>
+            <div id="fc-done" class="hidden stat-card" style="margin-top: 20px; width:100%; max-width:500px; margin-left:auto; margin-right:auto;">
+                <h3 style="color: var(--primary); margin-bottom: 10px;">🎉 Hoàn thành!</h3>
+                <p style="color: var(--text-light); font-size: 14px;">Bạn đã ôn xong danh sách này.</p>
+                <button class="btn-large" style="margin-top: 20px;" onclick="switchView('dashboard')">Về trang chủ</button>
+            </div>
+        </main>
+
+        <main id="view-library" class="view">
+            <select id="lib-lesson-select" class="lesson-dropdown" onchange="filterLibrary()"></select>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="setLibTab('all', this)">Tất cả</button>
+                <button class="tab-btn" onclick="setLibTab('learning', this)">Đang học</button>
+                <button class="tab-btn" onclick="setLibTab('mastered', this)">Đã thuộc</button>
+            </div>
+            <div class="word-list" id="library-list"></div>
+        </main>
+
+        <main id="view-quiz" class="view">
+            <div id="quiz-intro" class="stat-card" style="width:100%; max-width:600px; margin:0 auto;">
+                <h3 style="margin-bottom: 16px; font-size: 18px;">Luyện Tập Bài Tập</h3>
+                <select id="quiz-lesson-select" class="lesson-dropdown"></select>
+                <button class="btn-large" onclick="generateAndStartQuiz()">Tạo đề & Bắt đầu</button>
+            </div>
+
+            <div id="quiz-content" class="quiz-card hidden">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 13px; font-weight: 600; color: var(--text-light);">
+                    <span id="quiz-lesson-label">Bài X</span>
+                    <span id="quiz-counter">Câu 1/20</span>
+                </div>
+                <div class="jp-text quiz-question" id="quiz-q">...</div>
+                
+                <div class="quiz-options" id="quiz-opts"></div>
+                <div class="quiz-feedback" id="quiz-fb"></div>
+                <button id="quiz-next" class="btn-large hidden" style="margin-top: 16px;" onclick="loadNextQuiz()">Câu tiếp theo ➔</button>
+            </div>
+
+            <div id="quiz-done" class="stat-card hidden" style="width:100%; max-width:600px; margin:0 auto;">
+                <h3 style="color: var(--primary); margin-bottom: 10px; font-size: 24px;">🎉 Hoàn thành!</h3>
+                <p style="color: var(--text-light); font-size: 14px; margin-bottom: 10px;">Kết quả bài thi của bạn:</p>
+                <p id="quiz-score" style="font-size: 32px; font-weight: 800; color: var(--text-main); margin-bottom: 24px;"></p>
+                <button class="btn-large" onclick="switchView('quiz')">Làm đề khác</button>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchView('dashboard', this)">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg><span>Học từ</span>
+            </div>
+            <div class="nav-item" onclick="switchView('library', this)">
+                <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z" /></svg><span>Thư viện</span>
+            </div>
+            <div class="nav-item" onclick="switchView('quiz', this)">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg><span>Bài test</span>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+    const rawCSVDataPart1 = `26|さがします|探します|Tìm kiếm|鍵を探します
+26|やります|-|Làm, tổ chức|パーティーをやります
+26|みます|見ます|Xem|映画を見ます
+26|みます|診ます|Khám bệnh|医者に診てもらいます
+26|おくれます|遅れます|Trễ, muộn|時間に遅れます
+26|まにあいます|間に合います|Kịp giờ|電車に間に合います
+26|ひろいます|拾います|Nhặt|財布を拾います
+26|れんらくします|連絡します|Liên lạc|会社に連絡します
+26|ぼんおどり|盆踊り|Múa Obon|盆踊りに参加します
+26|フリーマーケット|-|Chợ trời|フリーマーケットに行きます
+26|きぶんがいい|気分がいい|Thấy khỏe|今日は気分がいいです
+26|きぶんがわるい|気分 gầy|Không khỏe|気分が悪いです
+26|うんどうkai|運動会|Hội thao|運動会があります
+26|さいふ|財布|Ví|財布を落としました
+26|ばしょ|場所|Địa điểm|約束の場所
+26|ボランティア|-|Tình nguyện viên|ボランティアをします
+26|かたづきます|片づきます|Được dọn dẹp|荷物が片付きます
+26|ごみ|-|Rác|ごみを捨てます
+26|đあします|出します|Đổ (rác)|ごみを出します
+26|もえます|燃えます|Cháy được|燃えるごみ
+26|おきば|置き場|Chỗ để|自転車の置き場
+26|びん|瓶|Chai|ビールの瓶
+26|かん|缶|Lon|ビールの缶
+26|かいしゃ|会社|Công ty|会社に勤めます
+26|ガス|-|Gas|ガスを使います
+26|ちょくせつ|直接|Trực tiếp|直接話します
+27|かいます|飼います|Nuôi|犬を飼います
+27|たてます|建てます|Xây dựng|家を建てます
+27|はしります|走ります|Chạy bộ|道を走ります
+27|みえます|見えます|Có thể thấy|山が見えます
+27|きこえます|聞こえます|Có thể nghe|声が聞こえます
+27|できます|-|Được xây lên|空港ができます
+27|ひらきます|開きます|Mở (lớp)|教室を開きます
+27|しんぱい|心配|Lo lắng|心配しないで
+27|ペット|-|Thú cưng|ペットを飼u
+27|とり|鳥|Chim|鳥が飛ぶ
+27|こえ|声|Giọng nói|大きい声
+27|なみ|波|Sóng|波が高い
+27|はなび|花火|Pháo hoa|花火を見る
+27|いえ|家|Nhà|家へ帰る
+27|キッチン|-|Bếp|キッチンで料理する
+27|どうぐ|道具|Dụng cụ|便利な道具
+27|ほんだな|本棚|Giá sách|本棚に本を置きます
+27|すばらしい|素晴らしい|Tuyệt vời|素晴らしい景色
+27|クリーニング|-|Tiệm giặt ủi|クリーニングに出す
+27|マンション|-|Chung cư|マンションに住む
+27|かぐ|家具|Đồ gỗ gia dụng|家具を買う
+27|パーティールーム|-|Phòng tiệc|パーティールームを借りる
+27|はっきり|-|Rõ ràng|はっきり見える
+27|いつか|-|Ngày nào đó|いつか日本へ行きたい
+27|きょうしつ|教室|Lớp học|日本語の教室
+27|かた|方|Vị, người|あの方
+27|ご|後|Sau|３日後
+27|しかない|-|Chỉ (phủ định)|sơ sài
+28|うれます|売れます|Bán chạy|パンが売れます
+28|おどります|踊ります|Nhảy, múa|音楽に合わせて踊ります
+28|かみます|噛みます|Nhai, Cắn|よく噛んで食べる
+28|えらびます|選びます|Chọn|プレゼントを選びます
+28|かよいます|通います|Đi (làm/học)|大学に通います
+28|メモします|-|Ghi chú|ノートにメモします
+28|だいどころ|台所|Bếp|台所で料理します
+28|まじめ|真面目|Chăm chỉ, nghiêm túc|真面目な学生
+28|ねっしん|熱心|Nhiệt tình|熱心に勉強します
+28|にんき|人気|Sự hâm mộ|人気がある
+28|えらい|偉い|Vĩ đại, giỏi|偉い人
+28|ちょうどいい|丁度いい|Vừa vặn|サイズが丁度いい
+28|ちから|力|Sức lực|力が強い
+28|かたち|形|Hình dáng|きれいな形
+28|いろ|色|Màu sắc|好きな色
+28|あじ|味|Hương vị|美味しい味
+28|ガム|-|Kẹo cao su|ガムを噛む
+28|しなもの|品物|Hàng hoá|品物を買う
+28|ねだん|値段|Giá cả|値段が高い
+28|きゅうりょう|給料|Tiền lương|給料をもらう
+28|ボーナス|-|Tiền thưởng|ボーナスが出る
+28|ばんぐみ|番組|Chương trình tivi|テレビの番組
+28|しょうせつ|小説|Tiểu thuyết|小説を読む
+28|しょうせつか|小説家|Nhà văn|有名な小説家
+28|かしゅ|歌手|Ca sĩ|好きな歌手
+28|ドラマ|-|Phim truyền hình|ドラマを見る
+29|あきます|開きます|(Cửa) mở|ドアが開きます
+29|しまります|閉まります|(Cửa) đóng|ドアが閉まります
+29|つきます|付きます|(Điện) bật|電気が付きます
+29|きえます|消えます|(Điện) tắt|電気が消えます
+29|とりかえます|取り替えます|Đổi|新しいのに取り替えます
+29|ふきます|吹きます|Lau|机を吹きます
+29|おれます|折れます|(Cành) gãy|木が折れます
+29|やぶれます|破れます|(Giấy) rách|紙が破れます
+29|はずれます|外れます|Bung, tuột|ボタンが外れます
+29|とまります|止まります|(Ô tô) dừng|車が止まります
+29|こわれます|壊れます|(Ghế) hỏng|パソコンが壊れます
+29|われます|割れます|(Cốc) vỡ|コップが割れます
+29|よごれます|汚れます|Bẩn (quần áo)|服が汚れます
+29|つきます|付きます|Đính, gắn (túi)|ポケットが付きます
+29|まちがえます|間違えます|Nhầm|答えを間違えます
+29|おとします|落tới|Đánh rơi|財布を落とします
+29|かかります|掛かります|Khoá|鍵が掛かります
+29|おさら|お皿|Đĩa|お皿を洗う
+29|おちゃわん|お茶碗|Bát|お茶碗を割る
+29|コップ|-|Cốc|コップに水を入れる
+29|ガラス|-|Thuỷ tinh|ガラスが割れる
+29|ふくろ|袋|Túi|袋に入れる
+29|さいふ|財布|Ví|財布を忘れる
+29|えだ|枝|Cành|枝が折れる
+30|はります|貼ります|Dán|ポスターを貼ります
+30|かけます|掛けます|Treo|カレンダーを掛けます
+30|かざります|飾ります|Trang trí|花を飾ります
+30|nらべます|並べます|Xếp|本を並べます
+30|うえます|植えます|Trồng|木を植えます
+30|もどします|戻します|Trả về|本を戻します
+30|そのままにします|-|Để nguyên|そのままにしておきます
+30|しまいます|-|Cất|鞄にしまいます
+30|まとめます|纏めます|Thu gọn/Tổng hợp|荷物をまとめます
+30|きめます|決めます|Quyết định|旅行の日uを決めます
+30|せいかつします|生活します|Sinh hoạt|日本で生活します
+30|よしゅうします|予習します|Chuẩn bị bài|漢字を予習します
+30|ふくしゅうします|復習します|Ôn bài|文法を復習します
+30|おしらせ|お知らせ|Thông báo|お知らせを読む
+30|じゅぎょう|授業|Tiết học|授業が始まる
+30|こうぎ|講義|Tiết giảng|大学の講義
+30|よてい|予定|Kế hoạch|休みの予定
+30|ごみばこ|ゴミ箱|Thùng rác|ごみ箱に捨てる
+30|にんぎょう|人形|Búp bê|フランスの人形
+30|かびん|花瓶|Bình hoa|花瓶に花を入れる
+30|かがみ|鏡|Kính/Gương|鏡を見る
+30|ひきだし|引き出し|Ngăn kéo|引き出しに入れる
+30|げんかん|玄関|Thềm trước cửa|玄関で靴を脱ぐ
+30|ろうか|廊下|Hành lang|廊下を走る
+30|かべ|壁|Tường|壁に絵を掛ける
+31|もうしこみます|申し込みます|Đăng ký|試験を申し込みます
+31|つづけます|続けます|Tiếp tục|仕事を続けます
+31|みつけます|見つけます|Tìm thấy|鍵を見つけます
+31|しけんuうけます|試験を受けます|Tham gia thi|大学の試験を受けます
+31|やすみをとります|休みを取ります|Xin nghỉ|会社に休みを取ります
+31|きゅうけいします|休憩します|Giải lao|ちょっと休憩します
+31|れんきゅう|連休|Nghỉ dài ngày|来週は連休です
+31|さくぶん|作文|Bài văn|作文を書きます
+31|てんらんkai|展覧会|Hội triển lãm|展覧会に行きます
+31|けっこんしき|結婚式|Lễ cưới|結婚式に参加します
+31|お葬式|お葬式|Lễ tang|お葬式に出ます
+31|ほんしゃ|本社|Trụ sở chính|東京に本社があります
+31|してん|支店|Chi nhánh|ハノイ支店
+31|きょうkai|教会|Nhà thờ|教会で祈ります
+31|だいがくいん|大学院|Trường cao học|大学院に進学します
+31|どうぶつえん|動物園|Sở thú|動物園にパンダがいます
+31|おんせん|温泉|Suối nước nóng|温泉に入ります
+31|はっぴょう|発表|Phát biểu|研究を発表します
+31|nこります|残ります|Xót lại|料理が残ります
+31|かえり|帰り|Đường về|帰りに買います
+31|おこさん|お子さん|Con người khác|お子さんは元気ですか
+31|ごう|号|Số hiệu|２０１号室
+31|にゅうがくしけん|入学試験|Kì thi đầu vào|入学試験に合格します
+32|うんどうします|運動します|Vận động|毎日運動します
+32|せいこうします|成功します|Thành công|実験に成功します
+32|しっぱいします|失敗します|Thất bại|試験に失敗します
+32|ごうかくします|合格します|Đỗ|大学に合格します
+32|ひやします|冷やします|Làm lạnh|ビールを冷やします
+32|やみます|-|Tạnh|雨が止みます
+32|はれます|晴れます|Nắng|明日は晴れます
+32|くもります|曇ります|Mây|空が曇ります
+32|すきます|-|Vắng|道が空きます
+32|こみます|-|Đông|道が込みます
+32|むりをします|無理をします|Quá sức|無理をしないでください
+32|つづきます|続きます|Kéo dài|熱が続きます
+32|ひきます|-|Cảm|風邪を引きます
+32|deます|出ます|Tham gia|試合に出ます
+32|せんせい|先生|Bác sĩ|先生に診てもらいます
+32|じゅうぶん|十分|Đủ|時間は十分あります
+32|おかしい|可笑しい|Có vấn đề|おかしい話
+32|うるさい|-|Ồn|うるさい音
+32|やけど|火傷|Bỏng|火傷をします
+32|けが|怪我|Bị thương|怪wを治します
+32|せきがdeます|咳が出ます|Ho|風邪で咳が出ます
+32|インフルエンザ|-|Cúm|インフルエンザに注意
+32|ほし|星|Sao|星が綺麗です
+32|そら|空|Bầu trời|青い空
+32|たいよう|太陽|Mặt trời|太陽が昇ります
+33|にげます|逃げます|Chạy, trốn|犯人が逃げます
+33|さわぎます|騒ぎます|Làm ồn|教室で騒ぎます
+33|あきらめます|諦めます|Từ bỏ|夢を諦めます
+33|nげます|投げます|Ném|ボールを投げます
+33|まもります|守ります|Tuân thủ/Bảo vệ|約束を守ります
+33|moどります|戻ります|Trở lại|席に戻ります
+33|つたえます|伝えます|Truyền đạt|伝言を伝えます
+33|ちゅういします|注意します|Chú ý|車に注意します
+33|はずします|外します|Rời (ghế)|席を外します
+33|せき|席|Ghế|席に座ります
+33|おなじ|同じ|Giống|同じ服
+33|しめきり|締め切り|Hạn cuối|レポートの締め切り
+33|たちいりきんし|立入禁止|Cấm vào|ここは立入禁止です
+33|いりぐち|入口|Cửa vào|入口で待ちます
+33|deぐch|出口|Cửa ra|出口はあちらです
+33|ひじょうぐち|非常口|Cửa thoát hiểm|非常口を確認します
+33|きそく|規則|Quy tắc|寮の規則
+33|きけん|危険|Nguy hiểm|危険な場所
+33|しよchゅう|使用中|Đang sử dụng|トイレは使用中です
+33|ちゅうしゃいはん|駐車違反|Đỗ xe sai|駐車違反で捕まります
+33|むりょう|無料|Miễn phí|入場は無料です
+33|けいさつ|警察|Cảnh sát|警察を呼びます
+33|わりびき|割引|Giảm giá|Campgiảm giá
+34|はをみがきます|歯を磨きます|Đánh răng|毎朝歯を磨きます
+34|くつみがきます|靴を磨きます|Đánh giày|出かける前に靴を磨きます
+34|くみたてます|組み立てます|Lắp ráp|ベッドを組み立てます
+34|おります|折ります|Gấp/bẻ|紙を折ります
+34|きがつきまs|気が付きます|Nhận ra|忘れ物に気が付きます
+34|つけます|つけます|Chấm|醤油をつけます
+34|みつかります|見つかります|Được tìm thấy|鍵が見つかります
+34|さします|差します|Che (ô)|傘を差します
+34|しつもんします|質問します|Hỏi|先生に質問します
+34|おしろ|お城|Toà thành|大阪のお城
+34|おきゃく|お客|Khách|お客さんが来ます
+34|にがい|苦い|Đắng|苦い薬
+34|スポーツクラブ|-|CLB thể thao|スポーツクラブに通います
+34|ざいりょう|材料|Nguyên liệu|料理の材料
+34|たまねぎ|玉ねぎ|Hành tây|玉ねぎを切ります
+34|ちょうみりょう|調味料|Gia vị|調味料を入れる
+34|せつめいしょ|說明書|Sách hướng dẫn|説明書を読みます
+34|ず|図|Sơ đồ|図を見ます
+34|やじるし|矢印|Dấu mũi tên|矢印の通りに行きます
+34|せん|線|Đường kẻ|線を引きます
+34|しろ|白|Màu trắng|白いシャツ
+34|あか|赤|Màu đỏ|赤い車
+34|くろ|黒|Màu đen|黒い靴
+34|きいろ|黄色|Màu vàng|黄色い花
+34|ちゃいろ|茶色|Màu nâu|茶色い鞄
+35|さきます|咲きます|Nở|桜が咲きます
+35|かわります|変わります|Đổi|色が変ります
+35|こまります|困ります|Khó khăn, rắc rối|お金がなくて困ります
+35|つけます|付けます|Khoanh (tròn)|丸を付けます
+35|nおします|治ります|Khỏi (bệnh)|病気が治ります
+35|nおします|直ります|Được sửa|時計が直ります
+35|クリックします|-|Click|右クリックします
+35|にゅうりょくします|入力します|Nhập vào|パスワードを入力します
+35|ただしい|正しい|Chính xác|正しい答え
+35|しま|島|Đảo|美しい島
+35|みなと|港|Cảng|港に船があります
+35|むこう|向こう|Phía kia|向こうに見えます
+35|やまのぼり|山登り|Leo núi|山登りに行きます
+35|カーテン|-|Rèm|カーテンを開けます
+35|ひmo|-|Dây|ひmoで結びます
+35|きんじょ|近所|Hàng xóm, lân cận|近所の人
+35|おくじょう|屋上|Sân thượng|屋上に上がります
+35|は|葉|Lá|木の葉
+35|やこうバス|夜行バス|Xe bus đêm|夜行バスで帰ります
+35|りょこうしゃ|旅行社|Công ty du lịch|旅行社に電話します
+35|くわしい|詳しい|Chi tiết|詳しい説明
+35|スキーじょう|スキー場|Khu trượt tuyết|スキー場へ行きます
+35|kaiがい|海外|Nước ngoài|海外旅行
+35|れきし|歴史|Lịch sử|日本の歴史
+35|きkai|機会|Cơ hội|いい機会
+36|しゅうかん|習慣|Thói quen|良い習慣
+36|うんどう|運動|Vận động, tập thể dục|毎日運動します
+36|むri|無理|Quá sức, vô lý|無理uをしないで
+36|えいよう|栄養|Dinh dưỡng|栄養がある食事
+36|ふとります|太ります|Béo lên|最近太ります
+36|やせます|痩せます|Gầy đi|ダイエットして痩せます
+36|つづく|続く|Tiếp tục|雨が続きます
+36|めずらしい|珍しい|Hiếm, quý|珍しい切手
+36|せいこう|成功|Thành công|実験が成功します
+36|가んばります|頑張ります|Cố gắng|試験を頑張ります
+36|ちゃんと|-|Cẩn thận, đàng hoàng|ちゃんと食べます
+36|deきるだけ|出来るだけ|Cố gắng hết sức có thể|出来るだけ早く
+36|ほとんど|殆ど|Hầu như|ほとんど終わりました
+36|かならず|必ず|Nhất định, chắc chắn|必ず行きます
+36|たいてい|大抵|Thường thường|大抵家にいます
+36|すいみん|睡眠|Giấc ngủ|睡眠をとります
+36|きゅうけい|休憩|Nghỉ giải lao|base休憩します
+36|まいにち|毎日|Mỗi ngày|毎日勉強します
+36|じかん|時間|Thời gian|時間がありません
+36|つかれます|疲れます|Mệt mỏi|仕事で疲れ ます
+36|しけん|試験|Kỳ thi|試験に合格します
+36|うかりまs|受かります|Đỗ (kỳ thi)|大学に受かります
+36|かんがえます|考えます|Suy nghĩ|よく考えます
+36|つけます|付けます|Bật|エアコンを付けます
+37|ほめます|褒めます|Khen|子供を褒めます
+37|しかります|叱ります|Mắng|生徒を叱ります
+37|さそいます|誘います|Rủ|友達を誘います
+37|おこないます|行います|Tổ chức|会議を行います
+37|shょうたいします|招待します|Mời|結婚式に招待します
+37|たのみます|頼みます|Nhờ|仕事を頼みます
+37|ちゅういします|注意します|Chú ý|先生に注意されます
+37|とります|取ります|Trộm|財布を取られます
+37|ふみます|踏みます|Dẫm|足を踏まれます
+37|こわします|壊します|Phá|おもちゃを壊します
+37|よごします|汚します|Làm bẩn|服を汚します
+37|ほんやくします|翻訳します|Biên dịch|本を翻訳します
+37|ゆしゅつします|輸出します|Xuất khẩu|車を輸出します
+37|ゆにゅうします|輸入します|Nhập khẩu|肉を輸入します
+37|はっけんします|発見します|Phát hiện|新しい星を発見します
+37|はつめいします|発明します|Phát minh|電話を発明します
+37|インスタントラーメン|-|Mì ăn liền|インスタントラーメンを食べる
+37|せkaiじゅう|世界中|Toàn thế giới|世界中を旅行します
+37|こめ|米|Gạo|米を作ります
+37|むぎ|麦|Lúa mạch|麦を育てます
+37|せきゆ|石油|Dầu mỏ|石油を輸入します
+37|げんryょう|原料|Nguyên liệu|ビールの原料
+37|デート|-|Hẹn hò|彼氏とデートします
+37|どろぼう|泥棒|Trộm|泥棒が入ります
+37|けいかん|警官|Cảnh sát|警官に道を尋ねます`;
+const rawCSVDataPart2 = `38|そだてます|育てます|Nuôi dưỡng, chăm|花を育てます
+38|はこびます|運びます|Vận chuyển|荷物を運びます
+38|さんかします|参加します|Tham gia (phỏng vấn)|面接に参加します
+38|nゅういんします|入院します|Nhập viện|病院に入院します
+38|たいいんします|退院します|Ra viện|来週退院します
+38|deんげんကိုいれます|電源を入れます|Cắm (điện)|パソコンの電源を入れます
+38|deんげんをきります|電源を切ります|Ngắt (điện)|テレビの電源を切ります
+38|かぎをかけます|鍵を掛けます|Khoá|ドアの鍵を掛けます
+38|きもちがいい|気持ちがいい|Cảm thấy dễ chịu|風が気持ちがいい
+38|きもちがわるい|気持ちが悪い|Cảm thấy khó chịu|乗り物酔いで気持ちが悪い
+38|あかちゃん|赤ちゃん|Em bé|赤ちゃんが泣きます
+38|しょうがっこう|小学校|Tiểu học|小学校に入ります
+38|ちゅう가っこう|中学校|Trung học|中学校ကို卒業します
+38|えきまえ|駅前|Nhà ga|駅前で待ち合わせします
+38|かいがん|海岸|Bờ biển|海岸を散歩します
+38|うそをつきます|嘘をつきます|Nói dối|嘘をつかないde
+38|かいらん|回覧|Tệp báo cáo|回覧を読みます
+38|せい|製|Sản xuất từ|日本製のカメラ
+38|せいriします|整理します|Sắp xếp|資料を整理します
+38|ゆびわ|指輪|Nhẫn|指輪をプレゼントします
+38|はんこ|判子|Đóng dấu|判子を押します
+38|おおきna|大きな|To|大きな声
+39|こたえます|答えます|Trả lời|質問に答えます
+39|たおれます|倒れます|(Nhà) đổ|台風で木が倒れます
+39|あんしんします|安心します|An tâm|試験が終わって安心します
+39|ふtoります|太ります|Béo|最近太りました
+39|やせます|痩せます|Giảm cân|運動して痩せます
+39|toおります|通ります|Qua (đường)|道を通ります
+39|しにます|死にます|Chết|犬が死にます
+39|びっくりします|-|Giật mình|大きな音にびっくりします
+39|가っかりします|-|Thất vọng|試合に負けてがっかりします
+39|かたい|硬い|Cứng|硬いパン
+39|やわらかい|軟らかい|Mềm|軟らかい肉
+39|しゅしょう|首相|Thủ tướng|日本の首相
+39|けんかします|喧嘩します|Cãi nhau|兄弟と喧嘩します
+39|りこんします|離婚します|Ly hôn|妻と離婚します
+39|ふくざつ|複雑|Phức tạp|複雑な問題
+39|じゃま|邪魔|Vướng|荷物が邪魔です
+39|きたない|汚い|Bẩn|汚い部屋
+39|うれしい|嬉しい|Vui|プレゼントをもらって嬉しい
+39|かなしい|悲しい|Đau buồn|悲しいニュース
+39|はずかしい|恥ずかしい|Ngại ngùng|恥ずかしい失敗
+39|じしん|地震|Động đất|地震が起きます
+39|taiふう|台風|Bão|台風が来ます
+39|かじ|火事|Hỏa hoạn|火事が起きます
+39|じこ|事故|Tai nạn|交通事故
+39|つなみ|津波|Sóng thần|津波の危険
+40|かぞえます|数えます|Đếm|人数uを数えます
+40|はかります|測ります|Cân, đo|体重を測ります
+40|たしかめます|確かめます|Xác nhận|時間を確かめます
+40|あいます|合います|Vừa (cỡ)|サイズが合います
+40|しゅっぱつします|出発します|Xuất phát|バスが出発します
+40|とうちゃくします|到着します|Đến|駅に到着します
+40|よいます|酔います|Say|お酒に酔います
+40|うまくいきます|-|Thuận lợi|仕事がうまくいきます
+40|ひつよう|必要|Cần thiết|ビザが必要です
+40|そうだんします|相談します|Thảo luận|先生に相談します
+40|deます|出ます|Có (đề)|テストに出ます
+40|ぼうねんkai|忘年会|Tiệc cuối năm|忘年会に参加します
+40|しんねんkai|新年会|Tiệc đầu năm|新年会を開きます
+40|にじkai|二次会|Tăng 2|二次会へ行きます
+40|tai kai|大会|Đại hội|スポーツの大会
+40|コンテスト|-|Cuộc thi|スピーチコンテスト
+40|おmoて|面|Mặt phải|紙の表
+40|うら|裏|Mặt sau|コインの裏
+40|はっぴょうkai|発表会|Hội hùng biện|発表会に出ます
+40|マラソン|-|Chạy marathon|マラソンを走ります
+40|ズボン|-|Quần|ズボンを履きます
+40|きず|傷|Vết xước|携帯に傷がつきます
+40|テスト|-|Kiểm tra|日本語のテスト
+40|せいせき|成績|Thành tích|成績がいい
+40|としより|年寄り|Người già|お年寄리를大切にします
+40|まちがい|間違い|Sai sót|間違いを直します
+41|やります|-|Cho (người dưới, động vật)|犬に餌をやります
+41|くださいます|-|Tặng (người trên tặng)|先生が本をくださいます
+41|いただきます|-|Nhận (từ người trên)|社長から時計をいただきます
+41|しんせつします|新設します|Đối xử tốt|人に親切にします
+41|おいわい|お祝い|Quà mừng|結婚のお祝い
+41|おみmai|お見舞i|Thăm người ốm|病院へお見舞いに行きます
+41|かわいい|可愛い|Đáng yêu|可愛い犬
+41|さる|猿|Khỉ|動物園の猿
+41|えさ|餌|Đồ ăn cho động vật|犬の餌
+41|おもちゃ|-|Đồ chơi|子供のおもちゃ
+41|えほん|絵本|Sách tranh|絵本を読みます
+41|えはがき|絵はがき|Bưu ảnh|絵はがきを送ります
+41|ハンカチ|-|Khăn tay|ハンカチで拭きます
+41|くつした|靴下|Tất, vớ|靴下を履きます
+41|てぶくろ|手袋|Găng tay|手袋をします
+41|めずらしい|珍しい|Hiếm|珍しい花
+41|おとしだま|お年玉|Tiền mừng tuổi|お年玉をもらいます
+41|そふ|祖父|Ông|私の祖父
+41|そbo|祖母|Bà|私の祖母
+41|まご|孫|Cháu|可愛い孫
+41|かんりにん|管理人|Quản lý|マンションの管理人
+41|たすけます|助けます|Giúp, cứu|人を助けます
+41|あげます|上げます|Nâng, tăng|温度を上げます
+41|さげます|下げます|Hạ, giảm|値段を下げます
+42|つつめます|包めます|Bọc|プレゼントを包みます
+42|わかします|沸かします|Đun|お湯を沸かします
+42|まぜます|混ぜます|Trộn, khuấy|砂糖を混ぜます
+42|けいさんします|計算します|Tính toán|お金を計算します
+42|nらびます|並びます|Xếp hàng|列に並びます
+42|じょうbu|丈夫|Bền|丈夫な鞄
+42|べんごし|弁護士|Luật sư|弁護士に相談します
+42|おんがくか|音楽家|Nhạc sĩ|有名な音楽家
+42|ぶんか|文化|Văn hoá|日本の文化
+42|せんそう|戦争|Chiến tranh|戦争が起きます
+42|へいわ|平和|Hoà bình|平和な世界
+42|ミキサー|-|Máy xay|ミキサーでジュースを作ります
+42|やかん|-|Ấm|やかんでお湯を沸かす
+42|せんnうき|栓抜き|Cái mở nắp|栓抜きでビールを開ける
+42|かんきり|缶切り|Cái mở hộp|缶切りを使う
+42|かんづめ|缶詰|Đồ hộp|魚の缶詰
+42|taiおんけい|体温計|Nhiệt kế|体温計で熱を測る
+42|ざいりょう|材料|Nguyên liệu|ケーキの材料
+42|こどもたち|子供たち|Trẻ em|子供たちが遊びます
+42|しぜん|自然|Tự nhiên|自然が豊かです
+42|きょういく|教育|Giáo dục|子供の教育
+42|しゃkai|社会|Xã hội|社会のルール
+42|せいじ|政治|Chính trị|政治のニュース
+42|ほうりつ|法律|Pháp luật|法律を守ります
+42|moくてき|目的|Mục đích|旅行の目的
+43|ふえます|増えます|Tăng|人口が増えます
+43|へります|減ります|Giảm|体重が減ります
+43|あがります|上がります|Tăng lên|値段が上がります
+43|さがります|下がります|Giảm xuống|給料が下がります
+43|きれます|-|Đứt/Hết|ひmoが切れます
+43|とれます|-|Bung/Tuột (cúc)|ボタンが取れます
+43|おちます|落ちます|Rơi|荷物が落ちます
+43|なくなります|無くなります|Mất|ガソリンが無くなります
+43|らく|楽|Thoải mái|楽な仕事
+43|へん|変|Lạ|変な音
+43|しあわせ|幸せ|Hạnh phúc|幸せな家族
+43|うmai|-|Ngon (nam)/Giỏi|うまい料理
+43|まずい|不味い|Dở|このパンはまずい
+43|つまらない|-|Nhàm chán|つまらない映画
+43|ガソリン|-|Xăng|ガソリンを入れます
+43|ひ|火|Lửa|火に気をつけます
+43|パンフレット|-|Tờ rơi/Tài liệu|旅行のパンフレット
+43|いまにmo|今にも|Sắp|今にも雨が降りそうです
+44|nきます|泣きます|Khóc|赤ちゃんが泣きます
+44|わらいます|笑います|Cười|大きい声で笑います
+44|かわきます|乾きます|Khô (quần áo)|服が乾きます
+44|nれます|-|Ướt (quần áo)|雨で濡れます
+44|すべります|滑ります|Trượt|雪で滑ります
+44|おきます|起きます|Xảy ra (tai nạn)|事故が起きます
+44|ちょうせつします|調節します|Điều chỉnh|温度を調節します
+44|きけん|危険|Nguy hiểm|危険な場所
+44|あんぜん|安全|An toàn|安全な車
+44|あつい|厚い|Dày|厚い本
+44|ほそい|細い|Mỏng|細い道
+44|こい|濃い|Đậm|味が濃い
+44|うすい|薄i|Nhạt|味が薄い
+44|ふとい|太い|Dày, to, béo|太i足
+44|くうき|空気|Không khí|空気がきれいです
+44|nみだ|涙|Nước mắt|涙が出ます
+44|わしょく|和食|Đồ ăn Nhật|和食が好きです
+44|おかず|-|Món ăn|ご飯のおかず
+44|ようしょく|洋食|Đồ ăn Tây|洋食を食べます
+44|りょう|量|Lượng|量が多い
+44|ばい|倍|Lần|２倍になります
+44|シングル|-|Phòng đơn|シングルルーム
+44|ツイン|-|Phòng đôi|ツインルーム
+44|せんたくmo|洗濯物|Đồ giặt|洗濯物を干します
+44|ショート|-|Kiểu ngắn|ショートヘア
+44|カット|-|Cắt|髪をカットします
+45|キャンセルします|-|Huỷ bỏ|予約をキャンセルします
+45|しんじます|信じます|Tin tưởng|話を信じます
+45|しらせます|知らせます|Thông báo|みんなに知らせます
+45|りょうしゅうしょ|領収書|Hoá đơn|領収書をください
+45|ほしょうしょ|保証書|Phiếu bảo hành|パソコンの保証書
+45|キャンプ|-|Trại|キャンプに行きます
+45|chゅうし|中止|Dừng/Huỷ|試合が中止になります
+45|かかりいん|係員|Nhân viên|係員に聞きます
+45|コース|-|Đường chạy/khoá|マラソンのコース
+45|スタート|-|Bắt đầu|ゲームがスタートします
+45|い|位|Vị trí (thứ mấy)|１位になります
+45|ゆうしょうします|優勝します|Chiến thắng|大会で優勝します
+45|てん|点|Điểm|100点を取ります
+45|うめ|梅|Hoa mơ|梅の花が咲きます
+45|いじょうdeす|以上です|Xin hết|ニュースは以上です
+45|たのしみにしています|楽しみにしています|Mong đợi|旅行を楽しみにしています
+45|むりに|無理に|Cố, gắng|無理に働きます
+45|きゅうに|急に|Gấp, đột nhiên|急に雨が降ります
+45|110ばん|110番|Số cảnh sát|110番に電話します
+45|119ばん|119番|Số cứu hoả, cấp cứu|119番に連絡します
+46|やきます|焼きます|Rán, nướng|肉を焼きます
+46|やけます|焼けます|Được nướng, rán|パンが焼けます
+46|わたします|渡します|Đưa|書類を渡します
+46|deます|出ます|(Xe buýt) xuất phát|バスが出ます
+46|toどきます|届きます|(Hàng) được chuyển đến|荷物が届きます
+46|たくはいびん|宅配便|Chuyển phát|宅配便で送ります
+46|ガスレンジ|-|Bếp ga|ガスレンジを使います
+46|かえってきます|帰ってきます|Trở về|国へ帰ってきます
+46|にゅう가くします|入学します|Nhập học|大学に入学します
+46|そつぎょうします|卒業します|Tốt nghiệp|高校を卒業します
+46|おまたせしました|お待たせしました|Đã khiến đợi|お待たせしました
+46|げんいん|原因|Nguyên nhân|事故の原因
+46|むかいます|向かいます|Hướng tới|駅へ向かいます
+46|るす|留守|Vắng nhà|留守にします
+46|たったいま|たった今|Vừa mới xong|たった今帰りました
+46|ちょうど|丁度|Đúng lúc|ちょうどいい時間
+46|どちらさまでしょうか|どちら様でしょうか|Ai vậy?|どちら様でしょうか
+46|mうしわけありません|申し訳ありません|Xin lỗi|申し訳ありません
+46|はんとし|半年|Nửa năm|半年日本にいます
+46|ぐあい|具合|Tình trạng|体の具合が悪いです
+46|いまいいdeすか|今いいですか|Bây giờ được không?|今いいですか
+47|あつまります|集まります|Tập hợp|人が集まります
+47|わかれます|別れます|Chia tay|恋人と別れます
+47|ふきます|吹きます|(Gió) thổi|風が吹きます
+47|おとがします|音がします|Nghe thấy tiếng|変な音がします
+47|あじ가します|味がします|Cảm thấy vị|甘い味がします
+47|においがします|匂いがします|Ngửi thấy mùi|いい匂いがします
+47|moえます|燃えます|Cháy được|家が燃えます
+47|なくなります|亡くなります|Mất|社長が亡くなります
+47|こわい|怖い|Sợ|怖い映画
+47|ひどい|酷い|Kinh khủng|ひどい雨
+47|きびしい|厳しい|Nghiêm khắc|厳しい先生
+47|じっけん|実験|Thực nghiệm|科学の実験
+47|じnこう|人口|Dân số|ベトナムの人口
+47|データ|-|Dữ liệu|パソコンのデータ
+47|パトカー|-|Xe cảnh sát|パトカーが来ます
+47|きゅうきゅうしゃ|救急車|Xe cứu thương|救急車を呼びます
+47|sanせい|賛成|Tán thành|意見に賛成します
+47|はんtai|反対|Phản đối|計画に反対します
+47|こいびと|恋人|Người yêu|恋人とデートします
+47|こnやくします|婚約します|Đính hôn|彼女と婚約します
+47|あいて|相手|Đối phương|結婚の相手
+47|가학|科学|Khoa học|科学の勉強
+47|いがく|医学|Y học|医学を研究します
+47|ぶんがく|文学|Văn học|日本の文学
+47|だいとうりょう|大統領|Tổng thống|アメリカの大統領
+48|おろします|降ろします|Hạ xuống|荷物を降ろします
+48|とどけます|届けます|Gửi hàng|手紙を届けます
+48|せわをします|世話をします|Chăm sóc|Subの世話をします
+48|ろくおんします|録音します|Ghi âm|声を録音します
+48|いや|嫌|Chán ghét|嫌な仕事
+48|じゅく|塾|Cơ sở học thêm|塾に通います
+48|ファイル|-|File tài liệu|書類のファイル
+48|せいto|生徒|Học sinh|学校の生徒
+48|たのしみます|楽しみます|Vui, tận hưởng|音楽を楽しみます
+48|えいぎょう|営業|Kinh doanh, bán|営業の仕事
+48|かまいません|-|Không sao|ここでタバコを吸ってもかまいません
+48|それまでに|-|Trước đó|それまでに終わります
+48|いいことdeすね|-|Được nhỉ|それはいいことですね
+48|かん|間|Khoảng|3年間に
+48|じゆうに|自由に|Tự do|自由に使います
+49|つとめます|勤めます|Làm việc (công ty)|会社に勤めます
+49|すごします|過ごします|Trải qua|楽しく過ごします
+49|りyouします|利用します|Sử dụng|地下鉄を利用します
+49|りょかん|旅館|Khách sạn (kiểu Nhật)|旅館に泊まります
+49|バスてい|バス停|Trạm xe buýt|バス停で待ちます
+49|かけます|-|Ngồi (ghế)|椅子に掛けます
+49|いらっしゃいます|-|Có, đi, đến (Kính)|先生がいらっしゃいます
+49|おっしゃいます|-|Nói (Kính)|社長がおっしゃいます
+49|なさいます|-|Làm (Kính)|何をなさいますか
+49|ごらんになります|ご覧になります|Nhìn, xem (Kính)|パンフレットをご覧になりますか
+49|めしあがります|召し上がります|Ăn, uống (Kính)|どうぞ召し上がってください
+49|ごぞんじdeす|ご存知です|Biết (Kính)|先生をご存知ですか
+49|さま|様|Ngài|田中様
+49|おくさま|奥様|Vợ (người khác)|社長の奥様
+49|あいさつ|挨拶|Chào hỏi|挨拶をします
+49|ねつをだします|熱を 出します|Bị sốt|子供が熱を出します
+49|yろよろしくおつたえください|よろしくお伝え下さい|Gửi lời hỏi thăm|奥様によろしくお伝えください
+49|といいます|と言います|Gọi là|ハノイと言います
+49|どなたde mｏ|-|Vị nào đi nữa|どなたでも参加できます
+49|たまに|-|Thi thoảng|たまに映画を見ます
+50|かないます|叶います|Thành hiện thực|夢が叶います
+50|まいります|参ります|Đến (Khiêm)|明日参ります
+50|きんちょうします|緊張します|Căng thẳng|面接で緊張します
+50|いただきます|-|Ăn/uống/nhận (Khiêm)|お茶をいただきます
+50|mうします|申します|Nói/gọi (Khiêm)|山田と申します
+50|ぞんじます|存じます|Biết (Khiêm)|その件は存じております
+50|うかがいます|伺います|Đến/hỏi/nghe (Khiêm)|先生のお宅へ伺います
+50|よういします|用意します|Chuẩn bị|食事を用意します
+50|わたくし|私|Tôi (Khiêm tốn)|わたくしが担当します
+50|おります|-|Có/ở (Khiêm)|私はハノイにおります
+50|いたします|致します|Làm (Khiêm)|ご案内いたします
+50|はいkenします|拝見します|Nhìn/xem (Khiêm)|資料を拝見します
+50|おめにかかります|お目にかかります|Gặp (Khiêm)|明日お目にかかります
+50|コーヒーをいれます|コーヒーを入れます|Pha cà phê|コーヒーを入れます
+50|キリン|-|Hươu cao cổ|動物園のキリン
+50|ガイド|-|Hướng dẫn viên|旅行のガイド
+50|メールアドレス|-|Địa chỉ email|メールアドレスを教える
+50|スケジュール|-|Lịch trình|スケジュールを確認する
+50|shょうきん|賞金|Tiền thưởng|賞金をもらう
+50|おうえんします|応援します|Cổ vũ/hỗ trợ|チームを応援します`;
+
+    const fullCSVData = rawCSVDataPart1 + "\n" + rawCSVDataPart2;
+
+    let vocabData = [];
+    fullCSVData.split('\n').forEach((line, index) => {
+        let parts = line.split('|');
+        if(parts.length >= 4) {
+            vocabData.push({
+                id: index,
+                lesson: parts[0],
+                kana: parts[1],
+                kanji: parts[2] !== '-' ? parts[2] : parts[1],
+                meaning: parts[3],
+                collocation: parts[4] || '', 
+                status: 'new'
+            });
+        }
+    });
+
+    let currentQuizList = [];
+    let currentQuizIndex = 0;
+    let quizScore = 0;
+
+    function shuffleArray(array) {
+        let curId = array.length;
+        while (0 !== curId) {
+            let randId = Math.floor(Math.random() * curId);
+            curId -= 1;
+            let tmp = array[curId];
+            array[curId] = array[randId];
+            array[randId] = tmp;
+        }
+        return array;
+    }
+
+    function saveLocalProgress() {
+        const progress = {};
+        vocabData.forEach(w => {
+            if (w.status !== 'new') progress[w.id] = w.status;
+        });
+        localStorage.setItem('sk_vocab_n4_progress', JSON.stringify(progress));
+    }
+
+    function loadLocalProgress() {
+        const saved = localStorage.getItem('sk_vocab_n4_progress');
+        if (saved) {
+            try {
+                const progress = JSON.parse(saved);
+                vocabData.forEach(w => {
+                    if (progress[w.id]) w.status = progress[w.id];
+                });
+            } catch(e) { console.error("Lỗi đọc tiến độ:", e); }
+        }
+    }
+
+    function generateQuizList(lesson) {
+        let generated = [];
+        let sourceWords = lesson === 'all' ? vocabData : vocabData.filter(v => v.lesson == lesson);
+        sourceWords = shuffleArray([...sourceWords]);
+
+        for(let i = 0; i < sourceWords.length; i++) {
+            if(generated.length >= 20) break;
+            
+            let word = sourceWords[i];
+            let q = {};
+            let wrongWords = shuffleArray(vocabData.filter(v => v.id !== word.id)).slice(0, 3);
+
+            q.q = `<span class="text-primary font-bold" style="letter-spacing:-2px;">________</span> : ${word.meaning}`;
+            q.hint = `(Hãy chọn từ vựng tiếng Nhật có nghĩa trên)`;
+            q.exp = `Từ 「${word.kanji}」 (${word.kana}) có nghĩa là "${word.meaning}".`;
+            q.correctStr = word.kanji;
+
+            let options = [word.kanji, ...wrongWords.map(w => w.kanji)];
+            options = [...new Set(options)]; 
+            while(options.length < 4) { 
+                options.push(shuffleArray(vocabData)[0].kanji);
+                options = [...new Set(options)];
+            }
+            options = shuffleArray(options.slice(0, 4));
+
+            q.opts = options;
+            q.correct = options.indexOf(q.correctStr);
+            generated.push(q);
+        }
+        return generated;
+    }
+
+    let studyQueue = [];
+    let currentStudyIndex = 0;
+    let isFlipped = false;
+    let libCurrentTab = 'all';
+
+    function initApp() {
+        loadLocalProgress();
+        
+        const lessons = [...new Set(vocabData.map(w => Number(w.lesson)))].sort((a, b) => a - b);
+        const dashSelect = document.getElementById('dash-lesson-select');
+        const libSelect = document.getElementById('lib-lesson-select');
+        const quizSelect = document.getElementById('quiz-lesson-select');
+
+        let allOpts = `<option value="all">Tất cả (Bài 26 - 50)</option>`;
+        dashSelect.innerHTML = allOpts;
+        libSelect.innerHTML = allOpts;
+        quizSelect.innerHTML = allOpts;
+
+        lessons.forEach(l => {
+            let label = `Bài ${l}`;
+            dashSelect.innerHTML += `<option value="${l}">${label}</option>`;
+            libSelect.innerHTML += `<option value="${l}">${label}</option>`;
+            quizSelect.innerHTML += `<option value="${l}">${label}</option>`;
+        });
+
+        updateDashboardStats();
+    }
+
+    function switchView(viewId, navElement = null) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(`view-${viewId}`).classList.add('active');
+        document.getElementById(`view-${viewId}`).scrollTop = 0;
+
+        if(navElement) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            navElement.classList.add('active');
+        } else {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const navItems = document.querySelectorAll('.nav-item');
+            if(viewId === 'dashboard') navItems[0].classList.add('active');
+            if(viewId === 'library') navItems[1].classList.add('active');
+            if(viewId === 'quiz') navItems[2].classList.add('active');
+        }
+        
+        if(viewId === 'dashboard') updateDashboardStats();
+        if(viewId === 'library') filterLibrary();
+        if(viewId === 'quiz') {
+            document.getElementById('quiz-intro').classList.remove('hidden');
+            document.getElementById('quiz-content').classList.add('hidden');
+            document.getElementById('quiz-done').classList.add('hidden');
+        }
+    }
+
+    function updateDashboardStats() {
+        const totalWords = vocabData.length;
+        const masteredWords = vocabData.filter(w => w.status === 'mastered').length;
+        const learningWords = vocabData.filter(w => w.status === 'learning').length;
+        const newWords = vocabData.filter(w => w.status === 'new').length;
+
+        document.getElementById('ov-total').innerText = totalWords;
+        document.getElementById('ov-mastered').innerText = masteredWords;
+        document.getElementById('ov-learning').innerText = learningWords;
+        document.getElementById('ov-new').innerText = newWords;
+
+        const masteredPct = totalWords === 0 ? 0 : (masteredWords / totalWords) * 100;
+        const learningPct = totalWords === 0 ? 0 : (learningWords / totalWords) * 100;
+
+        document.getElementById('ov-bar-mastered').style.width = `${masteredPct}%`;
+        document.getElementById('ov-bar-learning').style.width = `${learningPct}%`;
+        document.getElementById('ov-pct-text').innerText = `${Math.round(masteredPct)}%`;
+
+        const selected = document.getElementById('dash-lesson-select').value;
+        const filtered = selected === 'all' ? vocabData : vocabData.filter(w => w.lesson == selected);
+        document.getElementById('dash-total').innerText = filtered.length;
+        document.getElementById('dash-mastered').innerText = filtered.filter(w => w.status === 'mastered').length;
+        document.getElementById('btn-start-learn').disabled = (filtered.length === 0 || filtered.every(w => w.status === 'mastered'));
+    }
+
+    function startLearning(statusFilter = null) {
+        const selected = document.getElementById('dash-lesson-select').value;
+        const filtered = selected === 'all' ? vocabData : vocabData.filter(w => w.lesson == selected);
+        
+        if (statusFilter) {
+            studyQueue = filtered.filter(w => w.status === statusFilter);
+        } else {
+            studyQueue = filtered.filter(w => w.status !== 'mastered');
+        }
+
+        if(studyQueue.length > 0) {
+            currentStudyIndex = 0;
+            switchView('flashcard');
+            document.getElementById('flashcard').style.display = 'block';
+            document.getElementById('fc-done').classList.add('hidden');
+            loadCurrentCard();
+        } else {
+            alert("Không có từ vựng nào trong mục này để học.");
+        }
+    }
+
+    function loadCurrentCard() {
+        if(currentStudyIndex >= studyQueue.length) {
+            document.getElementById('flashcard').style.display = 'none';
+            document.getElementById('fc-actions').classList.remove('show');
+            document.getElementById('fc-done').classList.remove('hidden');
+            updateDashboardStats(); return;
+        }
+        const word = studyQueue[currentStudyIndex];
+        document.getElementById('fc-counter').innerText = `${currentStudyIndex + 1} / ${studyQueue.length}`;
+        document.getElementById('fc-kanji').innerText = word.kanji;
+        document.getElementById('fc-furigana').innerText = word.kana;
+        document.getElementById('fc-meaning').innerText = word.meaning;
+
+        const colEl = document.getElementById('fc-collocation');
+        if (word.collocation) {
+            colEl.innerText = word.collocation;
+            colEl.style.display = 'inline-block';
+        } else {
+            colEl.style.display = 'none';
+        }
+
+        document.getElementById('flashcard').classList.remove('is-flipped');
+        document.getElementById('fc-actions').classList.remove('show');
+        isFlipped = false;
+    }
+
+    function flipCard() {
+        if (isFlipped) return;
+        document.getElementById('flashcard').classList.add('is-flipped');
+        document.getElementById('fc-actions').classList.add('show');
+        isFlipped = true;
+    }
+
+    function gradeCard(status) {
+        event.stopPropagation();
+        studyQueue[currentStudyIndex].status = status; 
+        
+        saveLocalProgress();
+        
+        document.getElementById('flashcard').classList.remove('is-flipped');
+        document.getElementById('fc-actions').classList.remove('show');
+        setTimeout(() => { currentStudyIndex++; loadCurrentCard(); }, 300);
+    }
+
+    function playAudio(e) {
+        e.stopPropagation();
+        if ('speechSynthesis' in window) {
+            const u = new SpeechSynthesisUtterance(isFlipped ? studyQueue[currentStudyIndex].kana : studyQueue[currentStudyIndex].kanji);
+            u.lang = 'ja-JP'; u.rate = 0.8; window.speechSynthesis.speak(u);
+        }
+    }
+
+    function filterLibrary() {
+        const lesson = document.getElementById('lib-lesson-select').value;
+        const list = document.getElementById('library-list');
+        list.innerHTML = '';
+        let filtered = vocabData;
+        if(lesson !== 'all') filtered = filtered.filter(w => w.lesson == lesson);
+        if(libCurrentTab !== 'all') filtered = filtered.filter(w => w.status === libCurrentTab);
+        
+        filtered.forEach(w => {
+            let badge = w.status === 'new' ? 'Chưa học' : (w.status === 'learning' ? 'Đang ôn' : 'Đã thuộc');
+            list.innerHTML += `<div class="word-item"><div class="word-item-main"><h4><span class="jp-text">${w.kanji}</span> <span style="font-size:13px; color:var(--text-light);">(${w.kana})</span></h4><p>${w.meaning} <span style="font-size:11px; color:#9CA3AF;">[Bài ${w.lesson}]</span></p></div><div class="status-badge status-${w.status}">${badge}</div></div>`;
+        });
+    }
+
+    function setLibTab(tabName, btn) {
+        libCurrentTab = tabName;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filterLibrary();
+    }
+
+    function generateAndStartQuiz() {
+        const lesson = document.getElementById('quiz-lesson-select').value;
+        currentQuizList = generateQuizList(lesson);
+        
+        if(currentQuizList.length === 0) return alert("Không có từ vựng nào trong mục này.");
+
+        currentQuizIndex = 0; quizScore = 0;
+        document.getElementById('quiz-lesson-label').innerText = lesson === 'all' ? 'Tất cả bài học' : `Bài ${lesson}`;
+        document.getElementById('quiz-intro').classList.add('hidden');
+        document.getElementById('quiz-content').classList.remove('hidden');
+        document.getElementById('quiz-done').classList.add('hidden');
+        loadQuizCard();
+    }
+
+    function loadQuizCard() {
+        if(currentQuizIndex >= currentQuizList.length) {
+            document.getElementById('quiz-content').classList.add('hidden');
+            document.getElementById('quiz-done').classList.remove('hidden');
+            document.getElementById('quiz-score').innerText = `${quizScore} / ${currentQuizList.length}`;
+            return;
+        }
+        
+        const q = currentQuizList[currentQuizIndex];
+        document.getElementById('quiz-counter').innerText = `Câu ${currentQuizIndex + 1} / ${currentQuizList.length}`;
+        document.getElementById('quiz-q').innerHTML = `${q.q}<br><small style="font-weight:400; color:var(--text-light)">${q.hint}</small>`;
+        document.getElementById('quiz-fb').classList.remove('show');
+        document.getElementById('quiz-next').classList.remove('hidden');
+        
+        const optsContainer = document.getElementById('quiz-opts');
+        optsContainer.innerHTML = '';
+        q.opts.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-btn jp-text'; btn.innerText = opt;
+            btn.onclick = () => handleQuizAnswer(idx, btn, q.correct, q.exp);
+            optsContainer.appendChild(btn);
+        });
+        
+        document.getElementById('view-quiz').scrollTop = 0;
+    }
+
+    function handleQuizAnswer(selectedIdx, btn, correctIdx, exp) {
+        const buttons = document.querySelectorAll('.quiz-btn');
+        buttons.forEach(b => b.disabled = true);
+        const fb = document.getElementById('quiz-fb');
+        
+        if(selectedIdx === correctIdx) {
+            quizScore++; btn.classList.add('correct');
+            fb.innerHTML = `<span style="color:var(--primary); font-weight:700;">✅ Chính xác!</span><br><span style="color:var(--text-main)">${exp}</span>`;
+        } else {
+            btn.classList.add('wrong'); buttons[correctIdx].classList.add('correct');
+            fb.innerHTML = `<span style="color:var(--danger); font-weight:700;">❌ Sai rồi!</span><br><span style="color:var(--text-main)">${exp}</span>`;
+        }
+        fb.classList.add('show');
+        document.getElementById('quiz-next').classList.remove('hidden');
+        
+        setTimeout(() => {
+            const view = document.getElementById('view-quiz');
+            view.scrollTo({ top: view.scrollHeight, behavior: 'smooth' });
+        }, 100);
+    }
+
+    function loadNextQuiz() { currentQuizIndex++; loadQuizCard(); }
+
+    initApp();
+    </script>
+</body>
+</html>
