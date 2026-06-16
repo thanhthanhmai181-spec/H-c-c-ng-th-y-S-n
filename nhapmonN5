@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhập Môn - SONKURO</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        /* Fix for Google Sites iframe height issue */
+        body { margin: 0; padding: 0; height: 100vh; overflow-y: auto; background-color: #f8fafc;}
+        #root { min-height: 100%; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+        // --- DATA STRUCTURE ---
+        const seionData = [
+          { id: 'a',  h: ['あ','い','う','え','お'], k: ['ア','イ','ウ','エ','オ'], r: ['a','i','u','e','o'] },
+          { id: 'ka', h: ['か','き','く','け','こ'], k: ['カ','キ','ク','ケ','コ'], r: ['ka','ki','ku','ke','ko'] },
+          { id: 'sa', h: ['さ','し','す','せ','そ'], k: ['サ','シ','ス','セ','ソ'], r: ['sa','shi','su','se','so'] },
+          { id: 'ta', h: ['た','ち','つ','て','と'], k: ['タ','チ','ツ','テ','ト'], r: ['ta','chi','tsu','te','to'] },
+          { id: 'na', h: ['な','に','ぬ','ね','の'], k: ['ナ','ニ','ヌ','ネ','ノ'], r: ['na','ni','nu','ne','no'] },
+          { id: 'ha', h: ['は','ひ','ふ','へ','ほ'], k: ['ハ','ヒ','フ','ヘ','ホ'], r: ['ha','hi','fu','he','ho'] },
+          { id: 'ma', h: ['ま','み','む','め','も'], k: ['マ','ミ','ム','メ','モ'], r: ['ma','mi','mu','me','mo'] },
+          { id: 'ya', h: ['や',null,'ゆ',null,'よ'], k: ['ヤ',null,'ユ',null,'ヨ'], r: ['ya',null,'yu',null,'yo'] },
+          { id: 'ra', h: ['ら','り','る','れ','ろ'], k: ['ラ','リ','ル','レ','ロ'], r: ['ra','ri','ru','re','ro'] },
+          { id: 'wa', h: ['わ',null,null,null,'を'], k: ['ワ',null,null,null,'ヲ'], r: ['wa',null,null,null,'wo'] },
+          { id: 'n',  h: ['ん',null,null,null,null], k: ['ン',null,null,null,null], r: ['n',null,null,null,null] }
+        ];
+
+        const dakuonData = [
+          { id: 'ga', h: ['が','ぎ','ぐ','げ','ご'], k: ['ガ','ギ','グ','ゲ','ゴ'], r: ['ga','gi','gu','ge','go'] },
+          { id: 'za', h: ['ざ','じ','ず','ぜ','ぞ'], k: ['ザ','ジ','ズ','ゼ','ゾ'], r: ['za','ji','zu','ze','zo'] },
+          { id: 'da', h: ['だ','ぢ','づ','で','ど'], k: ['ダ','ヂ','ヅ','デ','ド'], r: ['da','ji','zu','de','do'] },
+          { id: 'ba', h: ['ば','び','ぶ','べ','ぼ'], k: ['バ','ビ','ブ','ベ','ボ'], r: ['ba','bi','bu','be','bo'] },
+          { id: 'pa', h: ['ぱ','ぴ','ぷ','ぺ','ぽ'], k: ['パ','ピ','プ','ペ','ポ'], r: ['pa','pi','pu','pe','po'] }
+        ];
+
+        const yoonData = [
+          { id:'kya', h:['きゃ','きゅ','きょ'], k:['キャ','キュ','キョ'], r:['kya','kyu','kyo'] },
+          { id:'sha', h:['しゃ','しゅ','しょ'], k:['シャ','シュ','ショ'], r:['sha','shu','sho'] },
+          { id:'cha', h:['ちゃ','ちゅ','ちょ'], k:['チャ','チュ','チョ'], r:['cha','chu','cho'] },
+          { id:'nya', h:['にゃ','にゅ','にょ'], k:['ニャ','ニュ','ニョ'], r:['nya','nyu','nyo'] },
+          { id:'hya', h:['ひゃ','ひゅ','ひょ'], k:['ヒャ','ヒュ','ヒョ'], r:['hya','hyu','hyo'] },
+          { id:'mya', h:['みゃ','みゅ','みょ'], k:['ミャ','ミュ','ミョ'], r:['mya','myu','myo'] },
+          { id:'rya', h:['りゃ','りゅ','りょ'], k:['リャ','リュ','りょ'], r:['rya','ryu','ryo'] },
+          { id:'gya', h:['ぎゃ','ぎゅ','ぎょ'], k:['ギャ','ギュ','ギョ'], r:['gya','gyu','gyo'] },
+          { id:'ja',  h:['じゃ','じゅ','じょ'], k:['ジャ','ジュ','ジョ'], r:['ja','ju','jo'] },
+          { id:'bya', h:['びゃ','びゅ','びょ'], k:['ビャ','ビュ','ビョ'], r:['bya','byu','byo'] },
+          { id:'pya', h:['ぴゃ','ぴゅ','ぴょ'], k:['ピャ','ピュ','ピョ'], r:['pya','pyu','pyo'] }
+        ];
+
+        const flatKanaList = [];
+        [seionData, dakuonData, yoonData].forEach(dataSet => {
+          dataSet.forEach(row => row.r.forEach((romaji, index) => {
+            if (romaji) flatKanaList.push({ h: row.h[index], k: row.k[index], r: romaji });
+          }));
+        });
+
+        const DrawingPad = ({ char }) => {
+          const canvasRef = useRef(null);
+          const [isDrawing, setIsDrawing] = useState(false);
+
+          useEffect(() => { clearCanvas(); }, [char]);
+
+          const clearCanvas = () => {
+            const canvas = canvasRef.current;
+            if (canvas) {
+              const ctx = canvas.getContext('2d');
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+          };
+
+          const getCoordinates = (e) => {
+            const canvas = canvasRef.current;
+            const rect = canvas.getBoundingClientRect();
+            if (e.touches && e.touches.length > 0) {
+              return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+            }
+            return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+          };
+
+          const startDrawing = (e) => {
+            e.preventDefault();
+            const { x, y } = getCoordinates(e);
+            const ctx = canvasRef.current.getContext('2d');
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            setIsDrawing(true);
+          };
+
+          const draw = (e) => {
+            e.preventDefault();
+            if (!isDrawing) return;
+            const { x, y } = getCoordinates(e);
+            const ctx = canvasRef.current.getContext('2d');
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = '#ef4444'; 
+            ctx.lineWidth = 14;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+          };
+
+          const stopDrawing = () => {
+            if (isDrawing) {
+              const ctx = canvasRef.current.getContext('2d');
+              ctx.closePath();
+              setIsDrawing(false);
+            }
+          };
+
+          const bgFontSize = char && char.length > 1 ? '130px' : '200px';
+
+          return (
+            <div className="relative w-full aspect-square max-w-[280px] mx-auto bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl overflow-hidden touch-none flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center text-slate-200 select-none pointer-events-none" style={{ fontSize: bgFontSize, fontFamily: '"Yu Mincho", "MS Mincho", serif', lineHeight: 1 }}>
+                {char}
+              </div>
+              <canvas
+                ref={canvasRef} width={280} height={280}
+                onMouseDown={startDrawing} onMouseMove={draw} onMouseUp={stopDrawing} onMouseLeave={stopDrawing}
+                onTouchStart={startDrawing} onTouchMove={draw} onTouchEnd={stopDrawing}
+                className="absolute inset-0 z-10 w-full h-full cursor-crosshair"
+              />
+              <button onClick={clearCanvas} className="absolute bottom-3 right-3 z-20 p-3 bg-white text-slate-500 rounded-full shadow-md hover:text-red-500 transition-colors" title="Xóa để viết lại">
+                <i className="fas fa-undo text-base"></i>
+              </button>
+            </div>
+          );
+        };
+
+        function App() {
+          const [activeMainTab, setActiveMainTab] = useState('hiragana');
+          const [pendingTab, setPendingTab] = useState(null); 
+          
+          // Học
+          const [readSubTab, setReadSubTab] = useState('seion');
+          const [showRomaji, setShowRomaji] = useState(true);
+
+          // Luyện Viết
+          const [writeKanaTab, setWriteKanaTab] = useState('hiragana');
+          const [writeSubTab, setWriteSubTab] = useState('seion');
+          const [selectedWriteChar, setSelectedWriteChar] = useState(null);
+
+          // Luyện Tập (Quiz)
+          const [quizConfig, setQuizConfig] = useState({ hiragana: true, katakana: false, seion: true, dakuon: false, yoon: false });
+          const [currentQuestion, setCurrentQuestion] = useState(null);
+          const [options, setOptions] = useState([]);
+          const [score, setScore] = useState(0);
+          const [totalAttempted, setTotalAttempted] = useState(0);
+          const [selectedAnswer, setSelectedAnswer] = useState(null);
+
+          // Thẻ Ghi Nhớ (Flashcard)
+          const [flashcardConfig, setFlashcardConfig] = useState({ hiragana: true, katakana: false, seion: true, dakuon: false, yoon: false });
+          const [flashcardPool, setFlashcardPool] = useState([]);
+          const [currentCardIndex, setCurrentCardIndex] = useState(0);
+          const [isFlipped, setIsFlipped] = useState(false);
+
+          // Kiểm Tra
+          const [examConfig, setExamConfig] = useState({ hiragana: true, katakana: true, seion: true, dakuon: true, yoon: true });
+          const [examState, setExamState] = useState({ isRunning: false, questions: [], currentIndex: 0, score: 0, answersLog: [] });
+          const [examSelectedAnswer, setExamSelectedAnswer] = useState(null);
+
+          // Lịch sử
+          const [testHistory, setTestHistory] = useState([]);
+
+          const playAudio = (text) => {
+            if ('speechSynthesis' in window) {
+              window.speechSynthesis.cancel();
+              const utterance = new SpeechSynthesisUtterance(text);
+              utterance.lang = 'ja-JP';
+              utterance.rate = 0.85; 
+              window.speechSynthesis.speak(utterance);
+            }
+          };
+
+          const getQuizPool = useCallback((config) => {
+            const pool = [];
+            const addData = (dataSet, charType) => {
+              dataSet.forEach(row => {
+                row.r.forEach((romaji, index) => {
+                  if (romaji) {
+                    if (config.hiragana && row.h[index]) pool.push({ char: row.h[index], r: romaji, kanaType: 'hiragana', charType });
+                    if (config.katakana && row.k[index]) pool.push({ char: row.k[index], r: romaji, kanaType: 'katakana', charType });
+                  }
+                });
+              });
+            };
+            if (config.seion) addData(seionData, 'seion');
+            if (config.dakuon) addData(dakuonData, 'dakuon');
+            if (config.yoon) addData(yoonData, 'yoon');
+            return pool;
+          }, []);
+
+          useEffect(() => {
+            if (activeMainTab === 'flashcard') {
+              const pool = getQuizPool(flashcardConfig);
+              setFlashcardPool(pool);
+              setCurrentCardIndex(0);
+              setIsFlipped(false);
+            }
+          }, [activeMainTab, flashcardConfig, getQuizPool]);
+
+          const handleFlashcardToggleConfig = (key) => {
+            setFlashcardConfig(prev => {
+              const next = { ...prev, [key]: !prev[key] };
+              if (!next.hiragana && !next.katakana) next.hiragana = true;
+              if (!next.seion && !next.dakuon && !next.yoon) next.seion = true;
+              return next;
+            });
+          };
+
+          const nextFlashcard = () => {
+            if (flashcardPool.length === 0) return;
+            setIsFlipped(false);
+            setTimeout(() => {
+              setCurrentCardIndex(prev => (prev + 1) % flashcardPool.length);
+            }, 150);
+          };
+
+          const prevFlashcard = () => {
+            if (flashcardPool.length === 0) return;
+            setIsFlipped(false);
+            setTimeout(() => {
+              setCurrentCardIndex(prev => (prev - 1 + flashcardPool.length) % flashcardPool.length);
+            }, 150);
+          };
+
+          const shuffleFlashcards = () => {
+            if (flashcardPool.length === 0) return;
+            setIsFlipped(false);
+            setTimeout(() => {
+              setFlashcardPool(prev => [...prev].sort(() => Math.random() - 0.5));
+              setCurrentCardIndex(0);
+            }, 150);
+          };
+
+          const flipCard = () => {
+            const nextFlippedState = !isFlipped;
+            setIsFlipped(nextFlippedState);
+            if (nextFlippedState && flashcardPool[currentCardIndex]) {
+              playAudio(flashcardPool[currentCardIndex].char); 
+            }
+          };
+
+          const loadNextQuizQuestion = useCallback((config) => {
+            const pool = getQuizPool(config);
+            if (pool.length === 0) return;
+
+            const qIndex = Math.floor(Math.random() * pool.length);
+            const question = pool[qIndex];
+            
+            const wrongOptions = new Set();
+            while(wrongOptions.size < 3) {
+              const randRomaji = flatKanaList[Math.floor(Math.random() * flatKanaList.length)].r;
+              if (randRomaji !== question.r) wrongOptions.add(randRomaji);
+            }
+            
+            const allOptions = [...wrongOptions, question.r].sort(() => Math.random() - 0.5);
+            setCurrentQuestion(question);
+            setOptions(allOptions);
+            setSelectedAnswer(null);
+          }, [getQuizPool]);
+
+          useEffect(() => {
+            if (activeMainTab === 'quiz') {
+              loadNextQuizQuestion(quizConfig);
+              setScore(0);
+              setTotalAttempted(0);
+            }
+          }, [activeMainTab, quizConfig, loadNextQuizQuestion]);
+
+          const handleToggleConfig = (key, isExam = false) => {
+            if (!isExam && selectedAnswer !== null) return; 
+            const setConfig = isExam ? setExamConfig : setQuizConfig;
+            setConfig(prev => {
+              const next = { ...prev, [key]: !prev[key] };
+              if (!next.hiragana && !next.katakana) next.hiragana = true;
+              if (!next.seion && !next.dakuon && !next.yoon) next.seion = true;
+              return next;
+            });
+          };
+
+          const handleQuizAnswer = (ans) => {
+            if (selectedAnswer) return;
+            setSelectedAnswer(ans);
+            if (ans === currentQuestion.r) {
+              setScore(s => s + 1);
+              playAudio(currentQuestion.char);
+            }
+            setTotalAttempted(t => t + 1);
+            setTimeout(() => loadNextQuizQuestion(quizConfig), 1200);
+          };
+
+          const EXAM_TOTAL_QUESTIONS = 20;
+
+          const startExam = () => {
+            const pool = getQuizPool(examConfig);
+            if (pool.length < 5) return; 
+
+            const shuffledPool = [...pool].sort(() => Math.random() - 0.5);
+            const selectedQuestions = shuffledPool.slice(0, Math.min(EXAM_TOTAL_QUESTIONS, pool.length));
+
+            const questionsWithOptions = selectedQuestions.map(q => {
+              const wrongOptions = new Set();
+              while(wrongOptions.size < 3) {
+                const randRomaji = flatKanaList[Math.floor(Math.random() * flatKanaList.length)].r;
+                if (randRomaji !== q.r) wrongOptions.add(randRomaji);
+              }
+              return { ...q, options: [...wrongOptions, q.r].sort(() => Math.random() - 0.5) };
+            });
+
+            setExamState({ isRunning: true, questions: questionsWithOptions, currentIndex: 0, score: 0, answersLog: [] });
+            setExamSelectedAnswer(null);
+          };
+
+          const handleExamAnswer = (ans) => {
+            if (examSelectedAnswer) return;
+            setExamSelectedAnswer(ans);
+            
+            const currentQ = examState.questions[examState.currentIndex];
+            const isCorrect = ans === currentQ.r;
+            
+            if (isCorrect) playAudio(currentQ.char);
+
+            const newScore = examState.score + (isCorrect ? 1 : 0);
+            const newLog = [...examState.answersLog, { ...currentQ, isCorrect }];
+
+            setTimeout(() => {
+              if (examState.currentIndex + 1 < examState.questions.length) {
+                setExamState(prev => ({ ...prev, currentIndex: prev.currentIndex + 1, score: newScore, answersLog: newLog }));
+                setExamSelectedAnswer(null);
+              } else {
+                finishExam(newScore, examState.questions.length, newLog);
+              }
+            }, 1000);
+          };
+
+          const finishExam = (finalScore, totalQs, finalLog) => {
+            const percentage = Math.round((finalScore / totalQs) * 100);
+            const newRecord = {
+              id: Date.now(),
+              date: new Date().toLocaleDateString('vi-VN') + ' ' + new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}),
+              score: finalScore,
+              total: totalQs,
+              percentage: percentage,
+              details: finalLog 
+            };
+            
+            setTestHistory(prev => [newRecord, ...prev]);
+            setExamState({ isRunning: false, questions: [], currentIndex: 0, score: 0, answersLog: [] });
+            setExamSelectedAnswer(null);
+            setActiveMainTab('dashboard');
+          };
+
+          const confirmExitExam = () => {
+            setExamState(prev => ({...prev, isRunning: false}));
+            setActiveMainTab(pendingTab);
+            setPendingTab(null);
+          };
+
+          const masteryStats = useMemo(() => {
+            const stats = {
+              hiragana: { correct: 0, total: 0 },
+              katakana: { correct: 0, total: 0 },
+              seion: { correct: 0, total: 0 },
+              dakuon: { correct: 0, total: 0 },
+              yoon: { correct: 0, total: 0 }
+            };
+
+            testHistory.forEach(test => {
+              test.details.forEach(ans => {
+                stats[ans.kanaType].total += 1;
+                if (ans.isCorrect) stats[ans.kanaType].correct += 1;
+                stats[ans.charType].total += 1;
+                if (ans.isCorrect) stats[ans.charType].correct += 1;
+              });
+            });
+
+            const getPercent = (stat) => stat.total === 0 ? 0 : Math.round((stat.correct / stat.total) * 100);
+
+            return {
+              hiragana: { ...stats.hiragana, percent: getPercent(stats.hiragana) },
+              katakana: { ...stats.katakana, percent: getPercent(stats.katakana) },
+              seion: { ...stats.seion, percent: getPercent(stats.seion) },
+              dakuon: { ...stats.dakuon, percent: getPercent(stats.dakuon) },
+              yoon: { ...stats.yoon, percent: getPercent(stats.yoon) }
+            };
+          }, [testHistory]);
+
+          const getAdvice = (percent) => {
+            if(percent >= 90) return "Tuyệt vời! Sensei rất tự hào. Bạn đã nắm cực kỳ vững mặt chữ. Hãy tự tin tiến tới các bài học ngữ pháp nhé!";
+            if(percent >= 70) return "Khá tốt! Bạn đã thuộc phần lớn bảng chữ. Cố gắng luyện viết thêm những chữ bị nhầm để đạt độ hoàn hảo nhé.";
+            if(percent >= 50) return "Bạn đang tiến bộ, nhưng vẫn còn nhầm lẫn một số nét. Đừng nản chí, hãy dùng tab Luyện Viết mỗi ngày 15 phút là sẽ ổn thôi!";
+            return "Sensei hiểu học bảng chữ cái khá vất vả ban đầu. Hãy kiên nhẫn chia nhỏ ra học từng hàng chữ, kết hợp luyện viết thường xuyên nhé. Cố lên!";
+          };
+
+          const renderGrid = (data, kanaKey, isYoon, onCardClick, isWritingTab = false) => {
+            const cols = isYoon ? 'grid-cols-3' : 'grid-cols-5';
+            return (
+              <div className="flex flex-col gap-3 max-w-4xl mx-auto w-full">
+                {data.map((row) => (
+                  <div key={row.id} className={`grid ${cols} gap-3`}>
+                    {row.r.map((romaji, idx) => {
+                      const char = row[kanaKey][idx];
+                      if (!char) return <div key={`${row.id}-${idx}`} className="opacity-0"></div>;
+                      return (
+                        <button
+                          key={`${row.id}-${idx}`}
+                          onClick={() => onCardClick(char, romaji)}
+                          className="group relative flex flex-col items-center justify-center p-4 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md hover:border-red-400 hover:bg-red-50 transition-all duration-200 aspect-square"
+                        >
+                          <span className="text-3xl sm:text-4xl font-medium text-slate-800 mb-1 group-hover:text-red-600 transition-colors">
+                            {char}
+                          </span>
+                          <span className={`text-sm font-semibold text-slate-500 transition-opacity duration-300 ${showRomaji ? 'opacity-100' : 'opacity-0'}`}>
+                            {romaji}
+                          </span>
+                          {isWritingTab ? (
+                            <i className="fas fa-pencil-alt absolute top-3 right-3 text-sm text-slate-300 group-hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                          ) : (
+                            <i className="fas fa-volume-up absolute top-3 right-3 text-sm text-slate-300 group-hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            );
+          };
+
+          const renderProgressBar = (label, stat) => {
+            if (stat.total === 0) return null; 
+            const color = stat.percent >= 80 ? 'bg-green-500' : stat.percent >= 50 ? 'bg-yellow-500' : 'bg-red-500';
+            return (
+              <div className="mb-3">
+                <div className="flex justify-between text-xs font-semibold mb-1 text-slate-600">
+                  <span>{label}</span>
+                  <span>{stat.percent}% <span className="text-slate-400 font-normal">({stat.correct}/{stat.total})</span></span>
+                </div>
+                <div className="w-full bg-slate-100 rounded-full h-2">
+                  <div className={`${color} h-2 rounded-full transition-all duration-500`} style={{ width: `${stat.percent}%` }}></div>
+                </div>
+              </div>
+            );
+          };
+
+          return (
+            <div className="min-h-screen bg-slate-50 text-slate-800 font-sans pb-20">
+              <header className="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+                <div className="max-w-6xl mx-auto px-4 py-3">
+                  <div className="flex flex-col xl:flex-row justify-between items-center gap-3">
+                    <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                      <span className="text-red-600 text-2xl">🇯🇵</span> Nhập Môn - SONKURO
+                    </h1>
+                    <div className="flex flex-wrap justify-center bg-slate-100 p-1 rounded-lg gap-1">
+                      {[
+                        { id: 'hiragana', label: 'Hira', icon: null },
+                        { id: 'katakana', label: 'Kata', icon: null },
+                        { id: 'writing', label: 'Viết', icon: <i className="fas fa-pen-nib w-4 h-4 text-center"></i> },
+                        { id: 'flashcard', label: 'Thẻ', icon: <i className="fas fa-layer-group w-4 h-4 text-center"></i> },
+                        { id: 'quiz', label: 'Luyện', icon: <i className="fas fa-undo w-4 h-4 text-center"></i> },
+                        { id: 'exam', label: 'Kiểm Tra', icon: <i className="fas fa-file-alt w-4 h-4 text-center"></i> },
+                        { id: 'dashboard', label: 'Kết Quả', icon: <i className="fas fa-chart-bar w-4 h-4 text-center"></i> }
+                      ].map(tab => (
+                        <button
+                          key={tab.id}
+                          onClick={() => {
+                            if (examState.isRunning && tab.id !== 'exam') {
+                              setPendingTab(tab.id); 
+                            } else {
+                              setActiveMainTab(tab.id);
+                            }
+                          }}
+                          className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium transition-all ${
+                            activeMainTab === tab.id ? 'bg-white text-red-600 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+                          }`}
+                        >
+                          {tab.icon} <span className="hidden sm:inline">{tab.label}</span>
+                          <span className="sm:hidden">{tab.label.substring(0, 4)}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </header>
+
+              <main className="max-w-5xl mx-auto px-4 py-6 sm:py-8">
+                
+                {/* HỌC CHỮ */}
+                {(activeMainTab === 'hiragana' || activeMainTab === 'katakana') && (
+                  <div className="animate-in fade-in duration-300">
+                    <div className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 gap-4">
+                      <div className="flex gap-1 sm:gap-2 bg-white p-1 rounded-full border border-slate-200 shadow-sm w-full sm:w-auto justify-center">
+                        {['seion', 'dakuon', 'yoon'].map((tab) => (
+                          <button
+                            key={tab} onClick={() => setReadSubTab(tab)}
+                            className={`px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors ${readSubTab === tab ? 'bg-slate-800 text-white' : 'text-slate-600 hover:bg-slate-50'}`}
+                          >
+                            {tab === 'seion' ? 'Cơ bản' : tab === 'dakuon' ? 'Âm đục' : 'Âm ghép'}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => setShowRomaji(!showRomaji)}
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 shadow-sm w-full sm:w-auto justify-center"
+                      >
+                        {showRomaji ? <i className="fas fa-eye-slash w-4 h-4 text-center"></i> : <i className="fas fa-eye w-4 h-4 text-center"></i>}
+                        <span>{showRomaji ? 'Ẩn Romaji' : 'Hiện Romaji'}</span>
+                      </button>
+                    </div>
+
+                    {readSubTab === 'seion' && renderGrid(seionData, activeMainTab === 'hiragana' ? 'h' : 'k', false, char => playAudio(char))}
+                    {readSubTab === 'dakuon' && renderGrid(dakuonData, activeMainTab === 'hiragana' ? 'h' : 'k', false, char => playAudio(char))}
+                    {readSubTab === 'yoon' && renderGrid(yoonData, activeMainTab === 'hiragana' ? 'h' : 'k', true, char => playAudio(char))}
+                  </div>
+                )}
+
+                {/* LUYỆN VIẾT */}
+                {activeMainTab === 'writing' && (
+                  <div className="animate-in fade-in duration-300">
+                    <div className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 gap-4">
+                      <div className="flex gap-2 w-full sm:w-auto justify-center">
+                        <button onClick={() => setWriteKanaTab('hiragana')} className={`flex-1 sm:flex-none px-4 py-1.5 rounded-full text-sm font-medium border ${writeKanaTab === 'hiragana' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200'}`}>Hiragana</button>
+                        <button onClick={() => setWriteKanaTab('katakana')} className={`flex-1 sm:flex-none px-4 py-1.5 rounded-full text-sm font-medium border ${writeKanaTab === 'katakana' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200'}`}>Katakana</button>
+                      </div>
+
+                      <div className="flex gap-1 sm:gap-2 bg-white p-1 rounded-full border border-slate-200 shadow-sm w-full sm:w-auto justify-center">
+                        {['seion', 'dakuon', 'yoon'].map((tab) => (
+                          <button
+                            key={tab} onClick={() => setWriteSubTab(tab)}
+                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${writeSubTab === tab ? 'bg-slate-200 text-slate-800' : 'text-slate-500 hover:bg-slate-50'}`}
+                          >
+                            {tab === 'seion' ? 'Cơ bản' : tab === 'dakuon' ? 'Âm đục' : 'Âm ghép'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {writeSubTab === 'seion' && renderGrid(seionData, writeKanaTab === 'hiragana' ? 'h' : 'k', false, (char, r) => { playAudio(char); setSelectedWriteChar({char, r}); }, true)}
+                    {writeSubTab === 'dakuon' && renderGrid(dakuonData, writeKanaTab === 'hiragana' ? 'h' : 'k', false, (char, r) => { playAudio(char); setSelectedWriteChar({char, r}); }, true)}
+                    {writeSubTab === 'yoon' && renderGrid(yoonData, writeKanaTab === 'hiragana' ? 'h' : 'k', true, (char, r) => { playAudio(char); setSelectedWriteChar({char, r}); }, true)}
+                  </div>
+                )}
+
+                {/* THẺ GHI NHỚ (FLASHCARD) */}
+                {activeMainTab === 'flashcard' && (
+                  <div className="max-w-md mx-auto animate-in fade-in zoom-in duration-300">
+                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-6">
+                      <div className="flex items-center gap-2 mb-3 text-sm font-bold text-slate-700">
+                        <i className="fas fa-cog w-4 h-4"></i> Bộ thẻ ghi nhớ:
+                      </div>
+                      <div className="flex flex-wrap gap-x-4 gap-y-2">
+                        <div className="flex gap-3">
+                          <label className="flex items-center gap-1 text-sm cursor-pointer hover:text-red-600">
+                            <input type="checkbox" checked={flashcardConfig.hiragana} onChange={() => handleFlashcardToggleConfig('hiragana')} className="accent-red-500" /> Hira
+                          </label>
+                          <label className="flex items-center gap-1 text-sm cursor-pointer hover:text-red-600">
+                            <input type="checkbox" checked={flashcardConfig.katakana} onChange={() => handleFlashcardToggleConfig('katakana')} className="accent-red-500" /> Kata
+                          </label>
+                        </div>
+                        <div className="w-px h-5 bg-slate-300 hidden sm:block"></div>
+                        <div className="flex gap-3">
+                          <label className="flex items-center gap-1 text-sm cursor-pointer hover:text-red-600">
+                            <input type="checkbox" checked={flashcardConfig.seion} onChange={() => handleFlashcardToggleConfig('seion')} className="accent-red-500" /> Cơ bản
+                          </label>
+                          <label className="flex items-center gap-1 text-sm cursor-pointer hover:text-red-600">
+                            <input type="checkbox" checked={flashcardConfig.dakuon} onChange={() => handleFlashcardToggleConfig('dakuon')} className="accent-red-500" /> Âm đục
+                          </label>
+                          <label className="flex items-center gap-1 text-sm cursor-pointer hover:text-red-600">
+                            <input type="checkbox" checked={flashcardConfig.yoon} onChange={() => handleFlashcardToggleConfig('yoon')} className="accent-red-500" /> Âm ghép
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {flashcardPool.length > 0 ? (
+                      <div className="flex flex-col items-center">
+                        <div 
+                          className="relative w-full aspect-[3/4] max-w-[320px] cursor-pointer perspective-1000"
+                          onClick={flipCard}
+                        >
+                          <div className={`w-full h-full relative transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+                            <div className="absolute w-full h-full backface-hidden bg-white rounded-3xl shadow-lg border border-slate-200 flex flex-col items-center justify-center p-6">
+                               <span className="text-8xl sm:text-9xl font-bold text-slate-800 drop-shadow-sm">
+                                 {flashcardPool[currentCardIndex].char}
+                               </span>
+                               <span className="absolute bottom-6 text-slate-400 text-sm flex items-center gap-1">
+                                 <i className="fas fa-undo text-xs"></i> Chạm để lật
+                               </span>
+                            </div>
+                            <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-red-50 rounded-3xl shadow-lg border border-red-200 flex flex-col items-center justify-center p-6">
+                               <span className="text-6xl sm:text-7xl font-black text-red-600 mb-8 uppercase tracking-widest">
+                                 {flashcardPool[currentCardIndex].r}
+                               </span>
+                               <button 
+                                 onClick={(e) => { e.stopPropagation(); playAudio(flashcardPool[currentCardIndex].char); }}
+                                 className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-full font-bold shadow-md hover:bg-red-700 transition-colors active:scale-95"
+                               >
+                                 <i className="fas fa-volume-up text-xl"></i> Nghe lại
+                               </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between w-full max-w-[320px] mt-8 bg-white p-2 rounded-full shadow-sm border border-slate-200">
+                          <button onClick={prevFlashcard} className="p-3 text-slate-500 hover:text-red-600 hover:bg-slate-100 rounded-full transition-colors">
+                            <i className="fas fa-chevron-left text-xl w-6 h-6 flex items-center justify-center"></i>
+                          </button>
+                          <div className="flex flex-col items-center">
+                            <span className="text-sm font-bold text-slate-700">{currentCardIndex + 1} / {flashcardPool.length}</span>
+                            <button onClick={shuffleFlashcards} className="text-xs text-blue-500 hover:text-blue-700 flex items-center gap-1 mt-1 font-medium">
+                              <i className="fas fa-random text-xs"></i> Trộn thẻ
+                            </button>
+                          </div>
+                          <button onClick={nextFlashcard} className="p-3 text-slate-500 hover:text-red-600 hover:bg-slate-100 rounded-full transition-colors">
+                            <i className="fas fa-chevron-right text-xl w-6 h-6 flex items-center justify-center"></i>
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center p-10 bg-white rounded-2xl border border-slate-200 text-slate-500">
+                        Vui lòng chọn ít nhất 1 mục để tạo thẻ ghi nhớ.
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* LUYỆN TẬP TỰ DO */}
+                {activeMainTab === 'quiz' && (
+                  <div className="max-w-2xl mx-auto animate-in fade-in zoom-in duration-300">
+                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-6">
+                      <div className="flex items-center gap-2 mb-3 text-sm font-bold text-slate-700">
+                        <i className="fas fa-cog w-4 h-4"></i> Phạm vi luyện tập tự do:
+                      </div>
+                      <div className="flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-x-6 sm:gap-y-3">
+                        <div className="flex gap-4">
+                          <label className="flex items-center gap-2 text-sm cursor-pointer hover:text-red-600">
+                            <input type="checkbox" disabled={selectedAnswer !== null} checked={quizConfig.hiragana} onChange={() => handleToggleConfig('hiragana')} className="accent-red-500 w-4 h-4" /> Hiragana
+                          </label>
+                          <label className="flex items-center gap-2 text-sm cursor-pointer hover:text-red-600">
+                            <input type="checkbox" disabled={selectedAnswer !== null} checked={quizConfig.katakana} onChange={() => handleToggleConfig('katakana')} className="accent-red-500 w-4 h-4" /> Katakana
+                          </label>
+                        </div>
+                        <div className="w-px h-5 bg-slate-300 hidden sm:block"></div>
+                        <div className="flex gap-4">
+                          <label className="flex items-center gap-2 text-sm cursor-pointer hover:text-red-600">
+                            <input type="checkbox" disabled={selectedAnswer !== null} checked={quizConfig.seion} onChange={() => handleToggleConfig('seion')} className="accent-red-500 w-4 h-4" /> Cơ bản
+                          </label>
+                          <label className="flex items-center gap-2 text-sm cursor-pointer hover:text-red-600">
+                            <input type="checkbox" disabled={selectedAnswer !== null} checked={quizConfig.dakuon} onChange={() => handleToggleConfig('dakuon')} className="accent-red-500 w-4 h-4" /> Âm đục
+                          </label>
+                          <label className="flex items-center gap-2 text-sm cursor-pointer hover:text-red-600">
+                            <input type="checkbox" disabled={selectedAnswer !== null} checked={quizConfig.yoon} onChange={() => handleToggleConfig('yoon')} className="accent-red-500 w-4 h-4" /> Âm ghép
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {currentQuestion && (
+                      <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 sm:p-10 relative">
+                        <div className="flex flex-col items-center gap-2 mb-6 border-b border-slate-100 pb-4">
+                          <div className="text-sm font-medium text-slate-500 bg-slate-50 px-4 py-1.5 rounded-full border border-slate-200">
+                            Chính xác: <span className="text-green-600 font-bold">{score}</span> / {totalAttempted}
+                          </div>
+                          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider text-center mt-2">Romaji của chữ này là gì?</h2>
+                        </div>
+                        <div className="text-8xl font-bold text-slate-800 mb-8 py-4 text-center drop-shadow-sm">{currentQuestion.char}</div>
+
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                          {options.map((opt, idx) => {
+                            let btnStyle = "bg-slate-50 border-slate-200 hover:border-red-400 hover:bg-red-50 text-slate-700";
+                            let icon = null;
+
+                            if (selectedAnswer !== null) {
+                              if (opt === currentQuestion.r) {
+                                btnStyle = "bg-green-100 border-green-500 text-green-800";
+                                icon = <i className="fas fa-check-circle text-lg absolute right-4"></i>;
+                              } else if (opt === selectedAnswer) {
+                                btnStyle = "bg-red-100 border-red-500 text-red-800";
+                                icon = <i className="fas fa-times-circle text-lg absolute right-4"></i>;
+                              } else {
+                                btnStyle = "bg-slate-50 border-slate-200 text-slate-400 opacity-50";
+                              }
+                            }
+
+                            return (
+                              <button key={idx} onClick={() => handleQuizAnswer(opt)} disabled={selectedAnswer !== null} className={`relative flex items-center justify-center py-4 rounded-xl border-2 text-lg sm:text-xl font-bold transition-all duration-200 ${btnStyle}`}>
+                                {opt} {icon}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* KIỂM TRA */}
+                {activeMainTab === 'exam' && (
+                  <div className="max-w-2xl mx-auto animate-in fade-in zoom-in duration-300">
+                    {!examState.isRunning ? (
+                      <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 sm:p-8 text-center">
+                        <i className="fas fa-award text-6xl text-yellow-500 mx-auto mb-4 block"></i>
+                        <h2 className="text-xl sm:text-2xl font-bold text-slate-800 mb-2">Bài Kiểm Tra Đánh Giá</h2>
+                        <p className="text-sm sm:text-base text-slate-500 mb-6 sm:mb-8">Kiểm tra nghiêm túc {EXAM_TOTAL_QUESTIONS} câu hỏi để xem độ thuần thục của bạn.</p>
+                        
+                        <div className="bg-slate-50 rounded-2xl p-4 sm:p-6 text-left mb-8 border border-slate-100 inline-block w-full sm:w-auto">
+                          <div className="flex flex-col gap-4">
+                            <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 justify-between border-b pb-4">
+                              <span className="font-semibold text-slate-700">Bảng chữ:</span>
+                              <div className="flex gap-4">
+                                <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={examConfig.hiragana} onChange={() => handleToggleConfig('hiragana', true)} className="accent-red-500 w-4 h-4" /> Hiragana</label>
+                                <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={examConfig.katakana} onChange={() => handleToggleConfig('katakana', true)} className="accent-red-500 w-4 h-4" /> Katakana</label>
+                              </div>
+                            </div>
+                            <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 justify-between">
+                              <span className="font-semibold text-slate-700">Phân loại:</span>
+                              <div className="flex flex-wrap sm:flex-col gap-3 sm:gap-2">
+                                <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={examConfig.seion} onChange={() => handleToggleConfig('seion', true)} className="accent-red-500 w-4 h-4" /> Âm cơ bản</label>
+                                <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={examConfig.dakuon} onChange={() => handleToggleConfig('dakuon', true)} className="accent-red-500 w-4 h-4" /> Âm đục</label>
+                                <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={examConfig.yoon} onChange={() => handleToggleConfig('yoon', true)} className="accent-red-500 w-4 h-4" /> Âm ghép</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          {getQuizPool(examConfig).length < 5 ? (
+                            <p className="text-red-500 text-sm font-medium">Vui lòng chọn nhiều loại âm hơn (Tối thiểu 5 ký tự) để tạo bài thi.</p>
+                          ) : (
+                             <button onClick={startExam} className="bg-red-600 text-white font-bold text-base sm:text-lg px-8 py-3 rounded-full hover:bg-red-700 shadow-lg shadow-red-200 w-full sm:w-auto">
+                               Bắt đầu làm bài
+                             </button>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 sm:p-10 relative">
+                        <div className="w-full bg-slate-100 h-2 rounded-full mb-6 overflow-hidden">
+                          <div className="bg-red-500 h-full transition-all duration-300" style={{ width: `${((examState.currentIndex) / examState.questions.length) * 100}%` }}></div>
+                        </div>
+                        
+                        <div className="flex flex-col items-center gap-2 mb-6 border-b border-slate-100 pb-4">
+                          <div className="text-sm font-bold text-slate-500 bg-slate-50 px-4 py-1.5 rounded-full border border-slate-200">
+                            Câu {examState.currentIndex + 1} / {examState.questions.length}
+                          </div>
+                          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider text-center mt-2">Romaji của chữ này là gì?</h2>
+                        </div>
+                        
+                        {examState.questions[examState.currentIndex] && (
+                          <div className="text-8xl font-bold text-slate-800 mb-8 py-4 text-center drop-shadow-sm">{examState.questions[examState.currentIndex].char}</div>
+                        )}
+
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                          {examState.questions[examState.currentIndex]?.options.map((opt, idx) => {
+                            const currentQ = examState.questions[examState.currentIndex];
+                            let btnStyle = "bg-slate-50 border-slate-200 hover:border-red-400 hover:bg-red-50 text-slate-700";
+                            let icon = null;
+
+                            if (examSelectedAnswer !== null) {
+                              if (opt === currentQ.r) {
+                                btnStyle = "bg-green-100 border-green-500 text-green-800";
+                                icon = <i className="fas fa-check-circle text-lg absolute right-4"></i>;
+                              } else if (opt === examSelectedAnswer) {
+                                btnStyle = "bg-red-100 border-red-500 text-red-800";
+                                icon = <i className="fas fa-times-circle text-lg absolute right-4"></i>;
+                              } else {
+                                btnStyle = "bg-slate-50 border-slate-200 text-slate-400 opacity-50";
+                              }
+                            }
+
+                            return (
+                              <button key={idx} onClick={() => handleExamAnswer(opt)} disabled={examSelectedAnswer !== null} className={`relative flex items-center justify-center py-4 rounded-xl border-2 text-lg sm:text-xl font-bold transition-all duration-200 ${btnStyle}`}>
+                                {opt} {icon}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* KẾT QUẢ (DASHBOARD) */}
+                {activeMainTab === 'dashboard' && (
+                  <div className="max-w-4xl mx-auto animate-in fade-in duration-500">
+                    {testHistory.length === 0 ? (
+                      <div className="text-center p-12 bg-white rounded-3xl border border-slate-200 shadow-sm text-slate-500">
+                        <i className="fas fa-chart-bar text-6xl text-slate-300 mx-auto mb-4 block"></i>
+                        <h3 className="text-xl font-bold text-slate-700 mb-2">Chưa có dữ liệu</h3>
+                        <p>Hãy hoàn thành ít nhất 1 bài Kiểm Tra để xem đánh giá và lời khuyên nhé.</p>
+                        <button onClick={() => setActiveMainTab('exam')} className="mt-6 px-6 py-2 bg-slate-800 text-white rounded-full font-medium hover:bg-slate-900">
+                          Làm bài kiểm tra
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 flex flex-col items-center text-center">
+                          <h3 className="text-lg font-bold text-slate-700 mb-6 uppercase tracking-wider">Bài thi gần nhất</h3>
+                          <div className="relative w-40 h-40 flex items-center justify-center mb-6">
+                            <svg className="w-full h-full transform -rotate-90">
+                              <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-slate-100" />
+                              <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="12" fill="transparent" 
+                                strokeDasharray={2 * Math.PI * 70} 
+                                strokeDashoffset={2 * Math.PI * 70 * (1 - testHistory[0].percentage / 100)}
+                                className={`${testHistory[0].percentage >= 80 ? 'text-green-500' : testHistory[0].percentage >= 50 ? 'text-yellow-500' : 'text-red-500'} transition-all duration-1000 ease-out`}
+                              />
+                            </svg>
+                            <div className="absolute flex flex-col items-center justify-center">
+                              <span className="text-4xl font-black text-slate-800">{testHistory[0].percentage}%</span>
+                              <span className="text-sm font-medium text-slate-400">{testHistory[0].score}/{testHistory[0].total} câu</span>
+                            </div>
+                          </div>
+
+                          <div className="bg-blue-50 border border-blue-100 text-blue-800 p-5 rounded-2xl w-full text-left">
+                            <div className="font-bold flex items-center gap-2 mb-2"><span className="text-blue-500">👨‍🏫</span> Sensei khuyên:</div>
+                            <p className="text-sm leading-relaxed">{getAdvice(testHistory[0].percentage)}</p>
+                          </div>
+                        </div>
+
+                        <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 flex flex-col">
+                          <h3 className="text-lg font-bold text-slate-700 mb-4 uppercase tracking-wider flex items-center gap-2">
+                            <i className="fas fa-bullseye text-lg text-red-500"></i> Độ thuần thục tổng hợp
+                          </h3>
+                          <div className="mb-6 flex-grow">
+                            {masteryStats.hiragana.total > 0 || masteryStats.katakana.total > 0 ? (
+                              <>
+                                {renderProgressBar('Hiragana', masteryStats.hiragana)}
+                                {renderProgressBar('Katakana', masteryStats.katakana)}
+                                <div className="h-px bg-slate-100 my-3"></div>
+                                {renderProgressBar('Âm cơ bản', masteryStats.seion)}
+                                {renderProgressBar('Âm đục', masteryStats.dakuon)}
+                                {renderProgressBar('Âm ghép', masteryStats.yoon)}
+                              </>
+                            ) : (
+                              <p className="text-sm text-slate-400 italic text-center py-4">Chưa đủ dữ liệu phân tích</p>
+                            )}
+                          </div>
+
+                          <h3 className="text-lg font-bold text-slate-700 mb-4 uppercase tracking-wider border-t border-slate-100 pt-6">10 Bài thi gần nhất</h3>
+                          <div className="h-32 flex items-end justify-between gap-2 border-b border-slate-200 pb-2 mb-2">
+                            {testHistory.slice(0, 10).reverse().map((test) => (
+                              <div key={test.id} className="w-full flex flex-col items-center gap-2 group relative">
+                                <div className="absolute -top-8 bg-slate-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                                  {test.percentage}%
+                                </div>
+                                <div className={`w-full rounded-t-md transition-all duration-500 ${test.percentage >= 80 ? 'bg-green-400' : test.percentage >= 50 ? 'bg-yellow-400' : 'bg-red-400'}`} style={{ height: `${test.percentage}%`, minHeight: '4px' }}></div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                      </div>
+                    )}
+                  </div>
+                )}
+              </main>
+
+              {/* MODALS */}
+              
+              {/* Cửa sổ Luyện Viết */}
+              {selectedWriteChar && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setSelectedWriteChar(null)}>
+                  <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden" onClick={e => e.stopPropagation()}>
+                    <div className="flex items-center justify-between p-4 border-b border-slate-100">
+                      <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">Tập viết chữ <span className="text-red-500 uppercase">{selectedWriteChar.r}</span></h3>
+                      <button onClick={() => setSelectedWriteChar(null)} className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors"><i className="fas fa-times text-lg"></i></button>
+                    </div>
+                    <div className="p-6 text-center space-y-5 bg-slate-50">
+                      <DrawingPad char={selectedWriteChar.char} />
+                      <div className="flex flex-col items-center gap-3">
+                        <button onClick={() => playAudio(selectedWriteChar.char)} className="flex items-center gap-2 px-6 py-2.5 bg-red-100 text-red-600 rounded-full font-semibold hover:bg-red-200 transition-colors text-sm shadow-sm">
+                          <i className="fas fa-volume-up text-lg"></i> Nghe lại phát âm
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Cửa sổ Xác nhận thoát bài Kiểm tra (Thay thế cho JS Confirm mặc định) */}
+              {pendingTab && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+                  <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden p-6 text-center">
+                    <i className="fas fa-exclamation-triangle text-6xl text-yellow-500 mx-auto mb-4 block"></i>
+                    <h3 className="text-xl font-bold text-slate-800 mb-2">Bạn có chắc chắn?</h3>
+                    <p className="text-slate-500 mb-6">Bạn đang trong bài kiểm tra. Nếu thoát bây giờ, kết quả sẽ không được lưu lại.</p>
+                    <div className="flex gap-3 justify-center">
+                      <button onClick={() => setPendingTab(null)} className="px-6 py-2 rounded-full font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
+                        Tiếp tục thi
+                      </button>
+                      <button onClick={confirmExitExam} className="px-6 py-2 rounded-full font-medium text-white bg-red-500 hover:bg-red-600 transition-colors shadow-md shadow-red-200">
+                        Đồng ý thoát
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
+
+        // Render application
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
