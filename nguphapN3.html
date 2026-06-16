@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N3 Grammar Master - Quản lý Tiến độ (SơnKuro)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .perspective { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .quiz-opt.selected { border-color: #3b82f6; background-color: #eff6ff; color: #1e3a8a; }
+        .quiz-opt.correct { border-color: #22c55e; background-color: #f0fdf4; color: #14532d; }
+        .quiz-opt.wrong { border-color: #ef4444; background-color: #fef2f2; color: #7f1d1d; }
+        
+        /* Toast Animation */
+        @keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .toast-enter { animation: slideInUp 0.3s ease-out forwards; }
+        .toast-exit { animation: fadeOut 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-gradient-to-r from-blue-800 to-indigo-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <div class="bg-white text-blue-900 font-black px-3 py-1.5 rounded-xl shadow-sm text-xl shrink-0">N3</div>
+                <div class="flex-grow">
+                    <h1 class="text-lg sm:text-xl font-bold tracking-wide leading-tight">Giáo Trình N3 - SơnKuro</h1>
+                    <p class="text-[10px] sm:text-xs text-blue-200">Đầy đủ lý thuyết, bài tập & Quản lý tiến độ (Offline)</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Tabs -->
+        <div class="max-w-7xl mx-auto px-4 pb-3 overflow-x-auto scrollbar-hide">
+            <nav class="flex bg-blue-950/40 p-1 rounded-xl gap-1 w-max mx-auto sm:mx-0 mt-3 sm:mt-0">
+                <button onclick="window.switchTab('library')" id="tab-library-btn" class="px-4 py-2 rounded-lg text-xs font-bold transition-all bg-white text-blue-900 shadow">📖 Thư Viện</button>
+                <button onclick="window.switchTab('flashcards')" id="tab-flashcards-btn" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-blue-100 hover:text-white">🎴 Flashcard</button>
+                <button onclick="window.switchTab('quiz')" id="tab-quiz-btn" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-blue-100 hover:text-white">📝 Bài Tập</button>
+                <button onclick="window.switchTab('dashboard')" id="tab-dashboard-btn" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-blue-100 hover:text-white flex items-center gap-1">📊 Thống Kê</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 relative">
+        
+        <!-- TAB 1: THƯ VIỆN -->
+        <section id="tab-library" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-1 space-y-4 flex flex-col h-[calc(100vh-180px)]">
+                <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-200">
+                    <input type="text" id="search-input" oninput="window.renderLibrary()" placeholder="🔍 Tìm kiếm mẫu ngữ pháp..." class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex-grow flex flex-col overflow-hidden">
+                    <div class="p-3 bg-slate-100 border-b border-slate-200 font-bold text-[11px] text-slate-500 uppercase flex justify-between items-center">
+                        <span>Danh sách ngữ pháp</span>
+                        <span class="text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full"><span id="grammar-count">124</span>/124</span>
+                    </div>
+                    <div id="grammar-list" class="overflow-y-auto flex-grow divide-y divide-slate-100 pb-4 scrollbar-hide"></div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 overflow-y-auto h-[calc(100vh-180px)] scrollbar-hide pb-10">
+                <div id="grammar-detail" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-8 space-y-6">
+                    <!-- Nội dung render bằng JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: FLASHCARD -->
+        <section id="tab-flashcards" class="hidden max-w-md mx-auto flex flex-col items-center gap-6 py-4">
+            <div class="text-center w-full flex justify-between items-end px-2">
+                <div class="text-left">
+                    <h2 class="text-lg font-bold text-slate-800">Flashcard Luyện Trí Nhớ</h2>
+                    <p id="flashcard-counter" class="text-xs text-slate-500 mt-0.5 font-semibold">Thẻ 1 / 124</p>
+                </div>
+                <div id="fc-status-badge" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border shadow-sm hidden">
+                    Trạng thái
+                </div>
+            </div>
+
+            <div class="w-full h-[320px] perspective cursor-pointer group" onclick="window.flipCard()">
+                <div id="fc-widget" class="relative w-full h-full duration-500 transform-style preserve-3d shadow-xl rounded-2xl group-hover:shadow-2xl transition-shadow">
+                    <!-- Mặt trước -->
+                    <div class="absolute inset-0 backface-hidden bg-white border-2 border-blue-100 rounded-2xl p-6 flex flex-col justify-center items-center text-center">
+                        <span class="absolute top-4 text-[10px] text-slate-400 font-bold uppercase tracking-wider bg-slate-50 px-3 py-1 rounded-full">Mặt trước (Tiếng Việt)</span>
+                        <div id="fc-viet" class="text-xl font-bold text-slate-800 px-2 leading-relaxed"></div>
+                        <span class="absolute bottom-4 text-xs bg-slate-100 text-slate-500 px-4 py-1.5 rounded-full font-semibold shadow-sm animate-pulse">Chạm để lật 🔄</span>
+                    </div>
+                    <!-- Mặt sau -->
+                    <div class="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-blue-600 to-indigo-700 border-2 border-blue-400 rounded-2xl p-6 flex flex-col justify-center items-center text-center shadow-inner">
+                        <span class="absolute top-4 text-[10px] text-blue-200 font-bold uppercase tracking-wider bg-blue-800/50 px-3 py-1 rounded-full">Mặt sau (Tiếng Nhật)</span>
+                        <div id="fc-jap" class="text-4xl font-black text-white mb-6 drop-shadow-md"></div>
+                        <div class="w-full text-left space-y-2">
+                            <span class="text-xs text-blue-200 font-semibold">Cấu trúc kết nối:</span>
+                            <div id="fc-form" class="bg-white/10 p-3 rounded-xl text-sm font-mono font-bold text-white w-full border border-blue-400/30"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Đánh giá trạng thái -->
+            <div class="w-full bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                <p class="text-center text-xs font-bold text-slate-500 uppercase tracking-widest">Đánh giá mức độ ghi nhớ</p>
+                <div class="flex gap-3">
+                    <button onclick="window.markFlashcard('learned')" class="flex-1 py-3 bg-green-50 border border-green-200 text-green-700 font-bold text-sm rounded-xl hover:bg-green-100 shadow-sm transition-all active:scale-95">✅ Đã thuộc</button>
+                    <button onclick="window.markFlashcard('not_learned')" class="flex-1 py-3 bg-rose-50 border border-rose-200 text-rose-700 font-bold text-sm rounded-xl hover:bg-rose-100 shadow-sm transition-all active:scale-95">❌ Chưa thuộc</button>
+                </div>
+            </div>
+
+            <!-- Điều hướng -->
+            <div class="flex justify-between w-full gap-3 mt-2">
+                <button onclick="window.prevCard()" class="flex-1 py-3 bg-white border border-slate-200 text-slate-600 font-bold text-sm rounded-xl hover:bg-slate-50 shadow-sm transition-all">◀ Quay lại</button>
+                <button onclick="window.nextCard()" class="flex-1 py-3 bg-slate-800 text-white font-bold text-sm rounded-xl hover:bg-slate-900 shadow-md transition-all">Thẻ tiếp theo ▶</button>
+            </div>
+        </section>
+
+        <!-- TAB 3: BÀI TẬP -->
+        <section id="tab-quiz" class="hidden max-w-3xl mx-auto space-y-6">
+            <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="w-full sm:w-2/3">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Chọn cấu trúc cần luyện tập:</label>
+                    <select id="quiz-selector" onchange="window.startQuiz()" class="block mt-1.5 w-full bg-slate-50 border border-slate-200 text-sm font-bold px-3 py-2.5 rounded-xl outline-none focus:border-blue-500"></select>
+                </div>
+                <div class="text-xs font-bold bg-blue-50 text-blue-800 px-4 py-3 rounded-xl border border-blue-100 flex gap-2 items-center w-full sm:w-auto justify-center">
+                    <span>Tiến độ:</span> <span id="quiz-progress" class="text-base">1/10</span>
+                </div>
+            </div>
+
+            <div id="quiz-box" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-6 relative overflow-hidden">
+                <div id="quiz-type-badge" class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-bl-xl uppercase tracking-wider">Loại câu hỏi</div>
+                <div id="quiz-content" class="pt-4"></div>
+                <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
+                    <button id="quiz-next-btn" onclick="window.nextQuizQuestion()" class="hidden px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-all active:scale-95">Tiếp tục ▶</button>
+                </div>
+            </div>
+
+            <div id="quiz-result" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-5">
+                <div class="text-6xl animate-bounce">🏆</div>
+                <div>
+                    <h3 class="text-2xl font-black text-slate-800">Hoàn Thành Đánh Giá!</h3>
+                    <p class="text-sm text-slate-500 mt-1">Cấu trúc: <span id="quiz-result-title" class="font-bold text-blue-600"></span></p>
+                </div>
+                
+                <div class="bg-blue-50 border border-blue-100 p-6 rounded-2xl max-w-xs mx-auto">
+                    <div class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">Điểm số của bạn</div>
+                    <div class="text-5xl font-black text-blue-700 mt-2" id="quiz-score">0/10</div>
+                </div>
+                
+                <p id="quiz-eval" class="text-sm font-medium leading-relaxed max-w-md mx-auto"></p>
+                
+                <div class="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+                    <button onclick="window.startQuiz()" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-md hover:bg-blue-700 transition-all">🔄 Luyện tập lại</button>
+                    <button onclick="window.switchTab('library')" class="px-6 py-3 bg-slate-100 border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-all">📖 Ôn lại lý thuyết</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: THỐNG KÊ (DASHBOARD) -->
+        <section id="tab-dashboard" class="hidden max-w-5xl mx-auto space-y-6">
+            <!-- Thẻ Tóm Tắt -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center items-center text-center">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tổng Mẫu N3</div>
+                    <div class="text-3xl font-black text-slate-800">124</div>
+                </div>
+                <div class="bg-gradient-to-b from-green-50 to-white p-5 rounded-2xl border border-green-200 shadow-sm flex flex-col justify-center items-center text-center">
+                    <div class="text-[10px] font-bold text-green-600 uppercase tracking-wider mb-1">Đã Thuộc</div>
+                    <div class="text-3xl font-black text-green-700" id="stat-learned">0</div>
+                </div>
+                <div class="bg-gradient-to-b from-rose-50 to-white p-5 rounded-2xl border border-rose-200 shadow-sm flex flex-col justify-center items-center text-center">
+                    <div class="text-[10px] font-bold text-rose-600 uppercase tracking-wider mb-1">Cần Ôn Lại</div>
+                    <div class="text-3xl font-black text-rose-700" id="stat-review">0</div>
+                </div>
+                <div class="bg-gradient-to-b from-blue-50 to-white p-5 rounded-2xl border border-blue-200 shadow-sm flex flex-col justify-center items-center text-center">
+                    <div class="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1">Điểm Quiz TB</div>
+                    <div class="text-3xl font-black text-blue-700"><span id="stat-avg-score">0</span><span class="text-sm">/10</span></div>
+                </div>
+            </div>
+
+            <!-- Khu vực Biểu đồ -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Biểu đồ Tròn: Flashcard -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wide text-center mb-4">Tỉ lệ hoàn thành Flashcard</h3>
+                    <div class="relative h-64 w-full flex justify-center">
+                        <canvas id="chart-flashcard"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Khu vực danh sách cần ôn -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wide flex justify-between items-center mb-4 border-b pb-2">
+                        <span>❌ Danh sách ưu tiên ôn tập</span>
+                        <span class="text-[10px] bg-rose-100 text-rose-700 px-2 py-1 rounded-md">Từ Flashcard "Chưa thuộc"</span>
+                    </h3>
+                    <div id="review-list" class="flex-grow overflow-y-auto space-y-2 pr-2 h-56 scrollbar-hide">
+                        <!-- Rendered by JS -->
+                        <p class="text-xs text-slate-400 italic text-center mt-10">Chưa có dữ liệu. Hãy học Flashcard để hệ thống phân loại!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Toast Notifications Container -->
+        <div id="toast-container" class="fixed bottom-5 right-5 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+    </main>
+
+    <!-- LOGIC CHÍNH (Offline) -->
+    <script>
+        /* ==========================================
+           1. CƠ SỞ DỮ LIỆU NGỮ PHÁP (NÉN)
+        ========================================== */
+        const compressedData = [
+            "1|うちに|Nhân lúc, trong khi|Vている/Vない/Aい/Aな/Nの+うちに|Tranh thủ làm V2 trước khi trạng thái thay đổi.|暗くならないうちに、山を下ります。=Tranh thủ lúc trời chưa tối, chúng ta xuống núi thôi.|母が寝ているうちに、ゲームをします。=Nhân lúc mẹ đang ngủ, tôi chơi game.",
+            "2|あいだ|Trong khi (song song)|Vている/Vない/Aい/Aな/Nの+あいだ|2 hành động diễn ra song song và xuyên suốt.|食事のあいだ、よく話しました。=Trong suốt bữa ăn, chúng tôi đã nói chuyện rất nhiều.|母が寝ているあいだ、テレビを見ていました。=Trong suốt thời gian mẹ ngủ, tôi đã xem tivi.",
+            "3|あいだに|Trong khi (khoảnh khắc)|Vている/Vない/Aい/Aな/Nの+あいだに|1 hành động đang diễn ra thì 1 hành động khác cắt ngang.|休みのあいだに旅行に行きました。=Trong kỳ nghỉ, tôi đã đi du lịch.|私が勉強しているあいだに兄はゲームをします。=Trong lúc tôi đang học thì anh trai chơi game.",
+            "4|てからでないと|Nếu không... thì không thể|Vて+からでないと/からでなければ+V phủ định|Nếu không làm hành động 1 thì không thể làm hành động 2.|病気が治ってからでないとお酒が飲めない。=Nếu bệnh chưa khỏi thì không thể uống rượu được.|歯を磨いてからでなければキスしたくない。=Nếu không đánh răng thì tôi không muốn hôn.",
+            "5|ところ|Đúng lúc|Vる/Vている/Vた+ところ|Nhấn mạnh thời điểm, lúc xảy ra hành động.|ちょうど今から、やるところ。=Đúng lúc bây giờ chuẩn bị làm đây.|バスが出発したところに来た。=Đến đúng lúc xe buýt vừa xuất phát.",
+            "6|とおり|Đúng theo như|Vる/Vた/Nの+とおりに / N+どおりに|Làm theo đúng kế hoạch, chỉ thị, mẫu.|この絵のとおりに書いて下さい。=Hãy vẽ đúng theo như bức tranh này.|予定どおり、明日日本へ出張する。=Đúng như dự định, mai tôi đi công tác.",
+            "7|によって|Tùy theo / Bởi|N+によって/によっては|Tùy thuộc vào N mà khác nhau, hoặc chỉ nguyên nhân/tác nhân.|国によって習慣が違う。=Tùy theo quốc gia mà tập quán khác nhau.|電話はベルによって発明された。=Điện thoại được phát minh bởi Bell.",
+            "8|たびに|Cứ mỗi lần|Vる/Nの+たびに|Cứ mỗi lần thì cùng một sự việc xảy ra.|この曲を聴くたびに、学生だった頃を思い出す。=Cứ mỗi lần nghe khúc nhạc này lại nhớ thời học sinh.|人は失敗のたびに、成長していく。=Con người cứ mỗi lần thất bại là một lần trưởng thành.",
+            "9|〜れば〜ほど|Càng... càng...|VればVるほど / AければAいほど|Biểu thị mức độ tăng tiến tỉ lệ thuận.|漢字がたくさんあればあるほど、文章を読みやすくなる。=Càng nhiều Kanji bài viết càng dễ đọc.|家賃は駅から近ければ近いほど高くなります。=Giá nhà càng gần ga càng cao.",
+            "10|ついでに|Nhân tiện|Vる/Vた/Nの+ついでに|Nhân tiện làm V1 thì làm luôn V2.|買い物のついでに銀行でお金をおろした。=Tiện đi mua sắm, tôi đã rút tiền ngân hàng.|郵便局へ行ったついでにはがきを買ってきた。=Nhân tiện đi bưu điện, đã mua bưu thiếp.",
+            "11|くらい / ほど|Đến mức độ|V/A/N + くらい / ほど|So sánh mức độ của trạng thái.|彼女の声は天使ほどきれいだ。=Giọng cô ấy đẹp đến mức như thiên thần.|骨が折れるときは、死ぬくらい痛かった。=Lúc gãy xương, đau đến mức tưởng chết.",
+            "12|ほど〜はない|Không có... bằng (So sánh nhất)|N+ほど...はない/いない|Nhấn mạnh mức độ cao nhất.|あの人ほど真面目な人はいない。=Không có ai chăm chỉ bằng người đó.|人前に出ることほど嫌なことはない。=Không có gì ghét bằng việc ra trước đám đông.",
+            "13|くらいなら|Nếu phải... thì thà...|Vる+くらいなら|So với việc phải làm A thì làm B còn hơn.|あの人と結婚するくらいなら、一生独身でいい。=Nếu phải kết hôn với người đó thì thà độc thân cả đời.|お金を借りるくらいなら、買わない。=Thà không mua còn hơn phải mượn tiền.",
+            "14|に限る|Là nhất, chẳng có gì bằng|Vる/Vない/N+に限る|Khẳng định A là cách tốt nhất, tuyệt vời nhất.|暑い夏の仕事終わりはやっぱりビールに限る。=Kết thúc công việc mùa hè nóng bức thì bia là nhất.|ストレスがたまったときは、カラオケに行くに限る。=Khi stress thì đi karaoke là nhất.",
+            "15|に対して|Trái ngược với / Đối với|Mệnh đề+の/N+に対して|Trái ngược với A thì B... hoặc thể hiện thái độ với đối tượng.|静かなAさんに対して、Bさんはうるさい。=Trái ngược với A trầm tính thì B lại ồn ào.|先生に対する態度は大切だ。=Thái độ đối với giáo viên là quan trọng.",
+            "16|反面|Nhưng mặt khác|Mệnh đề+反面|Hai mặt có tính chất trái ngược nhau trong cùng 1 sự vật.|彼は優れた学者である反面、精神的に弱い人間だ。=Anh ấy là học giả xuất sắc, nhưng mặt khác tinh thần lại yếu đuối.|この車は速い反面、値段が高い。=Xe này nhanh nhưng mặt khác giá lại cao.",
+            "17|一方で|Mặt khác, song song đó|Mệnh đề+一方で|Một mặt thì..., mặt khác lại...|地球上には豊かな人がいる一方で、明日食べ物もない人がいる。=Trên TĐ có người giàu, mặt khác lại có người mai không có gì ăn.|子供が生まれて嬉しかった一方で、重い責任も感じた。=Một mặt vui vì có con, mặt khác lại cảm thấy trách nhiệm nặng nề.",
+            "18|というより|Nói đúng hơn là|Mệnh đề+というより|So sánh 2 vế, vế sau thì đúng hơn vế trước.|あの学生はできないというよりやる気がないでしょう。=Học sinh đó nói không làm được thì đúng hơn là không có hứng thú.|彼女は節約というよりケチだよ。=Cô ấy nói là tiết kiệm thì đúng hơn là keo kiệt.",
+            "19|かわりに|Thay vì / Bù lại|V/A/Nの+かわりに|Trái ngược với A thì B... hoặc dùng cái này thay cái kia.|現金のかわりに、電子マネーでお金を払う人が増えてきた。=Thay vì tiền mặt, người trả bằng tiền điện tử tăng lên.|彼女は仕事が早いかわりに、ミスが多いです。=Cô ấy làm việc nhanh bù lại lỗi rất nhiều.",
+            "20|ため(に/だ)|Vì, bởi, do|V/A/Nの+ため(に)|Vì, bởi, do (Thường dẫn đến kết quả không tốt).|大雪のために、旅行が中止になった。=Do tuyết rơi dày, chuyến du lịch bị hủy.|会議が延期されたのは、社長の体調が悪いためだ。=Cuộc họp bị hoãn là do sức khỏe giám đốc không tốt.",
+            "21|によって/による|Do, vì (nguyên nhân)|N+によって/によるN|Diễn tả nguyên nhân, lý do.|円安が進んだことによって、海外からの観光客が増加しました。=Do đồng Yên giảm giá, khách du lịch nước ngoài tăng lên.|最近、災害による被害が多い。=Gần đây thiệt hại do thảm họa nhiều.",
+            "22|から/ことから|Vì, từ việc (phán đoán)|Mệnh đề+から/ことから|Từ lý do/thực tế đó dẫn đến kết quả/phán đoán.|二人はよく似ていることから、兄弟だとすぐにわかった。=Từ việc 2 người rất giống nhau, tôi hiểu ngay là anh em.|わずかな誤解から、友達との関係が悪くなってしまった。=Từ một hiểu lầm nhỏ, quan hệ bạn bè trở nên tồi tệ.",
+            "23|おかげで/せいで|Nhờ có (tốt) / Tại vì (xấu)|V/A/Nの+おかげで/せいで|Nhờ (kết quả tốt) / Tại (kết quả xấu).|天気が良かったおかげで、ピクニックを楽しめました。=Nhờ thời tiết đẹp mà tận hưởng được buổi picnic.|雨のせいで、試合が中止になりました。=Tại trời mưa nên trận đấu bị hủy.",
+            "24|のだから|Vì là... nên (đương nhiên)|V/A/Nな+のだから|Người nghe/nói đều hiểu lý do, nhấn mạnh sự tất yếu.|笑わないでください。真剣にやっているのだから。=Xin đừng cười. Vì tôi đang làm rất nghiêm túc mà.|世界は広いのだから、いろいろな習慣がある。=Vì thế giới rộng lớn nên đương nhiên có nhiều tập quán.",
+            "25|なら|Nếu... thì|V/A/N+なら|Đưa ra lời khuyên, nhận định dựa trên thông tin biết được.|旅行ならニャーチャンがいいと思います。=Nếu đi du lịch thì tôi nghĩ Nha Trang là tuyệt nhất.|彼女が忙しいなら、後で電話します。=Nếu cô ấy bận thì tôi sẽ gọi lại sau.",
+            "26|ては/のでは|Nếu... thì (kết quả không hay)|Vては/のでは|Nếu sự thật/giả định như thế thì sẽ đem lại kết quả xấu.|そんなに食べてはお腹を壊しちゃうよ！=Nếu ăn nhiều thế thì sẽ đau bụng mất!|お金がないのでは、旅行に行けません。=Nếu không có tiền thì không thể đi du lịch.",
+            "27|さえ〜ば|Chỉ cần... là đủ|Vます/て+さえいれば / Nさえあれば|Chỉ cần điều kiện đó là đủ, miễn là... thì...|お金さえあれば、何でもできる。=Chỉ cần có tiền là làm được mọi thứ.|薬を飲みさえすれば、治ります。=Chỉ cần uống thuốc là sẽ khỏi.",
+            "28|たとえ〜ても|Cho dù... đi chăng nữa|たとえ+Vても/Aくても/Nでも|Giả định nhượng bộ mạnh mẽ.|たとえ親に反対されても、彼女と結婚するんだ。=Cho dù bị bố mẹ phản đối, tôi vẫn sẽ kết hôn với cô ấy.|たとえ雨でも、試合は行われます。=Cho dù trời mưa, trận đấu vẫn được diễn ra.",
+            "29|ば/たら/なら|Nếu (giả định ngược)|Vば/Vたら/Nなら|Nếu... thì đã (thực tế không phải vậy).|もう少し早く来れば、それが買えたのに。=Nếu đến sớm một chút thì đã mua được nó rồi.|ちゃんと勉強しなかったら、良い点を取れないよ。=Nếu không học đàng hoàng thì không lấy được điểm cao đâu.",
+            "30|ということだ/とのことだ|Nghe nói, có nghĩa là|Mệnh đề+ということだ|Truyền đạt thông tin trang trọng / Giải thích ý nghĩa.|新しい先生はやさしいということだ。=Nghe nói giáo viên mới rất hiền.|お金はいりません。無料ということですね。=Không cần tiền. Nghĩa là miễn phí nhỉ.",
+            "31|と言われている|Người ta nói rằng, được cho là|Mệnh đề+と言われている|Sự đánh giá chung của dư luận, lời đồn.|あの会社はもうすぐ倒産すると言われている。=Người ta đồn công ty đó sắp phá sản.|東京は世界で一番安全な都市だと言われている。=Tokyo được cho là thành phố an toàn nhất thế giới.",
+            "32|とか|Nghe nói là, hình như là|Mệnh đề+とか|Nghe tin đồn không chắc chắn.|彼女はテニスの試合で優勝したとか。=Nghe nói cô ấy vô địch giải tennis.|来週からずっと雨だとか。=Hình như từ tuần sau mưa suốt.",
+            "33|って|Nghe nói, nói rằng|Mệnh đề+って|Văn nói thân mật của と言っている/と聞いた.|彼はしらないって言ってた。=Anh ấy nói là không biết.|Bさんの恋人は人気アイドルだって。=Nghe nói người yêu của B là idol nổi tiếng.",
+            "34|という|Nghe nói|Mệnh đề+という|Văn viết, truyền đạt thông tin trang trọng.|あの事件の犯人は捕まったという。=Nghe nói hung thủ vụ án đó đã bị bắt.|この辺りは、昔は海だったという。=Nghe nói khu vực này ngày xưa là biển.",
+            "35|はずがない/わけがない|Chắc chắn không, làm gì có chuyện|V/A/Nの+はずがない|Phủ định mạnh mẽ, tuyệt đối không có khả năng.|彼がそんなことをするはずがない。=Chắc chắn anh ấy không làm chuyện như vậy.|この問題が易しいはずがない。=Bài toán này làm gì có chuyện dễ.",
+            "36|とは限らない|Chưa chắc đã, không hẳn là|Mệnh đề+とは限らない|Phủ định một phần, hầu hết là thế nhưng có ngoại lệ.|日本語が上手な人は日本語を教えられるとは限らない。=Người giỏi tiếng Nhật chưa chắc đã dạy được tiếng Nhật.|高いものが良いとは限らない。=Đồ đắt tiền chưa chắc đã tốt.",
+            "37|わけではない|Không hẳn là, không có nghĩa là|Mệnh đề+わけではない|Phủ định 1 phần chứ không phải phủ định hoàn toàn.|彼ができないわけではないが、時間がかかる。=Không phải anh ấy không làm được, mà là tốn thời gian.|彼が嫌いなわけではないが、あまり話さない。=Không hẳn là ghét anh ấy nhưng ít nói chuyện.",
+            "38|ないことはない|Không phải là không... mà là|Vないことはない|Được thì được đấy nhưng mà...|この問題が解けないことはない。=Không phải là không giải được bài này (chỉ là khó thôi).|彼がしたくないことはない。=Không phải là anh ấy không muốn làm.",
+            "39|AことはAが|A thì A nhưng mà...|V/A+ことは+V/A+が|Công nhận vế trước nhưng nhấn mạnh vế sau.|行くことは行くが、時間がかかる。=Đi thì có đi nhưng tốn thời gian.|高いことは高いが、品質がいい。=Đắt thì đắt thật nhưng chất lượng tốt.",
+            "40|ていただきたい/てもらいたい|Muốn ai đó làm|Vていただきたい|Thể hiện mong muốn người khác làm gì cho mình (lịch sự).|この書類、ちょっと見ていただきたいですが。=Tôi muốn bạn xem qua tài liệu này một chút.|彼に自分の悩みを聞いてもらいたい。=Tôi muốn anh ấy lắng nghe nỗi niềm của tôi.",
+            "41|させてほしい/させてもらいたい|Muốn được làm|Vさせて+ほしい|Mong muốn người khác cho phép mình làm.|文化祭のポスターは私が作らせていただきたいです。=Tôi muốn được làm poster cho lễ hội văn hóa.|パーティーに参加させてもらいたいです。=Tôi muốn được tham gia bữa tiệc.",
+            "42|といい/ばいい/たらいい|Ước gì, giá mà... thì tốt|V/Aばいい|Thể hiện mong ước, hy vọng.|明日はゆっくり休むといいですよ。=Ngày mai giá mà được nghỉ ngơi thoải mái thì tốt.|今年の試験に合格すればいいけど。=Ước gì đỗ kỳ thi năm nay.",
+            "43|こと|Nên / Không nên / Cần|Vる/Vない+こと|Dùng trong quy định, nội quy, nhắc nhở.|病院で大きな声で話さないこと。=Không được nói chuyện to tiếng trong bệnh viện.|痩せたければ、お酒をやめること。=Nếu muốn ốm, cần phải bỏ rượu.",
+            "44|べきだ/べきではない|Nên / Không nên (quan điểm cá nhân)|Vる+べきだ|Khuyên răn mạnh mẽ dựa trên đạo đức, lẽ thường.|野菜は毎日食べるべきだ。=Mỗi ngày nên ăn rau.|人の悪口を言うべきではない。=Không nên nói xấu người khác.",
+            "45|たらどうか|Thử... thì sao? / Tại sao không?|Vたらどうか|Đưa ra lời khuyên, gợi ý nhẹ nhàng.|たまに運動したらどうですか。=Thỉnh thoảng thử vận động xem sao?|疲れているみたいですね。少し休んだらどうですか。=Có vẻ mệt, sao không nghỉ ngơi chút?",
+            "46|ことにする|Tôi quyết định|Vる/Vない+ことにする|Bản thân quyết tâm, quyết định làm gì.|彼のために、友達との遊ぶ約束を断ることにする。=Vì anh ấy, tôi quyết định từ chối hẹn chơi với bạn.|毎朝、５時に起きることにしている。=Tôi quyết định thói quen dậy lúc 5h sáng.",
+            "47|ようにする|Cố gắng|Vる/Vない+ようにする|Cố gắng tạo thói quen làm/không làm gì.|これから毎日１５分ぐらい運動するようにする。=Từ giờ tôi cố gắng vận động 15p mỗi ngày.|忘れないようにちゃんとメモするようにしています。=Tôi luôn cố gắng ghi chú cẩn thận để không quên.",
+            "48|ようとする|Định / Cố gắng làm|Vよう+とする|Định làm gì thì có việc xen vào, hoặc nỗ lực làm.|ご飯を食べようとする時、友達が遊びに来た。=Đúng lúc định ăn cơm thì bạn đến chơi.|あの子は手を伸ばして、テーブルの上のおもちゃを取ろうとしている。=Đứa bé đang vươn tay định lấy đồ chơi.",
+            "49|つもりだ|Cứ ngỡ là... nhưng|Vた/Vている/A/N+つもりだ|Bản thân nghĩ vậy nhưng thực tế khác.|秘密にしていたつもりだが、バレていた。=Cứ ngỡ đã giữ bí mật nhưng đã bị lộ.|試験は簡単なつもりだったが、思ったより難しかった。=Cứ ngỡ kỳ thi dễ, nhưng khó hơn tôi tưởng.",
+            "50|Kính ngữ bị động|Kính ngữ chia ở dạng bị động|Vれる/られる|Tôn kính ngữ (dùng cho hành động của người trên).|部長はコーヒーを飲まれますか。=Trưởng phòng có uống cafe không ạ?|先生は本をかかれます。=Thầy giáo viết sách.",
+            "51|おVになる|Tôn kính ngữ (hành động người trên)|お/ご+V+になる|Kính ngữ thể hiện sự tôn trọng.|社長はワインをお飲みになりますか。=Giám đốc có uống rượu vang không ạ?|先生はこの本をお読みになりましたか。=Thầy đã đọc sách này chưa ạ?",
+            "52|Tôn kính ngữ đặc biệt|Từ đặc biệt|いらっしゃる/召し上がる/なさる|Kính ngữ dạng từ vựng đặc biệt.|先生は教室にいらっしゃいます。=Thầy giáo đang ở trong phòng học.|課長はコーヒーを召し上がっています。=Tổ trưởng đang dùng cafe.",
+            "53|おVください|Hãy... (Kính ngữ)|お/ご+V+ください|Yêu cầu lịch sự.|少々お待ちください。=Xin vui lòng chờ một chút.|こちらのお椅子におかけください。=Xin mời ngồi vào ghế này.",
+            "54|おVする|Khiêm nhường ngữ (hành động của mình)|お/ご+V+する|Hạ mình xuống để tôn trọng đối phương.|私がお持ちします。=Để tôi cầm giúp cho.|私が金閣寺をご案内します。=Tôi xin phép hướng dẫn chùa Kinkakuji.",
+            "55|Khiêm nhường ngữ đặc biệt|Từ đặc biệt|伺う/申す/参る/拝見する|Hạ mình bằng từ vựng đặc biệt.|私はフォンと申します。=Tôi tên là Phong.|私はベトナムから参りました。=Tôi đến từ Việt Nam.",
+            "56|こそ|Chính là, nhất định là|N+こそ|Nhấn mạnh tuyệt đối.|この本こそ、私がずっと探していたものです。=Cuốn sách này chính là thứ tôi tìm kiếm bấy lâu.|愛するからこそ、辛くなる。=Chính vì yêu nên mới đau khổ.",
+            "57|でも|Ngay cả, ví dụ như...|N+でも|Đưa ra ví dụ hoặc nhấn mạnh điều hiển nhiên.|そんなことは子供でも知っている。=Chuyện đó đến trẻ con cũng biết.|ジュースでも飲みましょうか。=Uống nước hoa quả hay gì đó nhé?",
+            "58|も|Đến tận, những...|Số lượng/N+も|Nhấn mạnh số lượng nhiều hoặc mức độ kinh ngạc.|一日も休まないで、学校に通った。=Tôi đi học không nghỉ đến một ngày nào.|彼はビールを10本も飲んだ。=Anh ta uống đến tận 10 chai bia.",
+            "59|さえ|Đến ngay cả, thậm chí|N+さえ|Nhấn mạnh mức độ cực đoan.|この問題は小学生さえ分かる。=Bài này đến học sinh tiểu học cũng hiểu.|山田さんは私に会ってさえくれなかった。=Anh Yamada thậm chí còn không thèm gặp tôi.",
+            "60|まで|Đến mức, cho đến tận|N/Vて+まで|Nhấn mạnh giới hạn, phạm vi xa xôi.|疲れて倒れるまで働きました。=Làm việc đến mức mệt lả đi.|このバスは駅まで行きますか。=Xe buýt này đi đến tận ga không?",
+            "61|など/なんか/なんて|Ví dụ như là, mấy thứ như...|N+など|Đưa ra ví dụ (đôi khi mang hàm ý hạ thấp).|この服などいかがですか？=Bộ đồ này thì sao ạ?|寿司やラーメンなどが好きです。=Tôi thích sushi, ramen và mấy thứ tương tự.",
+            "62|だけ|Chỉ, duy nhất|N/V/A+だけ|Giới hạn phạm vi.|私は動物が好きだが、蛇だけはいやだ。=Tôi thích động vật nhưng chỉ ghét mỗi rắn.|ただの友達だけです。=Chỉ là bạn bè bình thường thôi.",
+            "63|について|Về vấn đề...|N+について|Biểu thị chủ đề nói đến (đi với nghĩ, nói, điều tra).|図書館で日本文化について調べた。=Tôi đã tìm hiểu về văn hóa Nhật ở thư viện.|留学について親に相談した。=Tôi đã thảo luận với bố mẹ về việc du học.",
+            "64|に対して(2)|Đối với...|N+に対して|Thái độ, hành động hướng tới đối tượng nào đó.|自分が言ったことに対して、ちゃんと責任を持ちなさいよ。=Hãy có trách nhiệm đối với những lời mình nói ra.|彼女は私の告白に対して何も言わなかった。=Cô ấy không nói gì đối với lời tỏ tình của tôi.",
+            "65|によって(Bị động)|Bởi...|N+によって+Vbị_động|Chủ thể của hành động bị động (phát minh, viết, thiết kế).|電話はベル兄弟によって発明された。=Điện thoại được phát minh bởi anh em nhà Bell.|このバッグは人気歌手によってデザインされた。=Túi này được thiết kế bởi ca sĩ nổi tiếng.",
+            "66|にとって|Đối với... (Đứng trên lập trường)|N+にとって|Đứng từ góc độ của N để đánh giá.|私にとって彼女は全てだ。=Đối với tôi cô ấy là tất cả.|体にとって一番重要なものは水だ。=Đối với cơ thể, quan trọng nhất là nước.",
+            "67|として|Với tư cách là, với vai trò là|N+として|Nói về danh nghĩa, tư cách, vị trí.|私は実習生として日本に来ました。=Tôi đến Nhật với tư cách là thực tập sinh.|友達としてちょっと君にアドバイスしたい。=Với tư cách là bạn, tôi muốn khuyên cậu chút.",
+            "68|こと|Việc (Danh từ hóa)|Vる/A/N+こと|Biến động từ, tính từ thành cụm danh từ để làm chủ ngữ/tân ngữ.|私の趣味は本を読むことと釣りをすることです。=Sở thích của tôi là việc đọc sách và câu cá.|先生の仕事は学生の能力を引き出すことだ。=Công việc của giáo viên là phát huy năng lực học sinh.",
+            "69|ことがある|Thỉnh thoảng có lúc...|Vる/Vない+ことがある|Thi thoảng xảy ra việc gì đó.|卒業後も、リンちゃんに会うことがある。=Sau khi tốt nghiệp, thỉnh thoảng vẫn gặp bé Lin.|最近、寝られないことがある。=Gần đây có lúc tôi không ngủ được.",
+            "70|ことはない|Không cần thiết phải...|Vる+ことはない|Khuyên giải, không cần làm vậy đâu.|まだ時間が十分あるから、急ぐことはない。=Vẫn còn thời gian, không cần vội đâu.|服がたくさんあるから、新しいのを買うことはない。=Nhiều quần áo rồi, không cần mua mới.",
+            "71|の|Việc (Danh từ hóa miêu tả)|V/A+の|Danh từ hóa để miêu tả, thường đi với động từ cảm giác/cụ thể.|映画を見るのを楽しみにしています。=Tôi đang mong đợi việc xem phim.|彼が話すのが好きです。=Tôi thích việc anh ấy nói chuyện.",
+            "72|のに|Để... (Mục đích, công dụng)|Vる+のに+使う/便利/役に立つ|Mục đích sử dụng, công cụ.|このアプリは日本語を勉強するのに便利です。=App này tiện cho việc học tiếng Nhật.|ティックトックは商売するのに役に立つ。=Tiktok có ích cho việc buôn bán.",
+            "73|のは〜だ|Cái mà... chính là...|Mệnh đề+のは+N+だ|Nhấn mạnh thông tin vế sau.|社長が帰ったのは6時ごろです。=Lúc giám đốc về là khoảng 6h.|一番幸せなのは好きな人のそばにいることです。=Điều hạnh phúc nhất là ở cạnh người mình thích.",
+            "74|というのは|Cái gọi là... nghĩa là...|N+というのは|Định nghĩa hoặc giải thích một khái niệm.|「こんにちは」というのは「Xin chào]という意味だ。=Konnichiwa nghĩa là Xin chào.|「マック」というのは「マクドナルド」だよ。=Mac nghĩa là McDonald đó.",
+            "75|のではないか|Phải chăng là...|Mệnh đề+のではないか/のではないだろうか|Nêu ý kiến cá nhân một cách e dè, nhẹ nhàng.|頑張れば合格するのではないか。=Phải chăng nỗ lực thì sẽ đỗ?|家族は一番大切なのではないだろうか。=Phải chăng gia đình là điều quan trọng nhất?",
+            "76|まるで〜ようだ|Cứ như thể là...|まるで+Nの/V+ようだ|So sánh ví von một điều không có thật.|4月なのにすごく寒くて、まるで冬のようだ。=Tháng 4 mà lạnh cứ như mùa đông vậy.|彼女はまるで天使のように優しかった。=Cô ấy hiền cứ như thiên thần.",
+            "77|まるで〜かのように|Cứ như thể là...|まるで+Mệnh đề+かのように|So sánh mạnh hơn ようだ.|今日は暖かくて、まるで春が来たかのようだ。=Hôm nay ấm áp, cứ như thể mùa xuân đã đến.|彼はいつも社長であるかのように他人に命令する。=Anh ta ra lệnh cho người khác cứ như thể mình là giám đốc.",
+            "78|みたいだ|Giống như là, có vẻ như|N/V+みたいだ|So sánh, suy đoán (văn nói của ようだ).|彼は子供みたいです。=Anh ấy cứ như trẻ con.|彼女は疲れているみたいです。=Có vẻ như cô ấy đang mệt.",
+            "79|ように|Đúng như, giống như|Vる/Vた/Nの+ように|Giống như đã nói, như đã biết...|教えてもらったようにやってみたけど、うまくいかなかったよ。=Đã làm giống như được dạy nhưng không suôn sẻ.|ご存知のように、日本は台風が多い国です。=Như các bạn đã biết, Nhật Bản nhiều bão.",
+            "80|わけだ|Hèn chi, thảo nào, nghĩa là|Mệnh đề+わけだ|Đúc kết lý do dẫn đến kết quả đương nhiên.|夜中に雪が降ったんですね。それで、昨日の夜あんなに寒かったわけですね。=Tuyết rơi giữa đêm. Hèn chi tối qua lạnh thế.|今年台風が多いですから、野菜の値段が上がっているわけだ。=Năm nay nhiều bão nên giá rau tăng là phải.",
+            "81|わけにはいかない|Không thể...|Vる+わけにはいかない|Vì lý do khách quan/đạo đức nên không thể làm.|今日は大事な会議があるので、風邪をひいても会社を休むわけにはいかない。=Hôm nay họp quan trọng nên dù cảm cũng không thể nghỉ.|上司はまだ残業中だ。私が先に帰るわけにはいかない。=Sếp đang OT, tôi không thể về trước.",
+            "82|ないわけにはいかない|Không thể không...|Vない+わけにはいかない|Vì lý do khách quan/đạo đức nên bắt buộc phải làm.|お年寄りが電車に乗ってきたら、席を譲らないわけにはいかない。=Người già lên tàu thì không thể không nhường ghế.|彼女が作ってくれた料理なのだから、食べないわけにはいかない。=Cô ấy đã nấu cho thì không thể không ăn.",
+            "83|ばかり|Toàn là, chỉ toàn|N/Vて+ばかり|Chỉ toàn làm việc gì đó (thường mang ý chê trách).|うちの子は友達とばかり遊んでいて、全く勉強してくれない。=Con nhà tôi chỉ toàn chơi với bạn, chả học gì.|お父さんは休みの日は寝てばかりいる。=Bố ngày nghỉ chỉ toàn ngủ.",
+            "84|ばかりでなく|Không chỉ... mà còn|Mệnh đề+ばかりでなく|Cấu trúc tương đương だけでなく.|ラン先生の説明は分かりやすいばかりでなく、面白い。=Cô Lan giải thích không chỉ dễ hiểu mà còn thú vị.|彼は町を案内してくれたばかりでなく、料理もご馳走してくれた。=Anh ấy không chỉ dẫn đường mà còn đãi ăn.",
+            "85|ばかりだ(1)|Càng ngày càng...|Vる(biến đổi)+ばかりだ|Xu hướng thay đổi xấu đi theo 1 chiều.|最近仕事は増えるばかりだ。=Gần đây công việc cứ ngày càng tăng.|物価は上がるばかりだ。=Vật giá cứ ngày càng tăng.",
+            "86|ばかりだ(2)|Chỉ còn đợi... là xong|Vる+ばかりだ|Đã chuẩn bị xong, chỉ chờ hành động cuối.|必要なものは全部準備したので、後は出かけるばかりだ。=Chuẩn bị xong hết rồi, chỉ còn chờ xuất phát thôi.|料理ができた。あとは食べるばかりだ。=Nấu xong rồi, giờ chỉ việc ăn.",
+            "87|たばかり|Vừa mới... xong|Vた+ばかり|Hành động vừa mới xảy ra theo cảm nhận người nói.|日本に来たばかりで、まだ日本語がわかりません。=Vừa mới đến Nhật nên chưa hiểu tiếng Nhật.|さっきご飯を食べたばかりなのにもうお腹がすいた。=Vừa ăn lúc nãy xong mà đã đói.",
+            "88|ことにしている|Đang quyết tâm duy trì|Vる/Vない+ことにしている|Duy trì thói quen do bản thân quyết định.|朝起きたら、水をいっぱい飲むことにしている。=Tôi duy trì thói quen uống nhiều nước khi dậy.|健康のために、タバコを吸わないことにしている。=Để khỏe mạnh, tôi duy trì việc không hút thuốc.",
+            "89|ことになる|Được quyết định là|Vる/Vない+ことになる|Quyết định không do bản thân (khách quan, công ty, tổ chức).|僕たちは今年の11月に結婚することになった。=Chúng tôi đã được quyết định sẽ cưới vào tháng 11.|来月から東京へ転勤することになりました。=Tôi đã có quyết định chuyển công tác tới Tokyo tháng sau.",
+            "90|ことになっている|Đã được quy định là|Vる/Vない+ことになっている|Quy tắc, luật lệ, lịch trình đã định sẵn.|教室ではタバコを吸わないことになっている。=Được quy định là không hút thuốc trong lớp.|ゴミは火曜日と金曜日に出すことになっている。=Quy định đổ rác vào thứ 3 và thứ 6.",
+            "91|ようになる|Trở nên có thể|Vる(khả năng)+ようになる|Biến đổi trạng thái từ không thể thành có thể.|漢字が読めるようになった。=Tôi đã trở nên có thể đọc chữ Hán.|子供は家事を手伝ってくれるようになった。=Con tôi đã bắt đầu biết giúp việc nhà.",
+            "92|ようになっている|Được thiết kế để...|Vる/Vない+ようになっている|Chức năng của máy móc, hệ thống.|この時計は水中でも壊れないようになっている。=Đồng hồ này được chế tạo để không hỏng dưới nước.|このドアは閉めると自動的に鍵がかかるようになっている。=Cửa này được thiết kế để tự khóa khi đóng.",
+            "93|と...た|Sau khi... thì nhận ra (bất ngờ)|Vると...Vた|Làm vế 1 thì phát hiện ra vế 2 (vế 2 bất ngờ).|会議室に入ると、社長もいた。=Vừa vào phòng họp thì thấy có cả giám đốc.|窓を開けると、雪が降っていた。=Mở cửa sổ ra thì thấy tuyết đang rơi.",
+            "94|たら...た|Sau khi... thì (kết quả)|Vたら...Vた|Làm A xong thì B xảy ra, hoặc dẫn tới kết quả B.|先生の覚え方をしてみると、すぐ効果が出る。=Thử cách nhớ của thầy thì có hiệu quả ngay.|駅員に聞いたら、「次の電車が30分後」と答えた。=Hỏi nhân viên ga thì được trả lời là 30p nữa.",
+            "95|もいれば...もいる|Có A, cũng có cả B|NもVば...NもVる|Liệt kê đa dạng các thành phần.|どこの国の人でもいい人もいれば、悪い人もいる。=Nước nào cũng có người tốt người xấu.|日本料理は美味しいものもあれば、まずいものもある。=Món Nhật có món ngon cũng có món dở.",
+            "96|全く...ない|Hoàn toàn không|全く+V/A phủ định|Phủ định tuyệt đối.|あの説明は全くわからない。=Lời giải thích đó hoàn toàn không hiểu gì.|彼はスポーツに全く興味がない。=Anh ta hoàn toàn không hứng thú thể thao.",
+            "97|少しも...ない|Một chút cũng không|少しも+V/A phủ định|Phủ định nhấn mạnh dù một chút cũng không.|昨日運動しても少しも疲れない。=Hôm qua vận động mà chả mệt chút nào.|その話は少しもわからない。=Câu chuyện đó tôi một chút cũng không hiểu.",
+            "98|そんなに...ない|Không... đến thế đâu|そんなに+V/A phủ định|Mức độ không như tưởng tượng.|このテストはそんなに難しくない。=Bài test này không khó đến mức đó đâu.|この店の価格はそんなに高くない。=Giá tiệm này không đắt đến thế.",
+            "99|決して...ない|Tuyệt đối không|決して+V/A phủ định|Quyết tâm hoặc cấm đoán mạnh.|彼は決して諦めない。=Anh ấy tuyệt đối không bỏ cuộc.|私はその日を決して忘れない。=Tôi tuyệt đối không quên ngày hôm đó.",
+            "100|めったに...ない|Hiếm khi, ít khi|めったに+Vない|Tần suất xảy ra cực kỳ thấp.|彼とはめったに会わない。=Tôi rất hiếm khi gặp anh ta.|この部屋はめったに使わない。=Phòng này hiếm khi được dùng tới.",
+            "101|すでに|Đã... rồi (Formal)|すでに+Vた/Vている/Vてある|Trạng thái đã hoàn tất từ trước (văn viết của もう).|桜はすでに咲いた。=Hoa anh đào đã nở rồi.|この事件はすでに新聞に載ってある。=Vụ án đã được đăng trên báo rồi.",
+            "102|少しずつ|Từng chút một|少しずつ+V|Sự thay đổi diễn ra từ từ, dần dần.|彼の日本語は少しずつ進んでいる。=Tiếng Nhật của anh ấy đang tiến bộ từng chút một.|体重が少しずつ減っています。=Cân nặng đang giảm từng chút một.",
+            "103|次第に|Dần dần, từ từ|次第に+V(thay đổi)|Quá trình biến đổi theo thời gian (văn viết của だんだん).|病気は次第に良くなっています。=Bệnh đang dần dần tốt lên.|参加者の数が次第に増えています。=Số lượng người tham gia đang dần tăng lên.",
+            "104|ますます|Ngày càng...|ますます+V/A|Mức độ tăng lên mạnh mẽ hơn trước.|彼は運動してますます元気になった。=Anh ấy tập thể thao nên ngày càng khỏe.|この問題はますます難しくなっている。=Vấn đề này ngày càng trở nên phức tạp.",
+            "105|そのうち|Sớm muộn gì cũng, chẳng mấy chốc|そのうち+V|Trong thời gian ngắn sắp tới sẽ xảy ra.|この意味はそのうちわかるでしょう。=Ý nghĩa này rồi sớm muộn cậu cũng hiểu thôi.|新しい仕事にはそのうち慣れるよ。=Công việc mới chẳng mấy chốc sẽ quen thôi.",
+            "106|今に|Sắp, chẳng mấy chốc|今に+V|Dự đoán sự việc sắp xảy ra trong tương lai gần.|君も今にわかるだろう。=Rồi cậu cũng sẽ sớm hiểu ra thôi.|彼は今に来るでしょう。=Anh ấy chắc sắp đến rồi.",
+            "107|もしかすると/もしかしたら|Biết đâu, có thể là|もしかすると+Mệnh đề+かもしれない|Suy đoán với độ xác suất thấp (khoảng 30-50%).|空が暗くなってきた。もしかすると雨が降るかもしれない。=Trời tối rồi. Biết đâu có thể sẽ mưa.|もしかしたら彼は来るのではないか。=Biết đâu có thể anh ấy sẽ đến?",
+            "108|おそらく|Có lẽ, e rằng|おそらく+Mệnh đề+だろう|Suy đoán với xác suất khá cao (70-80%).|天気がいいから、おそらく彼は来るだろう。=Thời tiết đẹp nên có lẽ anh ấy sẽ đến.|おそらくそれは間違いだと思う。=Có lẽ cái đó là sai sót rồi.",
+            "109|どうも|Hình như, có vẻ|どうも+Mệnh đề+ようだ/らしい|Cảm giác, linh cảm của người nói nhưng chưa chắc chắn.|電話もないし、どうも彼は来ないようだ。=Không thấy gọi, có vẻ anh ta không đến rồi.|どうも計算が間違っているようだ。=Hình như tính toán bị sai ở đâu đó.",
+            "110|今にも...そうだ|Sắp sửa... đến nơi|今にも+Vます bỏ ます+そうだ|Trạng thái sắp xảy ra ngay lập tức trước mắt.|空が暗くなってきた。今にも雨が降りそうだ。=Trời tối. Trông có vẻ sắp mưa đến nơi rồi.|彼は疲れていて、今にも倒れそうだ。=Anh ta mệt, trông sắp ngất đến nơi rồi.",
+            "111|まるで...ようだ|Cứ như là...|まるで+Nの/V+ようだ|Ví von, so sánh 2 vật khác nhau.|その景色はまるで夢のようだ。=Cảnh sắc đó đẹp cứ như một giấc mơ.|彼はまるで子供のように遊んでいる。=Anh ta đang chơi cứ như một đứa trẻ.",
+            "112|ちょうど|Vừa vặn, vừa đúng|ちょうど+A/N|Khớp hoàn hảo về thời gian, kích thước.|このシャツはちょうどいいサイズだ。=Cái áo này size vừa khít.|ちょうどいい時間みたいだから、今出発しましょう。=Thời gian vừa đẹp đấy, xuất phát thôi.",
+            "113|ぜひ/なんとかして|Nhất định, bằng mọi giá|ぜひ/なんとかして+Vてほしい/たい|Mong muốn mạnh mẽ, nhờ vả khẩn thiết.|ぜひ私に電話してください。=Nhất định hãy gọi điện cho tôi nhé.|なんとかしてこの人を探して欲しい。=Bằng mọi giá tôi muốn tìm được người này.",
+            "114|どうか|Làm ơn, mong rằng|どうか+Vて/Vないでください|Cầu xin tha thiết, mong mỏi.|どうか私の失敗を許してください。=Làm ơn hãy tha thứ cho lỗi lầm của tôi.|いい方法があるなら、どうか教えて欲しい。=Nếu có cách tốt, xin làm ơn chỉ cho tôi.",
+            "115|もしも/万一|Giả sử, nhỡ chả may|もしも/万一+Vば/たら|Đưa ra tình huống giả định (đặc biệt là tình huống xấu).|もしも雨が降ったら、ピクニックは中止です。=Nhỡ mà trời mưa thì hủy picnic.|万一事故が起きたら、すぐに警察に連絡してください。=Chả may có tai nạn thì hãy gọi cảnh sát ngay.",
+            "116|どんなに/いくら/たとえ|Dù... đến mức nào|どんなに/いくら+Vても|Giả định nhượng bộ dù mức độ/số lượng có cao đến đâu.|どんなに頑張っても、結果が変わらない。=Dù cố gắng đến đâu kết quả cũng không đổi.|いくら好きでも、もう会えない。=Dù thích đến mấy cũng không thể gặp nữa.",
+            "117|せっかく|Đã cất công, đã trót|せっかく+Vたのに/Vたから|Sự tiếc nuối khi nỗ lực bị uổng phí, hoặc tranh thủ cơ hội hiếm.|せっかく来たのに、彼は家にいなかった。=Cất công đến tận nơi mà anh ta không có nhà.|せっかく作っても、誰も食べなかった。=Cất công nấu mà chả ai ăn.",
+            "118|ただ...だけ|Chỉ, đơn thuần chỉ là|ただ+N/V+だけ|Giới hạn, không có gì khác ngoài điều đó.|医者は「ただの風邪です」と言った。=Bác sĩ bảo chỉ là cảm cúm thông thường thôi.|店内を見ている客に「ただ見ているだけです」と言われた。=Khách bảo 'tôi chỉ đang xem thôi'.",
+            "119|Vかけ|Đang làm dở...|Vます bỏ ます+かけ/かける|Hành động đang diễn ra giữa chừng, chưa hoàn tất.|お風呂に入りかけた時に電話が鳴った。=Đúng lúc đang dở tắm thì điện thoại reo.|母に食べかけのりんごを捨てられてしまった。=Mẹ vứt mất quả táo tôi đang ăn dở.",
+            "120|Vきる|Làm hết sạch, hoàn tất|Vます bỏ ます+きる/きれる|Hoàn thành trọn vẹn, không còn sót lại.|この本は2日間で読み切った。=Tôi đã đọc xong sạch cuốn sách này trong 2 ngày.|お金を使いきってしまった。=Tiêu sạch sành sanh tiền rồi.",
+            "121|Vとおす|Làm đến cùng|Vます bỏ ます+とおす|Nỗ lực thực hiện việc gì đó từ đầu đến cuối không bỏ cuộc.|やると決めたことは最後までやり通す。=Đã quyết định làm thì sẽ làm đến cùng.|諦めないで、ゴールまで走り通した。=Không bỏ cuộc, tôi đã chạy một mạch tới đích.",
+            "122|Vだす|Bắt đầu, đột nhiên|Vます bỏ ます+だす|Hành động diễn ra một cách bất ngờ, đột ngột.|赤ちゃんが急に泣き出した。=Em bé đột nhiên khóc òa lên.|急に空が暗くなって、雨が降り出した。=Trời đột nhiên tối sầm và bắt đầu đổ mưa.",
+            "123|Vづらい|Khó (cảm giác)|Vます bỏ ます+づらい|Cảm thấy khó khăn về mặt tâm lý hoặc thể chất.|個人的なことだから、同僚に頼みづらい。=Vì là việc cá nhân nên rất khó nhờ đồng nghiệp.|歯が痛くて、食べづらい。=Đau răng quá nên khó ăn.",
+            "124|だらけ|Toàn là (nghĩa tiêu cực)|N+だらけ|Phủ đầy bề mặt bởi những thứ không tốt (rác, bùn, nợ).|彼の部屋はゴミだらけだ。=Phòng của anh ta toàn là rác.|私は借金だらけだ。=Tôi ngập đầu trong nợ nần toàn là nợ."
+        ];
+
+        let GRAMMAR_DB = [];
+        let currentGrammarId = 1;
+        let flashcardIndex = 0;
+        let isFlipped = false;
+        
+        // Progress State
+        let userProgress = {
+            flashcards: {}, // id: 'learned' | 'not_learned'
+            quizzes: {}     // id: best_score (0-10)
+        };
+
+        // UI Helpers
+        window.showToast = (msg, type = 'info') => {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-rose-600' : 'bg-blue-600';
+            toast.className = `toast-enter ${colors} text-white px-5 py-3 rounded-xl shadow-lg font-bold text-sm flex items-center gap-2`;
+            toast.innerHTML = `<span>${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span> ${msg}`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.replace('toast-enter', 'toast-exit');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        };
+
+        function parseData() {
+            GRAMMAR_DB = compressedData.map(str => {
+                const parts = str.split('|');
+                const ex1 = parts[5].split('=');
+                const ex2 = parts[6].split('=');
+                return {
+                    id: parseInt(parts[0]), title: parts[1], vi: parts[2], form: parts[3], usage: parts[4],
+                    examples: [{ j: ex1[0], v: ex1[1] }, { j: ex2[0], v: ex2[1] }]
+                };
+            });
+        }
+
+        /* ==========================================
+           2. QUẢN LÝ DỮ LIỆU OFFLINE (LOCAL STORAGE)
+        ========================================== */
+        
+        function saveUserData() {
+            localStorage.setItem('n3_grammar_progress', JSON.stringify(userProgress));
+        }
+
+        function loadUserData() {
+            const data = localStorage.getItem('n3_grammar_progress');
+            if(data) {
+                const parsed = JSON.parse(data);
+                userProgress.flashcards = parsed.flashcards || {};
+                userProgress.quizzes = parsed.quizzes || {};
+            }
+        }
+
+        /* ==========================================
+           3. UI NAVIGATION
+        ========================================== */
+        window.switchTab = (tab) => {
+            document.querySelectorAll('section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            
+            ['library', 'flashcards', 'quiz', 'dashboard'].forEach(t => {
+                document.getElementById(`tab-${t}-btn`).className = "px-4 py-2 rounded-lg text-xs font-bold transition-all text-blue-100 hover:text-white whitespace-nowrap flex items-center gap-1";
+            });
+            document.getElementById(`tab-${tab}-btn`).className = "px-4 py-2 rounded-lg text-xs font-bold transition-all bg-white text-blue-900 shadow whitespace-nowrap flex items-center gap-1";
+
+            if (tab === 'library') window.renderLibrary();
+            if (tab === 'flashcards') { parseDataIfEmpty(); showFlashcard(); }
+            if (tab === 'quiz') { parseDataIfEmpty(); initQuizSelector(); window.startQuiz(); }
+            if (tab === 'dashboard') { parseDataIfEmpty(); renderDashboard(); }
+        }
+
+        function parseDataIfEmpty() { if (GRAMMAR_DB.length === 0) parseData(); }
+
+        /* === THƯ VIỆN === */
+        window.renderLibrary = () => {
+            parseDataIfEmpty();
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const list = document.getElementById('grammar-list');
+            list.innerHTML = '';
+            
+            let count = 0;
+            GRAMMAR_DB.forEach(g => {
+                const textToSearch = (g.title + " " + g.vi).toLowerCase();
+                if (textToSearch.includes(search)) {
+                    count++;
+                    const isActive = g.id === currentGrammarId;
+                    // Add status indicator
+                    let statusIcon = '';
+                    if(userProgress.flashcards[g.id] === 'learned') statusIcon = '<span class="text-green-500 ml-auto">✅</span>';
+                    else if(userProgress.flashcards[g.id] === 'not_learned') statusIcon = '<span class="text-rose-500 ml-auto">❌</span>';
+
+                    list.innerHTML += `
+                        <button onclick="window.selectGrammar(${g.id})" class="w-full text-left p-3 sm:p-4 transition-all flex flex-col gap-1 ${isActive ? 'bg-blue-50 border-l-[4px] border-blue-600' : 'hover:bg-slate-50 border-l-[4px] border-transparent'}">
+                            <div class="font-black text-slate-800 text-sm flex gap-2 items-center">
+                                <span class="text-blue-600">#${g.id}.</span> <span>${g.title}</span> ${statusIcon}
+                            </div>
+                            <div class="text-xs text-slate-500 font-medium truncate">${g.vi}</div>
+                        </button>
+                    `;
+                }
+            });
+            document.getElementById('grammar-count').innerText = count;
+            renderDetail();
+        }
+
+        window.selectGrammar = (id) => { currentGrammarId = id; window.renderLibrary(); }
+
+        function renderDetail() {
+            const g = GRAMMAR_DB.find(x => x.id === currentGrammarId);
+            if(!g) return;
+
+            let exHtml = g.examples.map((e, i) => `
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <p class="font-bold text-[14px] sm:text-[15px] text-slate-800 leading-relaxed"><span class="text-blue-500 mr-1">${i+1}.</span> ${e.j}</p>
+                    <p class="text-sm text-slate-500 mt-2 font-medium">${e.v}</p>
+                </div>
+            `).join('');
+
+            document.getElementById('grammar-detail').innerHTML = `
+                <div class="border-b border-slate-100 pb-5">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div>
+                            <span class="text-[10px] font-black tracking-widest bg-blue-100 text-blue-800 px-3 py-1 rounded-md uppercase">BÀI SỐ ${g.id}</span>
+                            <h2 class="text-2xl sm:text-3xl font-black mt-3 text-slate-800">${g.title}</h2>
+                            <p class="text-sm sm:text-base font-bold text-slate-600 mt-1">Nghĩa: <span class="text-blue-700">${g.vi}</span></p>
+                        </div>
+                        <button onclick="window.jumpToQuiz(${g.id})" class="w-full sm:w-auto bg-blue-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow hover:bg-blue-700 transition">📝 Luyện bài này</button>
+                    </div>
+                </div>
+                <div class="bg-blue-50/50 p-4 sm:p-5 rounded-2xl border border-blue-100">
+                    <span class="text-[11px] font-bold text-blue-400 uppercase tracking-widest flex items-center gap-1"><span>🔗</span> Cấu trúc ghép nối:</span>
+                    <div class="font-mono text-sm sm:text-base font-black text-blue-900 mt-2 bg-white p-3 rounded-xl border border-blue-100 break-words">${g.form}</div>
+                </div>
+                <div class="space-y-2">
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1"><span>💡</span> Giải thích sử dụng:</span>
+                    <p class="text-sm font-semibold text-slate-600 bg-slate-50 p-4 rounded-xl leading-relaxed">${g.usage}</p>
+                </div>
+                <div class="space-y-3">
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1"><span>🌟</span> Câu ví dụ (例文):</span>
+                    <div class="space-y-3">${exHtml}</div>
+                </div>
+            `;
+        }
+
+        window.jumpToQuiz = (id) => {
+            document.getElementById('quiz-selector').value = id;
+            window.switchTab('quiz');
+        }
+
+        /* === FLASHCARD === */
+        function showFlashcard() {
+            const g = GRAMMAR_DB[flashcardIndex];
+            document.getElementById('flashcard-counter').innerText = `Thẻ ${flashcardIndex + 1} / 124`;
+            document.getElementById('fc-viet').innerText = g.vi;
+            document.getElementById('fc-jap').innerText = g.title;
+            document.getElementById('fc-form').innerText = g.form;
+            isFlipped = false;
+            document.getElementById('fc-widget').classList.remove('rotate-y-180');
+
+            // Hiển thị trạng thái
+            const badge = document.getElementById('fc-status-badge');
+            const status = userProgress.flashcards[g.id];
+            badge.classList.remove('hidden', 'bg-green-100', 'text-green-700', 'bg-rose-100', 'text-rose-700', 'border-green-300', 'border-rose-300');
+            
+            if(status === 'learned') {
+                badge.innerText = '✅ Đã thuộc';
+                badge.classList.add('bg-green-100', 'text-green-700', 'border-green-300');
+            } else if (status === 'not_learned') {
+                badge.innerText = '❌ Chưa thuộc';
+                badge.classList.add('bg-rose-100', 'text-rose-700', 'border-rose-300');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        window.flipCard = () => {
+            isFlipped = !isFlipped;
+            const w = document.getElementById('fc-widget');
+            isFlipped ? w.classList.add('rotate-y-180') : w.classList.remove('rotate-y-180');
+        }
+        window.nextCard = () => { flashcardIndex = (flashcardIndex + 1) % 124; showFlashcard(); }
+        window.prevCard = () => { flashcardIndex = (flashcardIndex - 1 + 124) % 124; showFlashcard(); }
+
+        window.markFlashcard = (status) => {
+            const g = GRAMMAR_DB[flashcardIndex];
+            userProgress.flashcards[g.id] = status;
+            saveUserData();
+            showFlashcard();
+            if(status === 'learned') {
+                window.showToast('Đã đánh dấu Thuộc', 'success');
+                setTimeout(() => window.nextCard(), 400);
+            } else {
+                window.showToast('Đã lưu để ôn tập lại', 'error');
+            }
+        }
+
+        /* === BÀI TẬP (QUIZ) === */
+        let currentQuizIndex = 0, score = 0, generatedQuizzes = [], isAnswerSubmitted = false;
+
+        function initQuizSelector() {
+            const sel = document.getElementById('quiz-selector');
+            if(sel.options.length === 0) {
+                sel.innerHTML = GRAMMAR_DB.map(g => `<option value="${g.id}">Bài ${g.id}: ${g.title}</option>`).join('');
+            }
+        }
+
+        window.startQuiz = () => {
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-box').classList.remove('hidden');
+            
+            const gId = parseInt(document.getElementById('quiz-selector').value);
+            const g = GRAMMAR_DB.find(x => x.id === gId);
+            
+            // Build logic giống bản cũ
+            generatedQuizzes = [];
+            const getRnd = (c) => {
+                let d = []; let dbC = [...GRAMMAR_DB].filter(x => x.id !== g.id).sort(()=>Math.random()-0.5);
+                for(let i=0; i<c; i++) d.push(dbC[i].title); return d;
+            };
+
+            for(let i=0; i<6; i++) {
+                let ex = g.examples[i % 2]; 
+                let holeSentence = ex.j.replace(g.title, " ______ ");
+                if(holeSentence === ex.j) holeSentence = `(Hãy chọn cấu trúc mang ý nghĩa: "${g.vi}")`;
+                else if(i > 1) holeSentence = `Tiếng Việt: "${ex.v}"\nĐiền vào: ${holeSentence}`;
+
+                let opts = [g.title, ...getRnd(3)].sort(()=>Math.random()-0.5);
+                generatedQuizzes.push({
+                    type: 'mcq', q: holeSentence, opts: opts, ansIndex: opts.indexOf(g.title),
+                    explain: `Đáp án đúng là: ${g.title}. <br>Ý nghĩa: ${g.vi}`
+                });
+            }
+
+            generatedQuizzes.push({ type: 'translate', q: g.examples[0].v, ans: g.examples[0].j });
+            generatedQuizzes.push({ type: 'translate', q: g.examples[1].v, ans: g.examples[1].j });
+            generatedQuizzes.push({ type: 'translate', q: `[Lý thuyết] Viết công thức của: "${g.title}"`, ans: g.form });
+            generatedQuizzes.push({ type: 'translate', q: `[Thử thách] Dịch sang tiếng Nhật:\n"${g.examples[0].v}"`, ans: g.examples[0].j });
+
+            currentQuizIndex = 0; score = 0;
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            isAnswerSubmitted = false;
+            document.getElementById('quiz-next-btn').classList.add('hidden');
+            document.getElementById('quiz-progress').innerText = `${currentQuizIndex + 1}/10`;
+            
+            const quiz = generatedQuizzes[currentQuizIndex];
+            const contentBox = document.getElementById('quiz-content');
+            const badge = document.getElementById('quiz-type-badge');
+
+            if(quiz.type === 'mcq') {
+                badge.innerText = "Trắc nghiệm";
+                badge.className = "absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-bl-xl uppercase tracking-widest";
+                let qTextHTML = quiz.q.split('\n').map(l => `<div>${l}</div>`).join('');
+                contentBox.innerHTML = `
+                    <h3 class="text-base sm:text-lg font-black text-slate-800 leading-relaxed">${qTextHTML}</h3>
+                    <div class="grid grid-cols-1 gap-3 mt-6">
+                        ${quiz.opts.map((opt, i) => `
+                            <button onclick="window.submitMcq(${i})" class="quiz-opt text-left p-3 sm:p-4 border border-slate-200 rounded-xl hover:bg-slate-50 font-bold text-sm sm:text-[15px] transition-all flex justify-between items-center">
+                                <span><span class="text-blue-500 mr-2">${String.fromCharCode(65+i)}.</span> ${opt}</span>
+                                <span class="status-icon hidden text-lg"></span>
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="quiz-explain" class="hidden mt-4 p-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-semibold text-slate-600"></div>
+                `;
+            } else {
+                badge.innerText = "Tự luận";
+                badge.className = "absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-bl-xl uppercase tracking-widest";
+                let qTextHTML = quiz.q.split('\n').map(l => `<div>${l}</div>`).join('');
+                contentBox.innerHTML = `
+                    <h3 class="text-sm sm:text-base font-black text-indigo-900 bg-indigo-50 p-4 rounded-xl border border-indigo-100 leading-relaxed">${qTextHTML}</h3>
+                    <div class="mt-4 space-y-2">
+                        <textarea id="trans-input" class="w-full p-4 border border-slate-200 rounded-xl h-24 text-sm outline-none focus:border-blue-500 bg-slate-50 shadow-inner" placeholder="Nhập câu tiếng Nhật..."></textarea>
+                    </div>
+                    <div id="trans-eval-zone" class="hidden mt-4 space-y-4">
+                        <div class="p-4 bg-green-50 border border-green-200 rounded-xl">
+                            <span class="text-[10px] text-green-700 font-bold uppercase tracking-widest block mb-1">Đáp án Mẫu:</span>
+                            <p class="font-black text-base text-green-900">${quiz.ans}</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="window.submitTrans(true)" class="py-2.5 bg-white border border-green-400 text-green-700 font-bold rounded-xl text-xs sm:text-sm hover:bg-green-50 shadow-sm transition-all">🟢 Đúng / Giống</button>
+                            <button onclick="window.submitTrans(false)" class="py-2.5 bg-white border border-rose-400 text-rose-700 font-bold rounded-xl text-xs sm:text-sm hover:bg-rose-50 shadow-sm transition-all">🔴 Sai / Chưa sát</button>
+                        </div>
+                    </div>
+                    <button id="show-ans-btn" onclick="window.showTransAns()" class="w-full mt-4 py-3 bg-slate-800 text-white font-bold rounded-xl text-sm shadow hover:bg-slate-900 transition-all">Xem đáp án & Đối chiếu</button>
+                `;
+            }
+        }
+
+        window.submitMcq = (selIdx) => {
+            if(isAnswerSubmitted) return;
+            isAnswerSubmitted = true;
+            const quiz = generatedQuizzes[currentQuizIndex];
+            
+            document.querySelectorAll('.quiz-opt').forEach((btn, i) => {
+                const icon = btn.querySelector('.status-icon');
+                icon.classList.remove('hidden');
+                if(i === quiz.ansIndex) { btn.classList.add('correct'); icon.innerHTML = '✓'; }
+                else if(i === selIdx) { btn.classList.add('wrong'); icon.innerHTML = '✗'; }
+                else { btn.classList.add('opacity-50'); }
+            });
+            if(selIdx === quiz.ansIndex) score++;
+            
+            const exp = document.getElementById('quiz-explain');
+            exp.innerHTML = quiz.explain; exp.classList.remove('hidden');
+            document.getElementById('quiz-next-btn').classList.remove('hidden');
+        }
+
+        window.showTransAns = () => {
+            document.getElementById('trans-input').disabled = true;
+            document.getElementById('trans-eval-zone').classList.remove('hidden');
+            document.getElementById('show-ans-btn').classList.add('hidden');
+        }
+        window.submitTrans = (isCorrect) => { if(isCorrect) score++; window.nextQuizQuestion(); }
+
+        window.nextQuizQuestion = () => {
+            currentQuizIndex++;
+            if(currentQuizIndex >= 10) showFinalResult();
+            else renderQuizQuestion();
+        }
+
+        function showFinalResult() {
+            document.getElementById('quiz-box').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            
+            const gId = parseInt(document.getElementById('quiz-selector').value);
+            const gTitle = GRAMMAR_DB.find(x => x.id === gId).title;
+            
+            document.getElementById('quiz-result-title').innerText = gTitle;
+            document.getElementById('quiz-score').innerText = `${score}/10`;
+            
+            const evalObj = document.getElementById('quiz-eval');
+            if(score >= 8) { evalObj.innerText = "Xuất sắc!"; evalObj.className = "text-green-600 font-bold mt-2"; }
+            else if (score >= 5) { evalObj.innerText = "Khá tốt! Cần chú ý phần dịch."; evalObj.className = "text-amber-600 font-bold mt-2"; }
+            else { evalObj.innerText = "Chưa đạt! Bạn nên ôn lại lý thuyết."; evalObj.className = "text-rose-600 font-bold mt-2"; }
+
+            // Lưu điểm cao nhất vào progress
+            const oldScore = userProgress.quizzes[gId] || 0;
+            if(score > oldScore) {
+                userProgress.quizzes[gId] = score;
+                saveUserData();
+            }
+        }
+
+        /* === DASHBOARD CHART.JS === */
+        let fcChartInstance = null;
+
+        function renderDashboard() {
+            let learnedCount = 0;
+            let notLearnedCount = 0;
+            let reviewListHTML = '';
+            
+            // Xử lý dữ liệu Flashcard
+            GRAMMAR_DB.forEach(g => {
+                if(userProgress.flashcards[g.id] === 'learned') learnedCount++;
+                else if(userProgress.flashcards[g.id] === 'not_learned') {
+                    notLearnedCount++;
+                    reviewListHTML += `
+                        <div class="bg-rose-50 p-3 rounded-lg border border-rose-100 flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-rose-800 text-sm">#${g.id}. ${g.title}</span>
+                                <p class="text-xs text-rose-600">${g.vi}</p>
+                            </div>
+                            <button onclick="window.jumpToQuiz(${g.id})" class="text-[10px] bg-white text-rose-600 px-2 py-1 rounded shadow-sm hover:bg-rose-600 hover:text-white transition">Ôn tập</button>
+                        </div>
+                    `;
+                }
+            });
+            const unseenCount = 124 - learnedCount - notLearnedCount;
+
+            // Xử lý dữ liệu Quiz
+            let totalQuizScore = 0;
+            let quizTakenCount = 0;
+            for(const gId in userProgress.quizzes) {
+                totalQuizScore += userProgress.quizzes[gId];
+                quizTakenCount++;
+            }
+            const avgScore = quizTakenCount > 0 ? (totalQuizScore / quizTakenCount).toFixed(1) : 0;
+
+            // Cập nhật DOM
+            document.getElementById('stat-learned').innerText = learnedCount;
+            document.getElementById('stat-review').innerText = notLearnedCount;
+            document.getElementById('stat-avg-score').innerText = avgScore;
+            
+            const rlContainer = document.getElementById('review-list');
+            if(reviewListHTML !== '') rlContainer.innerHTML = reviewListHTML;
+            else rlContainer.innerHTML = `<p class="text-xs text-slate-400 italic text-center mt-10">Tuyệt vời! Hiện tại không có mẫu ngữ pháp nào nằm trong danh sách cần ưu tiên ôn tập.</p>`;
+
+            // Vẽ biểu đồ
+            const ctx = document.getElementById('chart-flashcard').getContext('2d');
+            if(fcChartInstance) fcChartInstance.destroy();
+            
+            fcChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Đã thuộc', 'Chưa thuộc', 'Chưa học'],
+                    datasets: [{
+                        data: [learnedCount, notLearnedCount, unseenCount],
+                        backgroundColor: ['#22c55e', '#ef4444', '#e2e8f0'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 12, family: 'sans-serif' } } }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        /* Khởi chạy khi load trang */
+        window.addEventListener('DOMContentLoaded', () => {
+            parseData();
+            loadUserData(); // Tải dữ liệu Offline lên ngay lập tức
+            window.renderLibrary();
+        });
+    </script>
+</body>
+</html>
