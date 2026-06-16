@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <title>Sơnkuro - Chiến Thần Chia Động Từ N5/N4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .japanese-font {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        .bg-shibui-cream { background-color: #fcfbf9; }
+        .text-shibui-navy { color: #0f172a; }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+            border-radius: 9999px;
+        }
+
+        .mindmap-node {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mindmap-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(244, 63, 94, 0.25);
+        }
+
+        @media screen and (max-width: 768px) {
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+        }
+
+        button, select, input {
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body class="bg-shibui-cream min-h-screen text-slate-800 flex flex-col justify-between selection:bg-rose-500/20">
+
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col lg:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-start">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-rose-600 flex items-center justify-center text-white font-black text-xl shadow-md transform rotate-[-3deg] hover:rotate-[3deg] transition-transform duration-200">
+                        道
+                    </div>
+                    <div>
+                        <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 flex items-center gap-1.5">
+                            Sơnkuro <span class="text-[10px] bg-rose-100 text-rose-700 font-bold px-2 py-0.5 rounded-full uppercase">Offline Pro v5.4</span>
+                        </h1>
+                        <p class="text-[10px] sm:text-xs text-slate-500 font-medium">Bản đồ phản xạ logic & Sơ đồ tư duy 11 thể động từ Nhật ngữ tự động</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="relative w-full lg:w-auto overflow-hidden">
+                <div class="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-white to-transparent pointer-events-none md:hidden z-10"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-white to-transparent pointer-events-none md:hidden z-10"></div>
+                <nav class="flex space-x-1 bg-slate-100 p-1 rounded-xl w-full lg:w-auto overflow-x-auto custom-scrollbar whitespace-nowrap scroll-smooth py-1.5 px-2">
+                    <button onclick="switchTab('learn')" id="tab-learn" class="tab-btn shrink-0 px-3 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 bg-white text-rose-600 shadow-sm">
+                        📔 Tra cứu động từ
+                    </button>
+                    <button onclick="switchTab('theory')" id="tab-theory" class="tab-btn shrink-0 px-3 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900">
+                        📖 Bí kíp 11 thể
+                    </button>
+                    <button onclick="switchTab('practice')" id="tab-practice" class="tab-btn shrink-0 px-3 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900">
+                        ✍️ Luyện Tập Gõ
+                    </button>
+                    <button onclick="switchTab('game')" id="tab-game" class="tab-btn shrink-0 px-3 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900">
+                        ⚡ Phản xạ 3s
+                    </button>
+                    <button onclick="switchTab('wizard')" id="tab-wizard" class="tab-btn shrink-0 px-3 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900">
+                        🧠 Sơ đồ Tư Duy
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div id="toast-notification" class="fixed top-24 right-4 md:right-8 z-50 transform translate-x-80 opacity-0 transition-all duration-300 pointer-events-none max-w-[calc(100vw-2rem)]">
+        <div class="bg-slate-900/95 backdrop-blur text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 border border-slate-700">
+            <span id="toast-icon" class="shrink-0 text-base md:text-lg">💡</span>
+            <span id="toast-text" class="text-xs md:text-sm font-semibold"></span>
+        </div>
+    </div>
+
+    <main class="max-w-6xl mx-auto px-4 py-6 md:py-8 flex-grow w-full">
+        
+        <section id="section-learn" class="tab-section block space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3 border-b border-slate-200/80">
+                <div>
+                    <h2 class="text-xl md:text-2xl font-black text-slate-900 flex items-center gap-2">
+                        <span>📔</span> Tra Cứu & Chia Động Từ Sơnkuro
+                    </h2>
+                    <p class="text-xs text-slate-500 font-medium mt-1">Nhập thể Masu, thể từ điển, Kanji hoặc Hiragana để tự động chia 11 thể.</p>
+                </div>
+                <div class="text-xs font-bold bg-rose-50 text-rose-700 px-3 py-1.5 rounded-full border border-rose-100 self-start md:self-auto flex items-center gap-1.5">
+                    <span class="animate-pulse w-2 h-2 rounded-full bg-rose-500"></span>
+                    Hệ thống Sơnkuro Smart Offline Engine
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col sm:flex-row gap-3 items-center">
+                <div class="relative w-full">
+                    <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                        <span class="text-lg">🔍</span>
+                    </div>
+                    <input type="text" id="verb-search-input" oninput="filterVerbs()" placeholder="Nhập động từ cần tra (Ví dụ: 帰ります, とります, くる...)" 
+                        class="w-full pl-12 pr-4 py-3 border border-slate-200 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 rounded-xl font-medium text-sm transition outline-none">
+                </div>
+                <button onclick="triggerSearch()" class="w-full sm:w-auto bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white font-black px-6 py-3 rounded-xl transition duration-150 shadow-md active:scale-95 text-xs uppercase tracking-wider shrink-0">
+                    Tra Cứu Nhanh
+                </button>
+            </div>
+
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Danh Sách Động Từ Thông Dụng:</h3>
+                    <div class="shrink-0 text-xs text-slate-400 font-bold uppercase tracking-wider">
+                        <span id="results-count" class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md mr-1">0</span> Động từ sẵn có
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 max-h-48 overflow-y-auto p-1 custom-scrollbar border border-slate-100 rounded-xl bg-slate-50/50" id="verb-chips-container">
+                </div>
+            </div>
+
+            <div id="verb-detail-card" class="bg-white rounded-2xl border border-slate-200 shadow-md p-4 md:p-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-5 gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-slate-900 text-white flex flex-col items-center justify-center shadow-md p-1.5 text-center shrink-0">
+                            <span class="japanese-font text-lg md:text-xl font-bold truncate max-w-full" id="detail-kanji">-</span>
+                            <span class="text-[8px] md:text-[9px] text-slate-400 truncate max-w-full" id="detail-kana">-</span>
+                        </div>
+                        <div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <h4 class="text-lg md:text-2xl font-black text-slate-900 japanese-font" id="detail-masu">-</h4>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-100" id="detail-group">-</span>
+                            </div>
+                            <p class="text-slate-500 text-xs md:text-sm font-medium mt-1">Ý nghĩa: <span class="text-slate-800 font-extrabold" id="detail-meaning">-</span></p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="bg-amber-50 text-amber-800 px-3 py-2 rounded-lg border border-amber-200/50 flex flex-wrap items-center gap-1.5 font-bold">
+                            Thể từ điển nguyên bản: <strong id="detail-dict-top" class="japanese-font text-sm md:text-base text-amber-600">-</strong>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6" id="conjugations-grid">
+                </div>
+            </div>
+        </section>
+
+        <section id="section-theory" class="tab-section hidden space-y-6">
+            <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-2xl p-4 md:p-6 text-white shadow-md relative overflow-hidden">
+                <div class="max-w-2xl relative z-10">
+                    <span class="text-xs font-bold bg-white/20 text-white px-3 py-1 rounded-full uppercase tracking-widest">Bản Đồ Lý Thuyết</span>
+                    <h2 class="text-xl md:text-2xl font-black mt-3 mb-2">Cẩm Nang 11 Thể Động Từ Cốt Lõi</h2>
+                    <p class="text-indigo-100 text-xs md:text-sm leading-relaxed">
+                        Hãy nhấp vào từng thể dưới đây để hiển thị quy luật chia khoa học chuẩn hóa cho cả 3 nhóm động từ chính.
+                    </p>
+                </div>
+                <div class="absolute -right-8 -bottom-8 text-white/10 text-7xl md:text-9xl font-black select-none pointer-events-none japanese-font">理</div>
+            </div>
+
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Chọn thể muốn học quy luật chia:</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-11 gap-2" id="theory-buttons-container">
+                </div>
+            </div>
+
+            <div id="theory-detail-card" class="bg-white rounded-2xl border border-slate-200 shadow-md p-4 md:p-6 space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <span class="text-2xl shrink-0" id="theory-heading-icon">📖</span>
+                    <div>
+                        <h3 class="font-black text-slate-900 text-base md:text-xl" id="theory-heading-title">-</h3>
+                        <p class="text-[10px] md:text-xs text-slate-500 font-medium" id="theory-heading-desc">-</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 pb-2 border-b border-slate-200 mb-3">
+                                <span class="w-6 h-6 rounded-md bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0">G1</span>
+                                <h4 class="font-bold text-slate-800 text-xs md:text-sm">Nhóm I (Cột I trước ます)</h4>
+                            </div>
+                            <div class="text-xs text-slate-600 leading-relaxed min-h-[100px]" id="theory-g1-text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 pb-2 border-b border-slate-200 mb-3">
+                                <span class="w-6 h-6 rounded-md bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">G2</span>
+                                <h4 class="font-bold text-slate-800 text-xs md:text-sm">Nhóm II (Cột E & Đặc Biệt)</h4>
+                            </div>
+                            <div class="text-xs text-slate-600 leading-relaxed min-h-[100px]" id="theory-g2-text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 pb-2 border-b border-slate-200 mb-3">
+                                <span class="w-6 h-6 rounded-md bg-amber-600 text-white font-bold text-xs flex items-center justify-center shrink-0">G3</span>
+                                <h4 class="font-bold text-slate-800 text-xs md:text-sm">Nhóm III (Bất Quy Tắc)</h4>
+                            </div>
+                            <div class="text-xs text-slate-600 leading-relaxed min-h-[100px]" id="theory-g3-text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-practice" class="tab-section hidden space-y-6">
+            <div class="max-w-2xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden">
+                <div class="bg-slate-900 text-white p-4 md:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl shrink-0">✍️</span>
+                        <div>
+                            <h2 class="text-sm md:text-base font-bold">Luyện Tập Gõ Động Từ Tự Luận</h2>
+                            <p class="text-[10px] md:text-xs text-slate-400">Tối ưu phản xạ gõ bàn phím Hiragana trực tiếp</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 bg-white/10 px-4 py-2 rounded-xl text-xs font-bold">
+                        <div>Đúng: <span id="practice-correct-count" class="text-emerald-400">0</span></div>
+                        <div class="w-px h-3 bg-white/20"></div>
+                        <div>Sai: <span id="practice-wrong-count" class="text-rose-400">0</span></div>
+                    </div>
+                </div>
+
+                <div class="p-4 md:p-6 space-y-6">
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                        <label class="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-2.5">
+                            🎯 Cấu Hình Luyện Tập Mục Tiêu:
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <span class="text-xs font-medium text-slate-500 block mb-1">Chủ đề thể:</span>
+                                <select id="practice-mode-select" onchange="initPracticeEngine()" class="w-full p-2.5 text-xs md:text-sm font-bold rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-rose-500">
+                                    <option value="all">🌐 TRỘN TẤT CẢ (Test Tổng Hợp)</option>
+                                    <option value="dict">Thể Từ Điển (る)</option>
+                                    <option value="nai">Thể Phủ Định (ない)</option>
+                                    <option value="ta">Thể Quá khứ (た)</option>
+                                    <option value="te">Thể Te (て)</option>
+                                    <option value="volitional">Thể Ý chí (よう)</option>
+                                    <option value="imperative">Thể Mệnh lệnh</option>
+                                    <option value="prohibitive">Thể Cấm đoán</option>
+                                    <option value="conditional">Thể Điều kiện (ば)</option>
+                                    <option value="potential">Thể Khả năng</option>
+                                    <option value="passive">Thể Bị động</option>
+                                    <option value="causative">Thể Sai khiến</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col justify-end">
+                                <span class="text-xs font-medium text-slate-500 block mb-1">Nhóm động từ luyện tập:</span>
+                                <div class="flex gap-2">
+                                    <label class="flex-1 border border-slate-200 bg-white hover:bg-slate-50 p-2.5 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer text-xs font-bold select-none">
+                                        <input type="checkbox" id="practice-g1" checked onchange="initPracticeEngine()" class="w-3.5 h-3.5 rounded text-rose-600 focus:ring-rose-500">
+                                        G1
+                                    </label>
+                                    <label class="flex-1 border border-slate-200 bg-white hover:bg-slate-50 p-2.5 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer text-xs font-bold select-none">
+                                        <input type="checkbox" id="practice-g2" checked onchange="initPracticeEngine()" class="w-3.5 h-3.5 rounded text-rose-600 focus:ring-rose-500">
+                                        G2
+                                    </label>
+                                    <label class="flex-1 border border-slate-200 bg-white hover:bg-slate-50 p-2.5 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer text-xs font-bold select-none">
+                                        <input type="checkbox" id="practice-g3" checked onchange="initPracticeEngine()" class="w-3.5 h-3.5 rounded text-rose-600 focus:ring-rose-500">
+                                        G3
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center py-6 px-4 bg-slate-50 rounded-xl border border-slate-100 relative">
+                        <span id="practice-group-badge" class="absolute top-3 left-3 text-[9px] font-bold px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-100">Nhóm 1</span>
+                        <p class="text-[9px] font-extrabold text-rose-500 uppercase tracking-widest">HÃY CHIA ĐỘNG TỪ SAU SANG THỂ CHỈ ĐỊNH:</p>
+                        
+                        <div class="my-3">
+                            <h3 id="practice-question-verb" class="text-2xl md:text-4xl font-extrabold text-slate-800 tracking-tight japanese-font">書きます</h3>
+                            <p id="practice-question-meaning" class="text-xs text-slate-400 font-semibold mt-1">(Ý nghĩa: Viết)</p>
+                        </div>
+
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm mt-1 max-w-full">
+                            <span class="text-slate-400 text-[10px] md:text-xs shrink-0">Thể cần chia:</span>
+                            <span id="practice-target-form" class="text-[10px] md:text-xs font-black text-rose-600 bg-rose-50 px-2 rounded-md truncate max-w-[150px] sm:max-w-full">-</span>
+                        </div>
+                    </div>
+
+                    <div class="max-w-md mx-auto space-y-4">
+                        <div class="relative">
+                            <input type="text" id="practice-answer-input" placeholder="Nhập câu trả lời bằng Hiragana (Ví dụ: かいて)" 
+                                class="w-full p-3 border-2 border-slate-200 rounded-xl font-bold text-center text-base md:text-lg focus:border-rose-500 focus:outline-none transition japanese-font" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+                            <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-300 font-bold text-base pointer-events-none">あ</div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <button onclick="initPracticeEngine()" class="w-1/3 py-3 border border-slate-200 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 active:scale-95 transition">
+                                BỎ QUA
+                            </button>
+                            <button onclick="submitPracticeAnswer()" class="w-2/3 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl active:scale-95 transition uppercase tracking-wide">
+                                KIỂM TRA ĐÁP ÁN
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="practice-feedback-box" class="hidden rounded-xl p-4 space-y-2 transition-all duration-300">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-game" class="tab-section hidden space-y-6">
+            <div id="game-setup" class="bg-white rounded-2xl border border-slate-200 shadow-md p-4 md:p-6 max-w-xl mx-auto">
+                <div class="text-center space-y-3 mb-6">
+                    <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-2xl shadow-sm">⚡</div>
+                    <h2 class="text-lg md:text-xl font-extrabold text-slate-950">Vũ Đài Phản Xạ 3 Giây</h2>
+                    <p class="text-slate-500 text-xs max-w-sm mx-auto leading-relaxed">
+                        Kiểm tra phản xạ dưới áp lực thời gian cực lớn để kích hoạt khả năng phản xạ Nhật ngữ tự nhiên không cần dịch nghĩa.
+                    </p>
+                </div>
+
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">1. Chọn Nhóm Động Từ:</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <label class="border border-slate-200 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-slate-50 transition text-xs font-bold select-none">
+                                <input type="checkbox" id="g-group1" checked class="w-4 h-4 text-rose-600 rounded">
+                                <span>G1</span>
+                            </label>
+                            <label class="border border-slate-200 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-slate-50 transition text-xs font-bold select-none">
+                                <input type="checkbox" id="g-group2" checked class="w-4 h-4 text-rose-600 rounded">
+                                <span>G2</span>
+                            </label>
+                            <label class="border border-slate-200 rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer hover:bg-slate-50 transition text-xs font-bold select-none">
+                                <input type="checkbox" id="g-group3" checked class="w-4 h-4 text-rose-600 rounded">
+                                <span>G3</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">2. Chọn Độ Khó (Thời gian đếm ngược):</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <label class="relative border border-slate-200 rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer hover:bg-slate-50 transition text-center select-none">
+                                <input type="radio" name="difficulty" value="10" class="sr-only peer">
+                                <div class="peer-checked:bg-slate-950 peer-checked:text-white absolute inset-0 rounded-xl transition"></div>
+                                <span class="text-xs font-bold text-emerald-600 relative z-10">Dễ thở</span>
+                                <span class="text-[10px] text-slate-400 relative z-10">10 Giây</span>
+                            </label>
+                            <label class="relative border border-slate-200 rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer hover:bg-slate-50 transition text-center select-none">
+                                <input type="radio" name="difficulty" value="5" checked class="sr-only peer">
+                                <div class="peer-checked:bg-slate-950 peer-checked:text-white absolute inset-0 rounded-xl transition"></div>
+                                <span class="text-xs font-bold text-amber-600 relative z-10">Hồi Hộp</span>
+                                <span class="text-[10px] text-slate-400 relative z-10">5 Giây</span>
+                            </label>
+                            <label class="relative border border-slate-200 rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer hover:bg-slate-50 transition text-center select-none">
+                                <input type="radio" name="difficulty" value="3" class="sr-only peer">
+                                <div class="peer-checked:bg-slate-950 peer-checked:text-white absolute inset-0 rounded-xl transition"></div>
+                                <span class="text-xs font-bold text-rose-600 relative z-10">Sát Thủ</span>
+                                <span class="text-[10px] text-slate-400 relative z-10">3 Giây</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button onclick="startGame()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl shadow-md transition active:scale-95 text-xs uppercase tracking-wider block text-center">
+                        ⚔️ BẮT ĐẦU THỬ THÁCH PHẢN XẠ
+                    </button>
+                </div>
+            </div>
+
+            <div id="game-play" class="hidden bg-white rounded-2xl border border-slate-200 shadow-md p-4 md:p-6 max-w-xl mx-auto relative overflow-hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-slate-400 font-bold text-xs">Điểm:</span>
+                        <span id="game-score" class="text-lg font-extrabold text-slate-950">0</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span id="game-streak" class="text-xs font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">🔥 0</span>
+                    </div>
+                    <div>
+                        <button onclick="exitGame()" class="text-[11px] text-slate-400 hover:text-slate-600 font-bold py-1 px-2.5">Thoát</button>
+                    </div>
+                </div>
+
+                <div class="w-full bg-slate-100 h-2.5 rounded-full mb-6 overflow-hidden">
+                    <div id="game-timer-bar" class="bg-rose-500 h-full w-full transition-all duration-100 ease-linear"></div>
+                </div>
+
+                <div class="text-center py-6 px-4 bg-slate-50 rounded-xl mb-6 border border-slate-100 relative">
+                    <span id="game-q-group" class="absolute top-3 left-3 text-[9px] font-bold px-2 py-0.5 rounded-md bg-white text-slate-500 border border-slate-100">Nhóm 1</span>
+                    <span class="text-[9px] font-extrabold text-rose-600 uppercase tracking-widest block mb-1">CHIA SANG THỂ:</span>
+                    <h3 id="game-q-form" class="text-lg md:text-xl font-black text-slate-950 mb-3">-</h3>
+                    <div class="h-px bg-slate-200/60 max-w-xs mx-auto my-2"></div>
+                    <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider block mb-0.5">CỦA ĐỘNG TỪ:</span>
+                    <h4 id="game-q-word" class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight japanese-font">-</h4>
+                    <span id="game-q-meaning" class="text-xs text-slate-500 font-semibold mt-1 inline-block">-</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3" id="game-choices-container">
+                </div>
+            </div>
+
+            <div id="game-over" class="hidden bg-white rounded-2xl border border-slate-200 shadow-md p-6 max-w-md mx-auto text-center space-y-4">
+                <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto text-3xl shadow-sm border border-rose-100">🏆</div>
+                <div>
+                    <h3 class="text-xl font-extrabold text-slate-900">Hoàn Thành Thách Thức!</h3>
+                    <p class="text-slate-400 text-xs mt-1">Sự bền bỉ tạo nên sự khác biệt.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <div>
+                        <span class="text-[9px] text-slate-400 font-bold uppercase block">Tổng điểm</span>
+                        <strong id="end-score" class="text-xl font-black text-slate-950">0</strong>
+                    </div>
+                    <div>
+                        <span class="text-[9px] text-slate-400 font-bold uppercase block">Chuỗi dài nhất</span>
+                        <strong id="end-streak" class="text-xl font-black text-rose-600">🔥 0</strong>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5 pt-1">
+                    <button onclick="switchTab('game')" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-xs transition">Chơi Trận Mới</button>
+                    <button onclick="switchTab('learn')" class="w-full text-slate-500 hover:text-slate-800 font-bold text-xs py-2">Quay về Tra cứu</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-wizard" class="tab-section hidden space-y-6">
+            <div class="bg-gradient-to-br from-indigo-950 to-slate-950 rounded-2xl p-4 md:p-6 text-white shadow-md relative overflow-hidden">
+                <div class="max-w-3xl relative z-10">
+                    <span class="text-[10px] font-bold text-indigo-200 uppercase tracking-widest bg-white/10 px-3 py-1 rounded-full">Bản Đồ Tư Duy 11 Thể</span>
+                    <h2 class="text-xl md:text-2xl font-black mt-3 mb-2">Bản Đồ Tư Duy Phân Luồng 5 Cột Âm Logic</h2>
+                    <p class="text-indigo-100 text-xs md:text-sm leading-relaxed max-w-2xl">
+                        Khám phá cách 11 thể động từ "đâm chồi" từ động từ gốc thông qua <strong>5 con đường biến âm cốt lõi</strong> (Cột A, Cột U, Cột E, Cột O và Đệm Âm). Bản đồ này tự động cập nhật đồng bộ các động từ vừa tra cứu!
+                    </p>
+                </div>
+                <div class="absolute -right-8 -bottom-8 text-white/10 text-7xl md:text-9xl font-black select-none pointer-events-none japanese-font">MAP</div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                    <label class="text-[10px] md:text-xs font-extrabold text-slate-500 uppercase tracking-wider shrink-0 w-full sm:w-auto text-left">🎯 Chọn động từ mô phỏng:</label>
+                    <select id="mindmap-verb-select" onchange="renderMindMap()" class="w-full sm:w-64 p-2.5 border border-slate-200 rounded-xl bg-slate-50 font-bold text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                    </select>
+                </div>
+                <div class="flex items-center gap-2 bg-indigo-50 text-indigo-800 text-xs font-bold px-4 py-2.5 rounded-xl border border-indigo-100 w-full md:w-auto justify-center">
+                    <span class="text-sm shrink-0">💡</span>
+                    <span>Hãy chú ý sự tương đương biến đổi âm của nhóm 1 để dễ ghi nhớ!</span>
+                </div>
+            </div>
+
+            <div class="lg:hidden flex items-center justify-center gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-wider animate-pulse py-1">
+                <span>👈 Vuốt ngang màn hình để khám phá toàn bộ Sơ Đồ Tư Duy 👉</span>
+            </div>
+
+            <div class="overflow-x-auto pb-4 custom-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+                <div class="min-w-[1080px] p-6 bg-slate-950 rounded-3xl relative border border-slate-800 shadow-2xl">
+                    <div class="relative z-10 flex flex-col items-center gap-8">
+                        <div class="flex flex-col items-center">
+                            <div class="bg-gradient-to-r from-rose-600 to-orange-600 text-white p-4 md:p-5 rounded-2xl shadow-xl text-center border-4 border-slate-900 animate-pulse w-72 md:w-80">
+                                <span class="text-[9px] font-black uppercase tracking-widest bg-black/20 px-2 py-0.5 rounded-full block w-max mx-auto mb-1.5" id="map-root-group">Nhóm 1</span>
+                                <h3 class="text-2xl md:text-3xl font-black japanese-font tracking-wide" id="map-root-masu">-</h3>
+                                <p class="text-xs text-rose-100 font-semibold mt-1" id="map-root-translation">-</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-5 gap-4 w-full">
+                            <div class="flex flex-col gap-4 bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl relative">
+                                <div class="text-center pb-2.5 border-b border-slate-800">
+                                    <span class="text-[10px] font-black text-rose-400 uppercase tracking-widest block">🛣️ Hướng Cột A (あ)</span>
+                                    <span class="text-[9px] text-slate-400 mt-0.5 block" id="path-a-desc">Biến âm cột I ➔ A</span>
+                                </div>
+                                <div class="space-y-3" id="branch-a-container">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-4 bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl relative">
+                                <div class="text-center pb-2.5 border-b border-slate-800">
+                                    <span class="text-[10px] font-black text-blue-400 uppercase tracking-widest block">🛣️ Hướng Cột U (う)</span>
+                                    <span class="text-[9px] text-slate-400 mt-0.5 block" id="path-u-desc">Biến âm cột I ➔ U</span>
+                                </div>
+                                <div class="space-y-3" id="branch-u-container">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-4 bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl relative">
+                                <div class="text-center pb-2.5 border-b border-slate-800">
+                                    <span class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block">🛣️ Hướng Cột E (え)</span>
+                                    <span class="text-[9px] text-slate-400 mt-0.5 block" id="path-e-desc">Biến âm cột I ➔ E</span>
+                                </div>
+                                <div class="space-y-3" id="branch-e-container">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-4 bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl relative">
+                                <div class="text-center pb-2.5 border-b border-slate-800">
+                                    <span class="text-[10px] font-black text-amber-400 uppercase tracking-widest block">🛣️ Hướng Cột O (お)</span>
+                                    <span class="text-[9px] text-slate-400 mt-0.5 block" id="path-o-desc">Biến âm cột I ➔ O</span>
+                                </div>
+                                <div class="space-y-3" id="branch-o-container">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-4 bg-slate-900/60 border border-slate-800 p-3.5 rounded-2xl relative">
+                                <div class="text-center pb-2.5 border-b border-slate-800">
+                                    <span class="text-[10px] font-black text-purple-400 uppercase tracking-widest block">🛣️ Nhánh て / た</span>
+                                    <span class="text-[9px] text-slate-400 mt-0.5 block" id="path-te-desc">Đệm âm</span>
+                                </div>
+                                <div class="space-y-3" id="branch-te-container">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-950 text-slate-500 py-6 md:py-8 border-t border-slate-900 text-center text-xs">
+        <div class="max-w-6xl mx-auto px-4 space-y-2">
+            <p class="font-bold text-slate-400 text-sm">Sơnkuro - Chiến Thần Chia Động Từ N5/N4</p>
+            <p>Rèn luyện bản năng chia và tư duy biến âm phản xạ siêu việt bằng thuật toán ngôn ngữ chuẩn xác.</p>
+            <p class="text-slate-700 mt-2">&copy; 2026 Sơnkuro. Bản Quyền thuộc về Sơnkuro. Học tập logic, phản xạ tối ưu.</p>
+        </div>
+    </footer>
+
+    <script>
+        const apiKey = ""; 
+        const verbsDatabase = [];
+
+        const formNames = {
+            dict: { vi: "Thể Từ điển (る)", desc: "Thể nguyên mẫu để tra cứu từ điển, giao tiếp thân mật, thông thường.", icon: "📖" },
+            nai: { vi: "Thể Phủ định (ない)", desc: "Dùng để phủ định hành vi, làm gốc cho các câu cấm đoán hoặc sai khiến.", icon: "❌" },
+            ta: { vi: "Thể Quá khứ (た)", desc: "Diễn tả hành động đã diễn ra trong quá khứ ở văn phong thông thường.", icon: "⌛" },
+            te: { vi: "Thể Te (て)", desc: "Nối các vế câu, sai khiến lịch sự, hoặc diễn đạt tiếp diễn.", icon: "🔗" },
+            volitional: { vi: "Thể Ý chí (よう)", desc: "Hãy cùng làm gì đó, dùng trong lời rủ rê thân mật.", icon: "💡" },
+            imperative: { vi: "Thể Mệnh lệnh", desc: "Mệnh lệnh bắt buộc thực hiện ngay lập tức, dùng khi khẩn cấp.", icon: "📣" },
+            prohibitive: { vi: "Thể Cấm đoán", desc: "Cấm tuyệt đối không được làm gì, thể hiện sự răn đe gay gắt.", icon: "🚫" },
+            conditional: { vi: "Thể Điều kiện (ば)", desc: "Nếu... xảy ra thì mệnh đề sau chắc chắn sẽ xảy ra.", icon: "🌿" },
+            potential: { vi: "Thể Khả năng", desc: "Có năng lực hoặc có khả năng thực hiện hành vi.", icon: "🌟" },
+            passive: { vi: "Thể Bị động", desc: "Bị hoặc được ai đó tác động hành vi lên bản thân mình.", icon: "🛡️" },
+            causative: { vi: "Thể Sai khiến", desc: "Bắt buộc hoặc cho phép ai khác thực hiện hành động.", icon: "👑" }
+        };
+
+        const masterTheoryData = {
+            dict: {
+                title: "Thể Từ Điển (る / Thể Thường)",
+                desc: "Thể nguyên mẫu để tra từ điển hoặc hội thoại suồng sã.",
+                g1: "Biến đổi nguyên âm đứng sát ます từ **Cột I** chuyển thành **Cột U** tương ứng hàng.<br><br>Ví dụ: かきます → <strong>かく</strong>",
+                g2: "Bỏ đuôi <strong>ます</strong> rồi cộng thêm chữ <strong>る</strong> vào.<br><br>Ví dụ: たべます → <strong>たべる</strong>",
+                g3: "Quy ước cố định:<br>• します → <strong>する</strong><br>• きます → <strong>くる</strong>"
+            },
+            nai: {
+                title: "Thể Phủ Định (ない)",
+                desc: "Thể phủ định ngắn (Không làm gì đó...).",
+                g1: "Chuyển đổi âm cột <strong>I</strong> ngay trước ます thành <strong>Cột A</strong> rồi ghép thêm chữ <strong>ない</strong>.<br><em>Lưu ý đặc biệt: Nếu đuôi là い, chuyển thành <strong>わ</strong>.</em><br><br>Ví dụ: かきます → <strong>かかない</strong><br>• かいます → <strong>かわない</strong>",
+                g2: "Lược bỏ đuôi <strong>ます</strong> rồi dán trực tiếp chữ <strong>ない</strong> vào thân từ.<br><br>Ví dụ: たべます → <strong>たべない</strong>",
+                g3: "Học thuộc lòng biến âm:<br>• します → <strong>しない</strong><br>• きます → <strong>こない</strong>"
+            },
+            ta: {
+                title: "Thể Quá Khứ (た)",
+                desc: "Biểu đạt hành động đã hoàn tất trong quá khứ.",
+                g1: "Chia y hệt quy luật **Thể て** bên dưới, rồi đổi đuôi <strong>て → た</strong> và đuôi <strong>de → だ</strong>.<br><br>Ví dụ: かいて → <strong>かいた</strong><br>• よんで → <strong>よんだ</strong>",
+                g2: "Bỏ đuôi <strong>ます</strong> rồi cộng thêm chữ <strong>た</strong> vào thân động từ.<br><br>Ví dụ: たべます → <strong>たべた</strong>",
+                g3: "Biến thể bắt buộc:<br>• します → <strong>した</strong><br>• きます → <strong>きた</strong>"
+            },
+            te: {
+                title: "Thể Te (て)",
+                desc: "Nối tiếp hành động, sai khiến lịch sự, hoặc dạng tiếp diễn.",
+                g1: "Dựa vào chữ cái đứng trước ます:<br>• い, ち, り → <strong>って</strong><br>• み, び, に → <strong>nde</strong><br>• き → <strong>いて</strong> (Ngoại lệ: いきます → <strong>いって</strong>)<br>• ぎ → <strong>いで</strong><br>• し → <strong>して</strong>",
+                g2: "Bỏ đuôi <strong>ます</strong> rồi ghép trực tiếp đuôi <strong>て</strong> vào.<br><br>Ví dụ: たべます → <strong>たべて</strong>",
+                g3: "Quy ước bắt buộc:<br>• します → <strong>して</strong><br>• きます → <strong>きて</strong>"
+            },
+            volitional: {
+                title: "Thể Ý Chí (よう)",
+                desc: "Dùng để rủ rê cùng làm gì một cách thân thiết.",
+                g1: "Chuyển đổi âm cột <strong>I</strong> sát ます thành <strong>Cột O</strong> rồi ghép thêm chữ <strong>う</strong>.<br><br>Ví dụ: かきます → かこ + う = <strong>かこう</strong>",
+                g2: "Bỏ đuôi <strong>ます</strong> rồi dán trực tiếp đuôi <strong>よう</strong> vào.<br><br>Ví dụ: たべます → <strong>たべよう</strong>",
+                g3: "Cố định bắt buộc:<br>• します → <strong>しよう</strong><br>• きます → <strong>こよう</strong>"
+            },
+            imperative: {
+                title: "Thể Mệnh Lệnh",
+                desc: "Ra lệnh thực thi bắt buộc, mức độ gay gắt.",
+                g1: "Biến đổi âm cột <strong>I</strong> sát ます thành âm thuộc <strong>Cột E</strong> cùng hàng.<br><br>Ví dụ: かきます → <strong>かけ</strong>",
+                g2: "Bỏ đuôi <strong>ます</strong> rồi cộng thêm chữ <strong>ろ</strong> vào sau thân động từ.<br><br>Ví dụ: たべます → <strong>たべろ</strong>",
+                g3: "Biến đổi bắt buộc:<br>• します → <strong>しろ</strong><br>• きます → <strong>こい</strong>"
+            },
+            prohibitive: {
+                title: "Thể Cấm Đoán",
+                desc: "Cấm tuyệt đối không được làm gì.",
+                g1: "Lấy nguyên vẹn dạng **Thể Từ Điển (Thể Thường)** rồi cộng thêm chữ <strong>な</strong> ở sau cùng.<br><br>Ví dụ: かく → <strong>かくな</strong>",
+                g2: "Lấy nguyên vẹn dạng **Thể Từ Điển (Thể Thường)** rồi cộng thêm chữ <strong>な</strong> ở sau cùng.<br><br>Ví dụ: たべる → <strong>たべるな</strong>",
+                g3: "Cộng な vào thể từ điển:<br>• する → <strong>するna</strong><br>• くる → <strong>くるな</strong>"
+            },
+            conditional: {
+                title: "Thể Điều Kiện (ば)",
+                desc: "Nếu... thì... xảy ra chắc chắn.",
+                g1: "Chuyển âm cột <strong>I</strong> sát ます thành âm tương ứng <strong>Cột E</strong> rồi cộng thêm chữ <strong>ば</strong>.<br><br>Ví dụ: かきます → かけ + ば = <strong>かけば</strong>",
+                g2: "Lược bỏ đuôi <strong>ます</strong> rồi cộng thêm đuôi <strong>れば</strong>.<br><br>Ví dụ: たべます → <strong>たべれば</strong>",
+                g3: "Học thuộc quy ước:<br>• します → <strong>すれば</strong><br>• きます → <strong>くれば</strong>"
+            },
+            potential: {
+                title: "Thể Khả Năng",
+                desc: "Biểu đạt năng lực hoặc khả năng thực thi.",
+                g1: "Chuyển âm cột <strong>I</strong> sát ます thành âm tương ứng <strong>Cột E</strong> rồi cộng thêm <strong>ます</strong>.<br><br>Ví dụ: かきます → かけ + ます = <strong>かけます</strong>",
+                g2: "Bỏ đuôi <strong>ます</strong> rồi cộng thêm đuôi <strong>られます</strong>.<br><br>Ví dụ: たべます → <strong>たべられます</strong>",
+                g3: "Học thuộc quy ước:<br>• します → <strong>できます</strong><br>• きます → <strong>こられます</strong>"
+            },
+            passive: {
+                title: "Thể Bị Động",
+                desc: "Bị hoặc được ai đó tác động hành động.",
+                g1: "Chuyển âm cột <strong>I</strong> sát ます sang <strong>Cột A</strong> rồi dán đuôi <strong>れます</strong> vào.<br><br>Ví dụ: かきます → かか + れます = <strong>かかれます</strong>",
+                g2: "Bỏ đuôi <strong>ます</strong> rồi cộng thêm đuôi <strong>られます</strong>.<br><br>Ví dụ: たべます → <strong>たべられます</strong>",
+                g3: "Học thuộc lòng dạng bị động:<br>• します → <strong>されます</strong><br>• きます → <strong>こられます</strong>"
+            },
+            causative: {
+                title: "Thể Sai Khiến",
+                desc: "Cho phép hoặc bắt ép ai làm việc gì.",
+                g1: "Chuyển âm cột <strong>I</strong> sát ます sang <strong>Cột A</strong> rồi dán đuôi <strong>せます</strong> vào.<br><br>Ví dụ: かきます → かか + せます = <strong>かかせます</strong>",
+                g2: "Bỏ đuôi <strong>ます</strong> rồi dán đuôi <strong>させます</strong> vào.<br><br>Ví dụ: たべます → <strong>たべさせます</strong>",
+                g3: "Quy ước bắt buộc:<br>• します → <strong>させます</strong><br>• きます → <strong>こさせます</strong>"
+            }
+        };
+
+        let currentActiveVerb = null;
+        let currentActiveTheoryForm = "te"; 
+        
+        let gameScore = 0;
+        let gameStreak = 0;
+        let currentTimer = null;
+        let timeLeft = 0;
+        let timerDuration = 5; 
+        let currentQuestion = {};
+
+        let practiceCorrect = 0;
+        let practiceWrong = 0;
+        let currentPracticeQuestion = {};
+
+        function showToast(text, icon = "💡") {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-icon').innerText = icon;
+            document.getElementById('toast-text').innerText = text;
+            
+            toast.className = "fixed top-24 right-4 md:right-8 z-50 transform translate-x-0 opacity-100 transition-all duration-300 max-w-[calc(100vw-2rem)]";
+            setTimeout(() => {
+                toast.className = "fixed top-24 right-4 md:right-8 z-50 transform translate-x-80 opacity-0 transition-all duration-300 pointer-events-none max-w-[calc(100vw-2rem)]";
+            }, 3000);
+        }
+
+        function cleanJsonString(rawText) {
+            if (!rawText) return "";
+            let clean = rawText.trim();
+            if (clean.includes("```")) {
+                clean = clean.replace(/```[a-zA-Z]*\n?/g, "").replace(/```/g, "");
+            }
+            return clean.trim();
+        }
+
+        function playBeep(success) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                if (success) {
+                    osc.frequency.setValueAtTime(587.33, ctx.currentTime); 
+                    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); 
+                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.3);
+                } else {
+                    osc.frequency.setValueAtTime(220, ctx.currentTime); 
+                    osc.frequency.linearRampToValueAtTime(110, ctx.currentTime + 0.25); 
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.3);
+                }
+            } catch(e) {
+                console.log("Audio synthesis blocked or not supported.");
+            }
+        }
+
+        function switchTab(tabName) {
+            clearInterval(currentTimer);
+            
+            document.querySelectorAll('.tab-section').forEach(sec => sec.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-rose-600', 'shadow-sm');
+                btn.classList.add('text-slate-600');
+            });
+
+            const activeSection = document.getElementById(`section-${tabName}`);
+            const activeTabButton = document.getElementById(`tab-${tabName}`);
+
+            activeSection.classList.remove('hidden');
+            activeTabButton.classList.add('bg-white', 'text-rose-600', 'shadow-sm');
+            activeTabButton.classList.remove('text-slate-600');
+
+            activeTabButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+            if (tabName === 'game') {
+                document.getElementById('game-setup').classList.remove('hidden');
+                document.getElementById('game-play').classList.add('hidden');
+                document.getElementById('game-over').classList.add('hidden');
+            } else if (tabName === 'wizard') {
+                initMindMapSelector();
+                renderMindMap();
+            } else if (tabName === 'practice') {
+                initPracticeEngine();
+            } else if (tabName === 'theory') {
+                renderTheoryButtons();
+                updateTheoryDisplay(currentActiveTheoryForm);
+            }
+        }
+
+        function initLearnSection() {
+            filterVerbs();
+            selectVerb(0);
+        }
+
+        function filterVerbs() {
+            const query = document.getElementById('verb-search-input').value.toLowerCase().trim();
+            const container = document.getElementById('verb-chips-container');
+            container.innerHTML = '';
+
+            let count = 0;
+            verbsDatabase.forEach((verb, idx) => {
+                const isMatch = verb.masu.toLowerCase().includes(query) || 
+                                verb.kanji.toLowerCase().includes(query) || 
+                                verb.meaning.toLowerCase().includes(query) || 
+                                verb.hiragana.toLowerCase().includes(query);
+                
+                if (isMatch) {
+                    count++;
+                    const btn = document.createElement('button');
+                    btn.className = "px-3 py-2.5 text-xs font-bold rounded-xl bg-white border border-slate-200 text-slate-800 hover:border-rose-500 hover:text-rose-600 transition shadow-sm text-left truncate flex items-center justify-between";
+                    btn.onclick = () => selectVerb(idx);
+                    btn.innerHTML = `<span>${verb.masu}</span> <span class="text-[9px] bg-rose-50 text-rose-600 px-1 py-0.5 rounded">G${verb.group}</span>`;
+                    container.appendChild(btn);
+                }
+            });
+            document.getElementById('results-count').innerText = count;
+        }
+
+        function isStemGroup2(stem) {
+            if (!stem) return false;
+            const lastChar = stem.slice(-1);
+            const eVowels = ["え", "け", "げ", "せ", "ぜ", "て", "de", "ね", "へ", "べ", "ぺ", "め", "れ"];
+            if (eVowels.includes(lastChar)) {
+                return true;
+            }
+            const specialG2Stems = [
+                "い", "居", "み", "見", "き", "着", "かり", "借り", "たり", "tửり",
+                "でき", "出来", "おち", "落ち", "おり", "降り", "おき", "起き",
+                "しんじ", "信じ", "とじ", "閉じ", "すぎ", "過ぎ", "のび", "伸び", "あび", "浴び"
+            ];
+            return specialG2Stems.includes(stem);
+        }
+
+        function conjugateFromDictForm(dict) {
+            dict = dict.trim();
+            let group = 1;
+            let base = "";
+            let last = dict.slice(-1);
+            let preLast = dict.slice(-2, -1);
+            
+            if (dict === "する" || dict.endsWith("する")) {
+                group = 3;
+                const prefix = dict.slice(0, -2);
+                return { masu: prefix + "します", dict: dict, group: 3 };
+            }
+            if (dict === "くる" || dict === "来る") {
+                group = 3;
+                return { masu: dict === "来る" ? "来ます" : "きます", dict: dict, group: 3 };
+            }
+            
+            if (last === "る") {
+                const falseG2Verbs = ["かえる", "帰る", "はしる", "走る", "しる", "知る", "いる", "要る", "きる", "切る", "はいる", "入る", "ける", "蹴る", "へる", "減る", "しゃべる", "すべる", "滑る", "あせる", "焦る", "にぎる", "握る", "かぎる", "限る", "まいる", "参る"];
+                const isFalseG2 = falseG2Verbs.includes(dict);
+                
+                const iVowels = ["い", "き", "ぎ", "し", "じ", "ち", "に", "ひ", "び", "ぴ", "mi", "り"];
+                const eVowels = ["え", "け", "げ", "せ", "ぜ", "て", "で", "ね", "へ", "べ", "ぺ", "め", "れ"];
+                const isIEVowel = iVowels.includes(preLast) || eVowels.includes(preLast);
+                
+                if (isIEVowel && !isFalseG2) {
+                    group = 2;
+                    base = dict.slice(0, -1);
+                    return { masu: base + "ます", dict: dict, group: 2 };
+                } else {
+                    group = 1;
+                    base = dict.slice(0, -1);
+                    return { masu: base + "ります", dict: dict, group: 1 };
+                }
+            }
+            
+            base = dict.slice(0, -1);
+            let suffix = "";
+            if (last === "う") suffix = "います";
+            else if (last === "く") suffix = "きます";
+            else if (last === "ぐ") suffix = "ぎます";
+            else if (last === "す") suffix = "します";
+            else if (last === "つ") suffix = "chıます";
+            else if (last === "ぬ") suffix = "にます";
+            else if (last === "ぶ") suffix = "びます";
+            else if (last === "む") suffix = "みます";
+            else {
+                return null;
+            }
+            return { masu: base + suffix, dict: dict, group: 1 };
+        }
+
+        function parseAndConjugateLocally(input) {
+            input = input.trim();
+            if (!input) return null;
+
+            let masu = "";
+            let dict = "";
+            let group = 1;
+            let meaning = "Động từ tra cứu";
+
+            if (input.endsWith("ます")) {
+                masu = input;
+                const stem = masu.slice(0, -2);
+                
+                if (masu === "します" || masu.endsWith("します")) {
+                    group = 3;
+                    dict = stem + "する";
+                } else if (masu === "きます" || masu === "来ます") {
+                    group = 3;
+                    dict = masu === "来ます" ? "来る" : "くる";
+                } else {
+                    if (isStemGroup2(stem)) {
+                        group = 2;
+                        dict = stem + "る";
+                    } else {
+                        group = 1;
+                        const lastChar = stem.slice(-1);
+                        const baseStem = stem.slice(0, -1);
+                        const mapping = {
+                            "い": "う", "き": "く", "ぎ": "ぐ", "し": "す", "ち": "つ", "に": "ぬ", "び": "ぶ", "mi": "む", "り": "る"
+                        };
+                        const dictEnding = mapping[lastChar] || "る";
+                        dict = baseStem + dictEnding;
+                    }
+                }
+            } else {
+                if (input.endsWith("する") || input === "する") {
+                    group = 3;
+                    dict = input;
+                    masu = input.replace(/する$/, "します");
+                } else if (input === "くる" || input === "来る") {
+                    group = 3;
+                    dict = input;
+                    masu = input === "来る" ? "来ます" : "きます";
+                } else {
+                    const parsed = conjugateFromDictForm(input);
+                    if (parsed) {
+                        masu = parsed.masu;
+                        dict = parsed.dict;
+                        group = parsed.group;
+                    } else {
+                        masu = input + "みます";
+                        dict = input + "む";
+                        group = 1;
+                    }
+                }
+            }
+
+            const stem = masu.slice(0, -2);
+            const lastChar = stem.slice(-1);
+            const baseStem = stem.slice(0, -1);
+
+            let forms = { masu, dict };
+            let rules = {};
+
+            if (group === 3) {
+                const isKuru = stem.endsWith("き") || stem.endsWith("来");
+                const prefix = stem.slice(0, -1);
+                if (isKuru) {
+                    forms = {
+                        masu: prefix + "きます", dict: prefix + "くる", nai: prefix + "こない",
+                        ta: prefix + "きた", te: prefix + "きて", volitional: prefix + "こよう",
+                        imperative: prefix + "こい", prohibitive: prefix + "くるな",
+                        conditional: prefix + "くれば", potential: prefix + "こられます",
+                        passive: prefix + "こられます", causative: prefix + "こさせます"
+                    };
+                } else {
+                    forms = {
+                        masu: prefix + "します", dict: prefix + "する", nai: prefix + "しない",
+                        ta: prefix + "した", te: prefix + "して", volitional: prefix + "しよう",
+                        imperative: prefix + "しろ", prohibitive: prefix + "するな",
+                        conditional: prefix + "すれば", potential: prefix + "できます",
+                        passive: prefix + "されます", causative: prefix + "させます"
+                    };
+                }
+            } else if (group === 2) {
+                forms = {
+                    masu: masu, dict: stem + "る", nai: stem + "ない", ta: stem + "た", te: stem + "て",
+                    volitional: stem + "よう", imperative: stem + "ろ", prohibitive: stem + "るna",
+                    conditional: stem + "れば", potential: stem + "られます", passive: stem + "られます",
+                    causative: stem + "させます"
+                };
+            } else {
+                const columns = {
+                    'い': { a: 'わ', u: 'う', e: 'え', o: 'お', t: 'って' },
+                    'き': { a: 'か', u: 'く', e: 'け', o: 'こ', t: 'いて' },
+                    'ぎ': { a: 'が', u: 'ぐ', e: 'げ', o: 'ご', t: 'いで' },
+                    'し': { a: 'さ', u: 'す', e: 'せ', o: 'そ', t: 'して' },
+                    'ち': { a: 'た', u: 'つ', e: 'て', o: 'と', t: 'って' },
+                    'に': { a: 'な', u: 'ぬ', e: 'ね', o: 'nói', t: 'んで' },
+                    'び': { a: 'ば', u: 'ぶ', e: 'べ', o: 'ぼ', t: 'んで' },
+                    'mi': { a: 'ま', u: 'む', e: 'め', o: 'も', t: 'んで' },
+                    'り': { a: 'ら', u: 'る', e: 'れ', o: 'ろ', t: '...って' }
+                };
+
+                const col = columns[lastChar] || { a: 'わ', u: 'う', e: 'え', o: 'お', t: 'って' };
+                let teForm = baseStem + col.t;
+                let taForm = teForm.endsWith("て") ? teForm.slice(0, -1) + "た" : teForm.slice(0, -1) + "だ";
+                
+                if (masu.endsWith("いきます") || masu.endsWith("行くます")) {
+                    teForm = baseStem + "って";
+                    taForm = baseStem + "った";
+                }
+
+                forms = {
+                    masu: masu, dict: baseStem + col.u, nai: baseStem + col.a + "ない", ta: taForm, te: teForm,
+                    volitional: baseStem + col.o + "う", imperative: baseStem + col.e, prohibitive: baseStem + col.u + "な",
+                    conditional: baseStem + col.e + "ば", potential: baseStem + col.e + "ます", passive: baseStem + col.a + "れます",
+                    causative: baseStem + col.a + "せます"
+                };
+            }
+
+            const formExplanations = {
+                masu: `Thể lịch sự kết thúc bằng ます`,
+                dict: `Nhóm ${group}: Chuyển đuôi cột I sang cột U tương ứng`,
+                nai: `Nhóm ${group}: Chuyển đuôi cột I sang cột A rồi thêm ない`,
+                ta: `Nhóm ${group}: Chuyển đổi dựa trên thể Te (て -> た, de -> だ)`,
+                te: `Nhóm ${group}: Chuyển đổi đuôi theo âm tiết trước ます`,
+                volitional: `Nhóm ${group}: Chuyển đuôi cột I sang cột O rồi thêm う`,
+                imperative: `Nhóm ${group}: Chuyển đuôi cột I sang cột E`,
+                prohibitive: `Nhóm ${group}: Thêm な vào sau Thể Từ điển`,
+                conditional: `Nhóm ${group}: Chuyển đuôi cột I sang cột E rồi thêm ば`,
+                potential: `Nhóm ${group}: Chuyển đuôi cột I sang cột E rồi thêm ます`,
+                passive: `Nhóm ${group}: Chuyển đuôi cột I sang cột A rồi thêm れます`,
+                causative: `Nhóm ${group}: Chuyển đuôi cột I sang cột A rồi thêm せます`
+            };
+
+            Object.keys(forms).forEach(k => {
+                rules[k] = formExplanations[k] || `Bộ chia Sơnkuro Offline tự động xác định quy luật chia Nhóm ${group}`;
+            });
+
+            return { kanji: dict, hiragana: masu, masu: masu, group: group, meaning: meaning, rules: rules, forms: forms };
+        }
+
+        function initVerbDatabaseAtRuntime() {
+            const rawVerbsList = [
+                ["会う", "あう", "あいます", 1, "Gặp gỡ"],
+                ["買う", "かう", "かいます", 1, "Mua"],
+                ["使う", "つかう", "つかいます", 1, "Sử dụng"],
+                ["洗う", "あらう", "あらいます", 1, "Rửa / Lau chùi"],
+                ["歌う", "うたう", "うたいます", 1, "Hát"],
+                ["吸う", "すう", "すいます", 1, "Hút (thuốc)"],
+                ["違う", "ちがう", "ちがいます", 1, "Khác biệt / Sai"],
+                ["払う", "はらう", "はらいます", 1, "Trả tiền / Thanh toán"],
+                ["思う", "おもう", "おもいます", 1, "Nghĩ / Suy nghĩ"],
+                ["言う", "いう", "いいます", 1, "Nói / Phát biểu"],
+                ["手伝う", "てつだう", "てつだいます", 1, "Giúp đỡ"],
+                ["笑う", "わらう", "わらいます", 1, "Cười"],
+                ["向かう", "むかう", "むかいます", 1, "Hướng về phía"],
+                ["習う", "ならう", "ならいます", 1, "Học tập (có người dạy)"],
+                ["誘う", "さそう", "さそいます", 1, "Mời / Rủ rê"],
+                ["拾う", "ひろう", "ひろいます", 1, "Nhặt / Lượm"],
+                ["通う", "かよう", "かよいます", 1, "Đi học / Đi làm thường xuyên"],
+                ["もらう", "もらう", "もらいます", 1, "Nhận được"],
+                ["祝う", "いわう", "いわいます", 1, "Chúc mừng"],
+                ["行う", "おこなう", "おこないます", 1, "Tổ chức / Tiến hành"],
+                ["嫌う", "きらう", "きらいます", 1, "Ghét"],
+                ["願う", "ねがう", "ねがいます", 1, "Cầu nguyện / Nhờ vả"],
+                ["書ku", "かく", "かきます", 1, "Viết"],
+                ["行く", "いく", "いきます", 1, "Đi"],
+                ["聞く", "きく", "ききます", 1, "Nghe / Hỏi"],
+                ["歩く", "あるく", "あるきます", 1, "Đi bộ"],
+                ["咲く", "さく", "さきます", 1, "Nở (hoa)"],
+                ["置く", "おく", "おきます", 1, "Đặt / Để"],
+                ["働く", "はたらく", "はたらきます", 1, "Làm việc"],
+                ["引く", "ひku", "ひきます", 1, "Kéo / Chơi nhạc cụ"],
+                ["弾く", "ひく", "ひきます", 1, "Chơi đàn / Gảy"],
+                ["磨く", "みがく", "みがきます", 1, "Đánh (răng) / Chải"],
+                ["叩く", "たたく", "たたきます", 1, "Gõ / Đập / Vỗ"],
+                ["履く", "はく", "はきます", 1, "Mặc (quần, giày) / Xỏ"],
+                ["泣く", "なく", "なきます", 1, "Khóc"],
+                ["吹く", "ふく", "ふきます", 1, "Thổi (gió)"],
+                ["開く", "あく", "あきます", 1, "Mở ra (tự động từ)"],
+                ["届く", "とどく", "とどきます", 1, "Đến nơi / Chạm tới"],
+                ["驚く", "おどろく", "おどろきます", 1, "Ngạc nhiên"],
+                ["除く", "のぞく", "のぞきます", 1, "Loại bỏ / Ngoại trừ"],
+                ["乾く", "かわく", "かわきます", 1, "Khô"],
+                ["急ぐ", "いそぐ", "いそぎます", 1, "Vội vã / Khẩn trương"],
+                ["泳ぐ", "およぐ", "およぎます", 1, "Bơi"],
+                ["脱ぐ", "ぬぐ", "ぬぎます", 1, "Cởi (quần áo, giày)"],
+                ["騒ぐ", "さわぐ", "さわぎます", 1, "Làm ồn / Gây náo loạn"],
+                ["注ぐ", "そそぐ", "そそぎます", 1, "Rót / Đổ vào"],
+                ["稼ぐ", "かせぐ", "かせぎます", 1, "Kiếm tiền / Thu nhập"],
+                ["防ぐ", "ふせぐ", "ふせぎます", 1, "Phòng tránh / Ngăn chặn"],
+                ["話す", "はなす", "はなします", 1, "Nói chuyện"],
+                ["貸す", "かす", "かします", 1, "Cho mượn"],
+                ["返す", "かえす", "かえします", 1, "Trả lại"],
+                ["消す", "けす", "けします", 1, "Tắt / Xoá"],
+                ["出す", "だす", "だします", 1, "Nộp / Lấy ra"],
+                ["渡す", "わたす", "わたします", 1, "Trao cho / Đưa qua"],
+                ["壊す", "こわす", "こわします", 1, "Làm hỏng / Phá vỡ"],
+                ["起こす", "おこす", "おこします", 1, "Đánh thức ai đó dậy"],
+                ["直す", "なおす", "なおします", 1, "Sửa chữa / Đính chính"],
+                ["探す", "さがす", "さがします", 1, "Tìm kiếm"],
+                ["暮らす", "くらす", "くらします", 1, "Sinh sống / Trải qua cuộc sống"],
+                ["落とす", "おとす", "おtoshıます", 1, "Làm rơi / Đánh mất"],
+                ["冷やす", "ひやす", "ひやします", 1, "Làm lạnh"],
+                ["待つ", "まつ", "まちます", 1, "Chờ đợi"],
+                ["持つ", "もつ", "もちます", 1, "Cầm / Mang / Có"],
+                ["立つ", "たつ", "たちます", 1, "Đứng"],
+                ["育つ", "そだつ", "そだちます", 1, "Lớn lên / Phát triển"],
+                ["勝つ", "かつ", "かちます", 1, "Chiến thắng"],
+                ["死ぬ", "しぬ", "しにます", 1, "Chết"],
+                ["遊ぶ", "あそぶ", "あそびます", 1, "Chơi"],
+                ["呼ぶ", "よぶ", "よびます", 1, "Gọi"],
+                ["飛ぶ", "とぶ", "tobiます", 1, "Bay / Nhảy"],
+                ["並ぶ", "ならぶ", "ならびます", 1, "Xếp hàng (tự động từ)"],
+                ["学ぶ", "まなぶ", "まなびます", 1, "Học tập / Nghiên cứu"],
+                ["喜ぶ", "よろこぶ", "よろこびます", 1, "Vui mừng"],
+                ["飲む", "のむ", "のみます", 1, "Uống"],
+                ["読む", "よむ", "よみます", 1, "Đọc"],
+                ["休む", "やすむ", "やすみます", 1, "Nghỉ ngơi"],
+                ["住む", "すむ", "すみます", 1, "Sống / Định cư"],
+                ["頼む", "たのむ", "たのみます", 1, "Nhờ vả / Yêu cầu"],
+                ["包む", "つつむ", "つつみます", 1, "Bọc / Gói"],
+                ["盗む", "ぬすむ", "ぬすみます", 1, "Ăn trộm"],
+                ["進む", "すすむ", "すすみます", 1, "Tiến lên / Tiến triển"],
+                ["帰る", "かえる", "かえります", 1, "Trở về"],
+                ["走る", "はしる", "はしります", 1, "Chạy"],
+                ["取る", "とる", "toriます", 1, "Cầm / Lấy / Chụp ảnh"],
+                ["作る", "つくる", "つくります", 1, "Chế tạo / Làm ra"],
+                ["知る", "しる", "しります", 1, "Biết / Hiểu biết"],
+                ["入る", "はいる", "はいります", 1, "Đi vào"],
+                ["切る", "きる", "きります", 1, "Cắt"],
+                ["要る", "いる", "いります", 1, "Cần thiết"],
+                ["降る", "ふる", "ふります", 1, "Rơi (mưa, tuyết)"],
+                ["売る", "うる", "うります", 1, "Bán"],
+                ["終わる", "おわる", "おわります", 1, "Kết thúc"],
+                ["喋る", "しゃべる", "しゃべります", 1, "Trò chuyện"],
+                ["座る", "すわる", "すわります", 1, "Ngồi"],
+                ["送る", "おくる", "おくります", 1, "Gửi đi / Tiễn biệt"],
+                ["登る", "のぼる", "のぼります", 1, "Leo (núi)"],
+                ["乗る", "のる", "のります", 1, "Lên (xe, tàu)"],
+                ["分かる", "わかる", "わかります", 1, "Hiểu / Biết"],
+                ["限る", "かぎる", "かぎります", 1, "Giới hạn"],
+                ["参る", "まいる", "まいります", 1, "Đi / Đến (khiêm nhường)"],
+                ["減る", "へる", "へります", 1, "Giảm đi"],
+                ["滑る", "すべる", "すべります", 1, "Trơn trượt"],
+                ["渡る", "わたる", "わたります", 1, "Băng qua (đường, cầu)"],
+                ["食べる", "たべる", "たべます", 2, "Ăn"],
+                ["開ける", "あける", "あけます", 2, "Mở (tha động từ)"],
+                ["閉める", "しめる", "しめます", 2, "Đóng (tha động từ)"],
+                ["教える", "おしえる", "おしえます", 2, "Dạy học / Chỉ bảo"],
+                ["忘れる", "わすれる", "わすれます", 2, "Quên"],
+                ["覚える", "おぼえる", "おぼえます", 2, "Ghi nhớ"],
+                ["調べる", "しらべる", "しらべます", 2, "Điều tra / Tra cứu"],
+                ["決める", "きめる", "きめます", 2, "Quyết định"],
+                ["始める", "はじめる", "はじめます", 2, "Bắt đầu (tha động từ)"],
+                ["集める", "あつめる", "あつめます", 2, "Thu thập / Gom lại"],
+                ["片付ける", "かたづける", "かたづけます", 2, "Dọn dẹp"],
+                ["捨てる", "すてる", "すてます", 2, "Vứt bỏ"],
+                ["疲れる", "つかれる", "つかれます", 2, "Mệt mỏi"],
+                ["答える", "こたえる", "こたえます", 2, "Trả lời"],
+                ["増える", "ふえる", "ふえます", 2, "Tăng lên (tự động từ)"],
+                ["遅れる", "おくれる", "おくれます", 2, "Trễ / Muộn"],
+                ["建てる", "たてる", "たてます", 2, "Xây dựng (nhà cửa)"],
+                ["考える", "かんγえる", "かんがえます", 2, "Suy nghĩ / Xem xét"],
+                ["褒める", "ほめる", "ほめます", 2, "Khen ngợi"],
+                ["迎える", "むかえる", "むかえます", 2, "Đón tiếp"],
+                ["逃げる", "にげる", "niげます", 2, "Trốn chạy / Đào tẩu"],
+                ["並べる", "ならべる", "ならべます", 2, "Sắp xếp bày biện"],
+                ["見せる", "みせる", "みせます", 2, "Cho xem / Trình bày"],
+                ["止める", "とめる", "とめます", 2, "Dừng lại / Ngăn chặn"],
+                ["掛ける", "かける", "かけます", 2, "Treo / Đeo (kính) / Gọi điện"],
+                ["伝える", "つたえる", "つたえます", 2, "Truyền đạt"],
+                ["続ける", "つづける", "つづけます", 2, "Tiếp tục (tha động từ)"],
+                ["受ける", "うける", "うけます", 2, "Tiếp nhận / Thi cử"],
+                ["負ける", "まける", "まけます", 2, "Thất bại / Thua"],
+                ["投げる", "なげる", "なげます", 2, "Ném"],
+                ["見る", "みる", "みます", 2, "Xem / Nhìn"],
+                ["起きる", "おきる", "おきます", 2, "Thức dậy"],
+                ["借りる", "かりる", "かります", 2, "Mượn"],
+                ["降りる", "おりる", "おります", 2, "Xuống (xe, tàu)"],
+                ["浴びる", "あびる", "あびます", 2, "Tắm (vòi sen)"],
+                ["居る", "いる", "います", 2, "Có (người, động vật)"],
+                ["落ちる", "おちる", "おちます", 2, "Rơi / Rụng"],
+                ["信じる", "しんじる", "しんじます", 2, "Tin tưởng"],
+                ["閉じる", "とじる", "とじます", 2, "Nhắm (mắt) / Đóng (sách)"],
+                ["giải sầu", "すぎる", "すぎます", 2, "Quá mức / Trôi qua"],
+                ["năng động", "のびる", "のびます", 2, "Kéo dài / Phát triển"],
+                ["着る", "きる", "きます", 2, "Mặc (áo)"],
+                ["tương tự", "たりる", "たります", 2, "Đầy đủ"],
+                ["する", "する", "します", 3, "Làm"],
+                ["来る", "くる", "きます", 3, "Đến"],
+                ["勉強する", "べんきょうする", "べんきょうします", 3, "Học tập"],
+                ["練習する", "れんしゅうする", "れんしゅうします", 3, "Luyện tập"],
+                ["散歩する", "さんぽする", "さんぽします", 3, "Đi dạo"],
+                ["旅行する", "りょこうする", "りょこうします", 3, "Du lịch"],
+                ["心配する", "しんぱいする", "しんぱいします", 3, "Lo lắng"],
+                ["準備する", "じゅんびする", "じゅんびします", 3, "Chuẩn bị"],
+                ["予約する", "よやくする", "よやくします", 3, "Đặt trước"],
+                ["案内する", "あんないする", "あんないします", 3, "Hướng dẫn"],
+                ["紹介する", "しょうかいする", "しょうかいします", 3, "Giới thiệu"],
+                ["電話する", "でんわする", "denwaします", 3, "Gọi điện thoại"],
+                ["運転する", "うんてんする", "うんてんします", 3, "Lái xe"],
+                ["洗濯する", "せんたくする", "せんたくします", 3, "Giặt giũ"],
+                ["掃除する", "そうじする", "そうじします", 3, "Dọn dẹp vệ sinh"],
+                ["料理する", "りょうりする", "りょうりします", 3, "Nấu ăn"],
+                ["買い物する", "かいものする", "かいものします", 3, "Mua sắm"],
+                ["結婚する", "けっこんする", "けっこんします", 3, "Kết hôn"],
+                ["確認する", "かくにんする", "かくにんします", 3, "Xác nhận"],
+                ["相談する", "そうだんする", "そうだんします", 3, "Bàn bạc / Thảo luận"]
+            ];
+
+            verbsDatabase.length = 0; 
+            const uniqueVerbsMap = new Map();
+            rawVerbsList.forEach(raw => {
+                const kanjiWord = raw[0]; const hiraWord = raw[1]; const masuForm = raw[2]; const groupNum = raw[3]; const meanWord = raw[4];
+                if (!uniqueVerbsMap.has(masuForm)) {
+                    uniqueVerbsMap.set(masuForm, { kanjiWord, hiraWord, masuForm, groupNum, meanWord });
+                }
+            });
+
+            uniqueVerbsMap.forEach(v => {
+                const conj = parseAndConjugateLocally(v.masuForm);
+                if (conj) {
+                    conj.kanji = v.kanjiWord; conj.hiragana = v.hiraWord; conj.meaning = v.meanWord; conj.group = v.groupNum;
+                    conj.hiraForms = { ...conj.forms };
+                    const isSuru = v.kanjiWord.endsWith("する"); const isKuru = v.kanjiWord === "来る";
+                    let kanjiRoot = v.kanjiWord.slice(0, -1); let hiraRoot = v.hiraWord.slice(0, -1);
+
+                    if (isSuru) {
+                        kanjiRoot = v.kanjiWord.slice(0, -2); hiraRoot = v.hiraWord.slice(0, -2);
+                    } else if (isKuru) {
+                        kanjiRoot = "来"; hiraRoot = "く";
+                    }
+
+                    Object.keys(conj.forms).forEach(key => {
+                        const hiraForm = conj.forms[key];
+                        if (isKuru) {
+                             if (key === "masu" || key === "ta" || key === "te") conj.forms[key] = hiraForm.replace("き", "来");
+                             else if (key === "dict" || key === "prohibitive" || key === "conditional") conj.forms[key] = hiraForm.replace("く", "来");
+                             else conj.forms[key] = hiraForm.replace("こ", "来");
+                        } else if (hiraForm.startsWith(hiraRoot)) {
+                            conj.forms[key] = hiraForm.replace(hiraRoot, kanjiRoot);
+                        }
+                    });
+                    verbsDatabase.push(conj);
+                }
+            });
+        }
+
+        function searchWithAI() {
+            const query = document.getElementById('verb-search-input').value.trim();
+            if (!query) {
+                showToast("Vui lòng nhập động từ hoặc nghĩa để tra cứu!", "⚠️");
+                return;
+            }
+
+            const localMatch = verbsDatabase.find(v => 
+                v.masu.toLowerCase().includes(query.toLowerCase()) || 
+                v.kanji.toLowerCase().includes(query.toLowerCase()) || 
+                v.meaning.toLowerCase().includes(query.toLowerCase()) ||
+                v.hiragana.toLowerCase().includes(query.toLowerCase())
+            );
+
+            if (localMatch) {
+                const matchIdx = verbsDatabase.indexOf(localMatch);
+                selectVerb(matchIdx);
+                initMindMapSelector();
+                showToast(`Đã tìm thấy "${localMatch.masu}" trong bộ nhớ Sơnkuro!`, "📔");
+                return;
+            }
+
+            const localConjugation = parseAndConjugateLocally(query);
+            if (localConjugation) {
+                verbsDatabase.push(localConjugation);
+                filterVerbs();
+                selectVerb(verbsDatabase.length - 1);
+                initMindMapSelector();
+                showToast(`Chia thuật toán ngoại tuyến tự động từ "${localConjugation.masu}"!`, "✨");
+            } else {
+                showToast("Không nhận dạng được từ khóa. Hãy thử nhập thể ます!", "❌");
+            }
+        }
+
+        function triggerSearch() {
+            searchWithAI();
+        }
+
+        function selectVerb(idx) {
+            currentActiveVerb = verbsDatabase[idx];
+            
+            document.getElementById('detail-kanji').innerText = currentActiveVerb.kanji;
+            document.getElementById('detail-kana').innerText = currentActiveVerb.hiragana;
+            document.getElementById('detail-masu').innerText = currentActiveVerb.masu;
+            document.getElementById('detail-group').innerText = `Nhóm ${currentActiveVerb.group}`;
+            document.getElementById('detail-meaning').innerText = currentActiveVerb.meaning;
+            document.getElementById('detail-dict-top').innerText = currentActiveVerb.forms.dict;
+
+            const grid = document.getElementById('conjugations-grid');
+            grid.innerHTML = '';
+
+            Object.keys(formNames).forEach(key => {
+                const formVal = currentActiveVerb.forms[key];
+                const rule = currentActiveVerb.rules[key];
+                const meta = formNames[key];
+
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-between hover:shadow-md transition duration-150";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="text-base">${meta.icon}</span>
+                            <h5 class="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">${meta.vi}</h5>
+                        </div>
+                        <div class="text-base md:text-lg font-extrabold text-slate-900 japanese-font mb-1">${formVal}</div>
+                        <p class="text-[11px] text-slate-400 font-medium leading-normal">${meta.desc}</p>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-slate-200/60 text-[10px] text-slate-500 leading-relaxed italic">
+                        <strong>Cách chia:</strong> ${rule}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderTheoryButtons() {
+            const container = document.getElementById('theory-buttons-container');
+            container.innerHTML = '';
+
+            Object.keys(formNames).forEach(key => {
+                const meta = formNames[key];
+                const isActive = (key === currentActiveTheoryForm);
+                const btn = document.createElement('button');
+                btn.className = `p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center gap-1 min-h-[64px] ${
+                    isActive ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-black shadow-sm ring-1 ring-indigo-500' : 'border-slate-200 bg-white hover:border-slate-400 text-slate-600 font-bold'
+                }`;
+                btn.onclick = () => {
+                    currentActiveTheoryForm = key;
+                    renderTheoryButtons();
+                    updateTheoryDisplay(key);
+                };
+                btn.innerHTML = `
+                    <span class="text-base md:text-lg">${meta.icon}</span>
+                    <span class="text-[9px] sm:text-[10px] truncate max-w-full font-bold">${meta.vi.split(" (")[0]}</span>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        function updateTheoryDisplay(formKey) {
+            const data = masterTheoryData[formKey];
+            if (!data) return;
+
+            document.getElementById('theory-heading-icon').innerText = formNames[formKey].icon;
+            document.getElementById('theory-heading-title').innerText = data.title;
+            document.getElementById('theory-heading-desc').innerText = data.desc;
+
+            document.getElementById('theory-g1-text').innerHTML = `<div class="min-h-[96px]">${data.g1}</div>`;
+            document.getElementById('theory-g2-text').innerHTML = `<div class="min-h-[96px]">${data.g2}</div>`;
+            document.getElementById('theory-g3-text').innerHTML = `<div class="min-h-[96px]">${data.g3}</div>`;
+        }
+
+        function initPracticeEngine() {
+            const targetMode = document.getElementById('practice-mode-select').value;
+            const pG1 = document.getElementById('practice-g1').checked;
+            const pG2 = document.getElementById('practice-g2').checked;
+            const pG3 = document.getElementById('practice-g3').checked;
+
+            const allowedGroups = [];
+            if (pG1) allowedGroups.push(1);
+            if (pG2) allowedGroups.push(2);
+            if (pG3) allowedGroups.push(3);
+
+            if (allowedGroups.length === 0) {
+                const feedbackBox = document.getElementById('practice-feedback-box');
+                feedbackBox.className = "block bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-xl text-xs font-bold";
+                feedbackBox.innerHTML = "⚠️ Vui lòng chọn ít nhất 1 nhóm động từ luyện tập phía trên!";
+                return;
+            }
+
+            const filteredVerbs = verbsDatabase.filter(v => allowedGroups.includes(v.group));
+            const randomVerb = filteredVerbs[Math.floor(Math.random() * filteredVerbs.length)];
+
+            let finalFormKey = targetMode;
+            if (targetMode === 'all') {
+                const possibleKeys = Object.keys(formNames);
+                finalFormKey = possibleKeys[Math.floor(Math.random() * possibleKeys.length)];
+            }
+
+            const expectedAnswer = randomVerb.hiraForms[finalFormKey] || randomVerb.forms[finalFormKey];
+
+            currentPracticeQuestion = {
+                verb: randomVerb, formKey: finalFormKey, correctAnswer: expectedAnswer, rule: randomVerb.rules[finalFormKey]
+            };
+
+            document.getElementById('practice-group-badge').innerText = `Nhóm ${randomVerb.group}`;
+            document.getElementById('practice-question-verb').innerText = randomVerb.masu;
+            document.getElementById('practice-question-meaning').innerText = `(Ý nghĩa: ${randomVerb.meaning})`;
+            document.getElementById('practice-target-form').innerText = `${formNames[finalFormKey].icon} ${formNames[finalFormKey].vi}`;
+
+            document.getElementById('practice-answer-input').value = '';
+            const feedbackBox = document.getElementById('practice-feedback-box');
+            feedbackBox.className = "hidden";
+        }
+
+        function submitPracticeAnswer() {
+            const userInput = document.getElementById('practice-answer-input').value.trim().toLowerCase();
+            const feedbackBox = document.getElementById('practice-feedback-box');
+            
+            if (!userInput) {
+                feedbackBox.className = "block bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-lg text-xs font-bold";
+                feedbackBox.innerHTML = "⚠️ Bạn chưa nhập câu trả lời!";
+                return;
+            }
+
+            const isCorrect = (userInput === currentPracticeQuestion.correctAnswer.toLowerCase() || 
+                               userInput === currentPracticeQuestion.verb.forms[currentPracticeQuestion.formKey].toLowerCase());
+            playBeep(isCorrect);
+
+            feedbackBox.className = "block p-4 rounded-xl border transition duration-200";
+
+            if (isCorrect) {
+                practiceCorrect++;
+                localStorage.setItem('sk_dt_practiceCorrect', practiceCorrect);
+                document.getElementById('practice-correct-count').innerText = practiceCorrect;
+                
+                feedbackBox.className = "block p-4 rounded-xl border bg-emerald-50 border-emerald-200 text-emerald-800";
+                feedbackBox.innerHTML = `
+                    <strong class="text-xs">Chính xác tuyệt đối!</strong>
+                    <p class="text-xs">Đáp án: <strong class="japanese-font text-emerald-700">${currentPracticeQuestion.correctAnswer}</strong></p>
+                    <button onclick="initPracticeEngine()" class="mt-2 bg-emerald-600 text-white font-bold text-[11px] py-1 px-3 rounded-xl shadow-sm transition block">Từ tiếp theo &rarr;</button>
+                `;
+            } else {
+                practiceWrong++;
+                localStorage.setItem('sk_dt_practiceWrong', practiceWrong);
+                document.getElementById('practice-wrong-count').innerText = practiceWrong;
+
+                feedbackBox.className = "block p-4 rounded-xl border bg-rose-50 border-rose-200 text-rose-800";
+                feedbackBox.innerHTML = `
+                    <strong class="text-xs">Chưa chính xác!</strong>
+                    <p class="text-xs">Đáp án đúng là: <strong class="japanese-font text-rose-700">${currentPracticeQuestion.correctAnswer}</strong></p>
+                    <button onclick="initPracticeEngine()" class="mt-2 bg-rose-600 text-white font-bold text-[11px] py-1 px-3 rounded-xl shadow-sm transition block">Tiếp tục &rarr;</button>
+                `;
+            }
+        }
+
+        function startGame() {
+            const selectG1 = document.getElementById('g-group1').checked;
+            const selectG2 = document.getElementById('g-group2').checked;
+            const selectG3 = document.getElementById('g-group3').checked;
+
+            const allowedGroups = [];
+            if (selectG1) allowedGroups.push(1);
+            if (selectG2) allowedGroups.push(2);
+            if (selectG3) allowedGroups.push(3);
+
+            if (allowedGroups.length === 0) {
+                showToast("Vui lòng chọn ít nhất một động từ nhóm!", "⚠️");
+                return;
+            }
+
+            const difficultyRadios = document.getElementsByName('difficulty');
+            for (let radio of difficultyRadios) {
+                if (radio.checked) { timerDuration = parseInt(radio.value); break; }
+            }
+
+            gameScore = 0; gameStreak = 0;
+            document.getElementById('game-score').innerText = gameScore;
+            document.getElementById('game-streak').innerText = `🔥 ${gameStreak}`;
+
+            document.getElementById('game-setup').classList.add('hidden');
+            document.getElementById('game-play').classList.remove('hidden');
+
+            generateQuestion(allowedGroups);
+        }
+
+        function generateQuestion(allowedGroups) {
+            clearInterval(currentTimer);
+
+            const possibleVerbs = verbsDatabase.filter(v => allowedGroups.includes(v.group));
+            const randomVerb = possibleVerbs[Math.floor(Math.random() * possibleVerbs.length)];
+
+            const possibleForms = Object.keys(formNames);
+            const randomFormKey = possibleForms[Math.floor(Math.random() * possibleForms.length)];
+
+            const correctAnswer = randomVerb.hiraForms[randomFormKey] || randomVerb.forms[randomFormKey];
+
+            const wrongAnswers = new Set();
+            let limitCounter = 0;
+            while(wrongAnswers.size < 3 && limitCounter < 50) {
+                limitCounter++;
+                const decoyChoiceType = Math.random() > 0.5 ? 'same_verb_different_form' : 'different_verb_same_form';
+                
+                if (decoyChoiceType === 'same_verb_different_form') {
+                    const otherFormKey = possibleForms[Math.floor(Math.random() * possibleForms.length)];
+                    const otherFormVal = randomVerb.hiraForms[otherFormKey] || randomVerb.forms[otherFormKey];
+                    if (otherFormVal && otherFormVal !== correctAnswer) wrongAnswers.add(otherFormVal);
+                } else {
+                    const otherVerb = possibleVerbs[Math.floor(Math.random() * possibleVerbs.length)];
+                    const otherVerbVal = otherVerb.hiraForms[randomFormKey] || otherVerb.forms[randomFormKey];
+                    if (otherVerbVal && otherVerbVal !== correctAnswer) wrongAnswers.add(otherVerbVal);
+                }
+            }
+
+            while (wrongAnswers.size < 3) { wrongAnswers.add("đáp án bẫy " + (wrongAnswers.size + 1)); }
+
+            const choices = [correctAnswer, ...Array.from(wrongAnswers)].sort(() => Math.random() - 0.5);
+
+            currentQuestion = {
+                verb: randomVerb, formKey: randomFormKey, correct: correctAnswer, choices: choices, allowedGroups: allowedGroups
+            };
+
+            document.getElementById('game-q-group').innerText = `Nhóm ${randomVerb.group}`;
+            document.getElementById('game-q-form').innerText = `${formNames[randomFormKey].icon} ${formNames[randomFormKey].vi}`;
+            document.getElementById('game-q-word').innerText = randomVerb.masu;
+            document.getElementById('game-q-meaning').innerText = `(${randomVerb.meaning})`;
+
+            const container = document.getElementById('game-choices-container');
+            container.innerHTML = '';
+
+            choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = "py-3 px-2 border-2 border-slate-200 hover:border-slate-800 rounded-xl font-bold text-xs text-slate-800 hover:bg-slate-50 transition active:scale-95 text-center japanese-font truncate";
+                btn.onclick = () => submitAnswer(choice);
+                btn.innerText = choice;
+                container.appendChild(btn);
+            });
+
+            timeLeft = timerDuration;
+            updateTimerUI();
+            
+            currentTimer = setInterval(() => {
+                timeLeft -= 0.1;
+                updateTimerUI();
+                if (timeLeft <= 0) { clearInterval(currentTimer); timeOutFail(); }
+            }, 100);
+        }
+
+        function updateTimerUI() {
+            const bar = document.getElementById('game-timer-bar');
+            const percent = (timeLeft / timerDuration) * 100;
+            bar.style.width = `${percent}%`;
+            if (percent < 30) { bar.className = "bg-rose-600 h-full w-full animate-pulse"; }
+            else { bar.className = "bg-rose-500 h-full w-full"; }
+        }
+
+        function submitAnswer(selected) {
+            clearInterval(currentTimer);
+            const isCorrect = (selected === currentQuestion.correct);
+            playBeep(isCorrect);
+
+            if (isCorrect) {
+                gameScore += 10; gameStreak += 1;
+                localStorage.setItem('sk_dt_gameScore', gameScore);
+                localStorage.setItem('sk_dt_gameStreak', gameStreak);
+                document.getElementById('game-score').innerText = gameScore;
+                document.getElementById('game-streak').innerText = `🔥 ${gameStreak}`;
+                
+                const el = document.getElementById('game-play');
+                el.classList.add('ring-4', 'ring-emerald-500/50');
+                setTimeout(() => el.classList.remove('ring-4', 'ring-emerald-500/50'), 400);
+                setTimeout(() => generateQuestion(currentQuestion.allowedGroups), 500);
+            } else {
+                endGame();
+            }
+        }
+
+        function timeOutFail() { playBeep(false); endGame(); }
+
+        function endGame() {
+            clearInterval(currentTimer);
+            document.getElementById('game-play').classList.add('hidden');
+            document.getElementById('game-over').classList.remove('hidden');
+            document.getElementById('end-score').innerText = gameScore;
+            document.getElementById('end-streak').innerText = `🔥 ${gameStreak}`;
+        }
+
+        function exitGame() { clearInterval(currentTimer); switchTab('learn'); }
+
+        function initMindMapSelector() {
+            const selectEl = document.getElementById('mindmap-verb-select');
+            if (!selectEl) return;
+            selectEl.innerHTML = '';
+            verbsDatabase.forEach((verb, idx) => {
+                const opt = document.createElement('option'); opt.value = idx;
+                opt.innerText = `[G${verb.group}] ${verb.masu} (${verb.meaning})`;
+                selectEl.appendChild(opt);
+            });
+            const activeIdx = verbsDatabase.findIndex(v => v.masu === currentActiveVerb.masu);
+            if (activeIdx !== -1) { selectEl.value = activeIdx; }
+        }
+
+        function renderMindMap() {
+            const selectEl = document.getElementById('mindmap-verb-select');
+            if (!selectEl) return;
+
+            const selectedIndex = parseInt(selectEl.value || 0);
+            const verb = verbsDatabase[selectedIndex];
+            currentActiveVerb = verb; 
+
+            document.getElementById('map-root-group').innerText = `Nhóm ${verb.group}`;
+            document.getElementById('map-root-masu').innerText = verb.masu;
+            document.getElementById('map-root-translation').innerText = `Nghĩa: ${verb.meaning}`;
+
+            const createNodeHTML = (formKey, accentColorClass) => {
+                return `
+                    <div class="bg-slate-900 border-l-4 ${accentColorClass} p-3 rounded-xl shadow-md mindmap-node">
+                        <span class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wide block">${formNames[formKey].icon} ${formNames[formKey].vi}</span>
+                        <h4 class="text-sm font-black text-white japanese-font">${verb.forms[formKey]}</h4>
+                    </div>`;
+            };
+
+            document.getElementById('branch-a-container').innerHTML = createNodeHTML('nai', 'border-rose-500') + createNodeHTML('passive', 'border-rose-500') + createNodeHTML('causative', 'border-rose-500');
+            document.getElementById('branch-u-container').innerHTML = createNodeHTML('dict', 'border-blue-500') + createNodeHTML('prohibitive', 'border-blue-500');
+            document.getElementById('branch-e-container').innerHTML = createNodeHTML('potential', 'border-emerald-500') + createNodeHTML('conditional', 'border-emerald-500') + createNodeHTML('imperative', 'border-emerald-500');
+            document.getElementById('branch-o-container').innerHTML = createNodeHTML('volitional', 'border-amber-500');
+            document.getElementById('branch-te-container').innerHTML = createNodeHTML('te', 'border-purple-500') + createNodeHTML('ta', 'border-purple-500');
+        }
+
+        window.onload = function() {
+            // TẢI TIẾN ĐỘ CŨ TỪ LOCALSTORAGE ĐỂ ĐỒNG BỘ HIỂN THỊ
+            practiceCorrect = parseInt(localStorage.getItem('sk_dt_practiceCorrect')) || 0;
+            practiceWrong = parseInt(localStorage.getItem('sk_dt_practiceWrong')) || 0;
+            document.getElementById('practice-correct-count').innerText = practiceCorrect;
+            document.getElementById('practice-wrong-count').innerText = practiceWrong;
+
+            initVerbDatabaseAtRuntime();
+            initLearnSection();
+            initMindMapSelector();
+            
+            document.getElementById('practice-answer-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') { submitPracticeAnswer(); }
+            });
+        };
+    </script>
+</body>
+</html>
