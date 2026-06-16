@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Học Hán Tự N5 - Hạc Giấy Phiêu Lưu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700;900&family=Quicksand:wght@500;700&display=swap');
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: #0f172a;
+            touch-action: none;
+            overflow: hidden;
+        }
+        
+        .kanji-text {
+            font-family: 'Noto Serif JP', serif;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(12px);
+            border: 2px solid #f1f5f9;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-0 m-0 select-none flex-col">
+
+    <div id="sync-alert" class="w-full sm:max-w-lg md:max-w-xl mb-3 p-3 bg-slate-900 border border-slate-800 text-slate-300 rounded-xl flex items-center justify-between text-xs font-semibold shadow-md">
+        <p id="sync-text">👤 Chế độ khách: Đăng nhập tại Trang Chủ để lưu kỷ lục trận pháp Hán tự.</p>
+    </div>
+
+    <div class="w-full sm:max-w-lg md:max-w-xl mb-3 flex justify-start">
+        <button onclick="goBackToMenu('game-home.html')" class="px-4 py-2 bg-red-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition hover:bg-red-600 shadow-md">
+            ← Rời trò chơi
+        </button>
+    </div>
+
+    <div class="relative w-full sm:max-w-lg md:max-w-xl h-[80dvh] sm:h-[75vh] sm:rounded-2xl sm:shadow-2xl overflow-hidden bg-[#fbf5ee] border-4 border-[#e63946]/15 flex flex-col">
+        
+        <div class="relative flex-grow w-full overflow-hidden bg-[#fbf5ee]">
+            <canvas id="gameCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+        </div>
+
+        <div id="questionCard" class="absolute top-4 left-1/2 -translate-x-1/2 w-[92%] max-w-[380px] bg-[#fffdf9] border-2 border-[#b7094c] rounded-xl shadow-lg p-3 text-center transition-all duration-300 hidden">
+            <div class="flex justify-between items-center px-1 mb-1 border-b pb-1 border-gray-100">
+                <span id="stageNameHUD" class="text-[10px] font-bold text-red-600 bg-red-50 px-2.5 py-0.5 rounded-full uppercase tracking-wider">MÀN 1: CHỮ SỐ</span>
+                <span id="stageProgressHUD" class="text-[10px] font-bold text-gray-500">TIẾN TRÌNH: 0</span>
+            </div>
+            <div class="text-[11px] text-gray-400 font-bold mb-0.5">Tìm chữ Kanji đúng của từ dưới đây:</div>
+            <div id="questionPrompt" class="text-2xl font-black text-gray-800 kanji-text">---</div>
+        </div>
+
+        <div id="startScreen" class="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white p-4 text-center overflow-y-auto transition-all duration-300 z-50">
+            <div class="glass-panel p-6 sm:p-8 rounded-2xl w-full max-w-[360px] shadow-2xl flex flex-col items-center text-gray-800 my-auto">
+                <h1 class="text-3xl font-black text-[#b7094c] kanji-text mb-1 tracking-wider">漢字の旅</h1>
+                <h2 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Phiêu Lưu Hán Tự N5</h2>
+                <p class="text-[11px] text-gray-500 font-bold mb-3 uppercase tracking-wider text-center">👇 Hãy chọn màn chơi để bắt đầu 👇</p>
+                
+                <div class="w-full space-y-2.5 mb-4">
+                    <button data-stage="0" class="stage-btn w-full text-left p-3 rounded-xl border-2 border-orange-200 bg-orange-50/60 hover:bg-orange-100 active:scale-[0.98] transition-all flex items-center justify-between">
+                        <div>
+                            <div class="text-[9px] font-bold text-orange-800 tracking-wider">Màn 1</div>
+                            <div class="text-sm font-black text-gray-800">Số đếm & Thời gian</div>
+                            <div class="text-[10px] text-gray-500">121 từ • Chơi vô hạn tính điểm</div>
+                        </div>
+                        <span class="text-xl">🌸</span>
+                    </button>
+                    <button data-stage="1" class="stage-btn w-full text-left p-3 rounded-xl border-2 border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100 active:scale-[0.98] transition-all flex items-center justify-between">
+                        <div>
+                            <div class="text-[9px] font-bold text-indigo-800 tracking-wider">Màn 2</div>
+                            <div class="text-sm font-black text-gray-800">Vị trí & Thiên nhiên</div>
+                            <div class="text-[10px] text-gray-500">121 từ • Chơi vô hạn tính điểm</div>
+                        </div>
+                        <span class="text-xl">🌙</span>
+                    </button>
+                    <button data-stage="2" class="stage-btn w-full text-left p-3 rounded-xl border-2 border-rose-200 bg-rose-50/60 hover:bg-rose-100 active:scale-[0.98] transition-all flex items-center justify-between">
+                        <div>
+                            <div class="text-[9px] font-bold text-rose-800 tracking-wider">Màn 3</div>
+                            <div class="text-sm font-black text-gray-800">Động từ & Tính từ</div>
+                            <div class="text-[10px] text-gray-500">122 từ • Chơi vô hạn tính điểm</div>
+                        </div>
+                        <span class="text-xl">🍁</span>
+                    </button>
+                </div>
+                <p class="text-[10px] text-gray-400 italic">Dữ liệu đồng bộ 364 từ vựng từ Tổng hợp hán tự N5</p>
+            </div>
+        </div>
+
+        <div id="gameOverScreen" class="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white p-6 text-center hidden transition-all duration-300 z-40">
+            <div class="glass-panel p-6 rounded-2xl w-full max-w-[340px] shadow-2xl flex flex-col items-center text-gray-800">
+                <h2 class="text-2xl font-bold mb-2 text-red-600 kanji-text">Chưa Chính Xác</h2>
+                
+                <div id="learningFeedback" class="bg-red-50 border border-red-200 rounded-lg p-4 w-full mb-6">
+                    <p class="text-xs text-gray-500 mb-1">Hán tự viết đúng phải là:</p>
+                    <div id="correctKanjiDisplay" class="text-4xl font-black text-[#b7094c] kanji-text mb-1 tracking-wide">---</div>
+                    <p id="correctReadingDisplay" class="text-sm text-gray-600">Đọc là: ---</p>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-3 w-full mb-6 flex justify-around text-center border border-gray-200">
+                    <div>
+                        <div class="text-xs text-gray-400 font-bold">MÀN VỪA CHƠI</div>
+                        <div id="finalStage" class="text-lg font-bold text-[#b7094c]">Màn 1</div>
+                    </div>
+                    <div class="border-r border-gray-200"></div>
+                    <div>
+                        <div class="text-xs text-gray-400 font-bold">ĐIỂM ĐẠT ĐƯỢC</div>
+                        <div id="highScore" class="text-lg font-bold text-emerald-600">0</div>
+                    </div>
+                </div>
+
+                <button id="restartButton" class="w-full bg-[#b7094c] hover:bg-[#a0073e] text-white font-bold py-3 px-6 rounded-full shadow-lg transition active:scale-95 transform duration-150 tracking-wider">
+                    QUAY LẠI CHỌN MÀN CHƠI
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Hàm phát thông điệp điều hướng quay lại danh mục menu trò chơi
+        function goBackToMenu(menuUrl) {
+            window.parent.postMessage({ type: 'HIGHUB_FRAME_NAVIGATE', url: menuUrl }, '*');
+        }
+
+        // 2. Lắng nghe gói đồng bộ trạng thái tài khoản tự động từ Trang Chủ lớn đổ xuống
+        window.addEventListener('message', function(event) {
+            const message = event.data;
+            if (message && message.type === 'HIGHUB_AUTH_SYNC') {
+                const authState = message.payload;
+                const alertBox = document.getElementById('sync-alert');
+                const alertText = document.getElementById('sync-text');
+
+                if (authState.isLoggedIn && authState.data) {
+                    alertBox.classList.replace('bg-slate-900', 'bg-emerald-950');
+                    alertBox.classList.replace('border-slate-800', 'border-emerald-600');
+                    alertBox.classList.replace('text-slate-300', 'text-emerald-200');
+                    alertText.innerHTML = `🥷 <strong>HIGHUB Máy chủ giải trí:</strong> Đã kết nối với học viên <strong>${authState.data.name}</strong>!`;
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            const startScreen = document.getElementById('startScreen');
+            const gameOverScreen = document.getElementById('gameOverScreen');
+            
+            const questionCard = document.getElementById('questionCard');
+            const questionPrompt = document.getElementById('questionPrompt');
+            const stageNameHUD = document.getElementById('stageNameHUD');
+            const stageProgressHUD = document.getElementById('stageProgressHUD');
+            
+            const learningFeedback = document.getElementById('learningFeedback');
+            const correctKanjiDisplay = document.getElementById('correctKanjiDisplay');
+            const correctReadingDisplay = document.getElementById('correctReadingDisplay');
+            
+            const restartButton = document.getElementById('restartButton');
+            
+            const finalStageText = document.getElementById('finalStage');
+            const highScoreText = document.getElementById('highScore');
+
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+            function playSound(type) {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'jump') {
+                    osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(550, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'score') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.08); 
+                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.16); 
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'hit') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 0.4);
+                    gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                }
+            }
+
+            const stagesData = [
+                {
+                    level: 1,
+                    name: "Màn 1: Số đếm & Thời gian",
+                    bgColor: { start: '#fbf1da', mid: '#fdd49e', end: '#f6a76c' }, 
+                    moonOrSun: 'sun',
+                    vocab: [
+                        { prompt: "いち (Một)", correct: "一", wrong: "二" },
+                        { prompt: "いちじ (Một giờ)", correct: "一時", wrong: "一寺" },
+                        { prompt: "いっぷん (Một phút)", correct: "一分", wrong: "一刀" },
+                        { prompt: "ひとつ (Một cái)", correct: "一つ", wrong: "一っ" },
+                        { prompt: "ひとり (Một người)", correct: "一人", wrong: "一入" },
+                        { prompt: "niじ (Hai giờ)", correct: "二時", wrong: "二寺" },
+                        { prompt: "にがつ (Tháng hai)", correct: "二月", wrong: "二日" },
+                        { prompt: "じnan (Con trai thứ hai)", correct: "二男", wrong: "二女" },
+                        { prompt: "ふたつ (Hai cái)", correct: "二つ", wrong: "二っ" },
+                        { prompt: "ふたり (Hai người)", correct: "二人", wrong: "二入" },
+                        { prompt: "ふつか (Ngày mùng hai)", correct: "二日", wrong: "二月" },
+                        { prompt: "さん (Ba)", correct: "三", wrong: "川" },
+                        { prompt: "さんじ (Ba giờ)", correct: "三時", wrong: "三寺" },
+                        { prompt: "さんにん (Ba người)", correct: "三人", wrong: "三入" },
+                        { prompt: "みっつ (Ba cái)", correct: "三つ", wrong: "三っ" },
+                        { prompt: "みっか (Ngày mùng ba)", correct: "三日", wrong: "三月" },
+                        { prompt: "しがつ (Tháng tư)", correct: "四月", wrong: "四日" },
+                        { prompt: "しこく (Đảo Shikoku)", correct: "四国", wrong: "西国" },
+                        { prompt: "し / よん (Bốn)", correct: "四", wrong: "西" },
+                        { prompt: "よにん (Bốn người)", correct: "四人", wrong: "四入" },
+                        { prompt: "よっつ (Bốn cái)", correct: "四つ", wrong: "四っ" },
+                        { prompt: "ご (Năm)", correct: "五", wrong: "吾" },
+                        { prompt: "ごねん (Năm năm)", correct: "五年", wrong: "五手" },
+                        { prompt: "ごじ (Năm giờ)", correct: "五時", wrong: "五寺" },
+                        { prompt: "いつつ (Năm cái)", correct: "五つ", wrong: "五っ" },
+                        { prompt: "いつか (Ngày mùng năm)", correct: "五日", wrong: "五月" },
+                        { prompt: "ろく (Sáu)", correct: "六", wrong: "介" },
+                        { prompt: "じゅうろく (Mười sáu)", correct: "十六", wrong: "十介" },
+                        { prompt: "ろくじゅう (Sáu mươi)", correct: "六十", wrong: "介十" },
+                        { prompt: "むっつ (Sáu cái)", correct: "六つ", wrong: "六っ" },
+                        { prompt: "むいか (Ngày mùng sáu)", correct: "六日", wrong: "六月" },
+                        { prompt: "しchいじ (Bảy giờ)", correct: "七時", wrong: "七寺" },
+                        { prompt: "しちがつ (Tháng bảy)", correct: "七月", wrong: "七日" },
+                        { prompt: "しちじはん (Bảy giờ rưỡi)", correct: "七時半", wrong: "七寺半" },
+                        { prompt: "ななつ (Bảy cái)", correct: "七つ", wrong: "七っ" },
+                        { prompt: "なのか (Ngày mùng bảy)", correct: "七日", wrong: "七月" },
+                        { prompt: "はち (Tám)", correct: "八", wrong: "人" },
+                        { prompt: "はちgatす (Tháng tám)", correct: "八月", wrong: "八日" },
+                        { prompt: "はちにん (Tám người)", correct: "八人", wrong: "八入" },
+                        { prompt: "やっつ (Tám cái)", correct: "八つ", wrong: "八っ" },
+                        { prompt: "ようか (Ngày mùng tám)", correct: "八日", wrong: "八月" },
+                        { prompt: "く / きゅう (Chín)", correct: "九", wrong: "丸" },
+                        { prompt: "きゅうにん (Chín người)", correct: "九人", wrong: "九入" },
+                        { prompt: "くがつ (Tháng chín)", correct: "九月", wrong: "九日" },
+                        { prompt: "ここのつ (Chín cái)", correct: "九つ", wrong: "九っ" },
+                        { prompt: "ここのか (Ngày mùng chín)", correct: "九日", wrong: "九月" },
+                        { prompt: "sあんじゅう (Ba mươi)", correct: "三十", wrong: "川十" },
+                        { prompt: "じゅっぷん (Mười phút/Đầy đủ)", correct: "十分", wrong: "十刀" },
+                        { prompt: "じっぷん (Mười phút)", correct: "十分", wrong: "十人" },
+                        { prompt: "とお (Mười cái)", correct: "十", wrong: "千" },
+                        { prompt: "とおか (Ngày mùng mười)", correct: "十日", wrong: "十月" },
+                        { prompt: "ひゃく (Một trăm)", correct: "百", wrong: "白" },
+                        { prompt: "さんびゃく (Ba trăm)", correct: "三百", wrong: "川百" },
+                        { prompt: "ろっpiゃく (Sáu trăm)", correct: "六百", wrong: "介百" },
+                        { prompt: "せん (Một nghìn)", correct: "千", wrong: "干" },
+                        { prompt: "さんぜん (Ba nghìn)", correct: "三千", wrong: "川千" },
+                        { prompt: "ちば (Tỉnh Chiba)", correct: "千葉", wrong: "干葉" },
+                        { prompt: "いちまん (Mười nghìn)", correct: "一万", wrong: "一方" },
+                        { prompt: "まんいち (Nếu lỡ)", correct: "万一", wrong: "方一" },
+                        { prompt: "ばんじ (Vạn sự)", correct: "万事", wrong: "方事" },
+                        { prompt: "えん (Yên Nhật/Tròn)", correct: "円", wrong: "同" },
+                        { prompt: "えんだか (Yên lên giá)", correct: "円高", wrong: "同高" },
+                        { prompt: "じんこう (Dân số)", correct: "人口", wrong: "人品" },
+                        { prompt: "くでん (Truyền khẩu)", correct: "口伝", wrong: "日伝" },
+                        { prompt: "くち (Miệng)", correct: "口", wrong: "日" },
+                        { prompt: "でぐち (Lối ra)", correct: "出口", wrong: "出日" },
+                        { prompt: "もくてき (Mục đích)", correct: "目的", wrong: "耳的" },
+                        { prompt: "めんもく (Thể diện)", correct: "面目", wrong: "面耳" },
+                        { prompt: "め (Mắt)", correct: "目", wrong: "耳" },
+                        { prompt: "まぶた (Mí mắt)", correct: "目蓋", wrong: "耳蓋" },
+                        { prompt: "なんにち (Ngày mấy)", correct: "何日", wrong: "向日" },
+                        { prompt: "にほん (Nhật Bản)", correct: "日本", wrong: "日木" },
+                        { prompt: "きゅうじつ (Ngày nghỉ)", correct: "休日", wrong: "休目" },
+                        { prompt: "ははのひ (Ngày của Mẹ)", correct: "母の日", wrong: "毎の日" },
+                        { prompt: "げつようび (Thứ hai)", correct: "月曜日", wrong: "目曜日" },
+                        { prompt: "よっか (Ngày mùng bốn)", correct: "四日", wrong: "四目" },
+                        { prompt: "らいげつ (Tháng sau)", correct: "来月", wrong: "来目" },
+                        { prompt: "いっかげつ (Một tháng)", correct: "一ヶ月", wrong: "一ヶ目" },
+                        { prompt: "つき (Mặt trăng/Tháng)", correct: "月", wrong: "目" },
+                        { prompt: "まいつき (Mỗi tháng)", correct: "毎月", wrong: "毎目" },
+                        { prompt: "かじ (Hỏa hoạn)", correct: "火事", wrong: "大事" },
+                        { prompt: "かようび (Thứ ba)", correct: "火曜日", wrong: "人曜日" },
+                        { prompt: "かざん (Núi lửa)", correct: "火山", wrong: "火出" },
+                        { prompt: "ひ (Lửa)", correct: "火", wrong: "人" },
+                        { prompt: "はなび (Pháo hoa)", correct: "花火", wrong: "花人" },
+                        { prompt: "すいようび (Thứ tư)", correct: "水曜日", wrong: "氷曜日" },
+                        { prompt: "すいどう (Nước máy)", correct: "水道", wrong: "氷道" },
+                        { prompt: "すいえい (Bơi lội)", correct: "水泳", wrong: "永泳" },
+                        { prompt: "みず (Nước)", correct: "水", wrong: "氷" },
+                        { prompt: "はなみず (Nước mũi)", correct: "鼻水", wrong: "鼻氷" },
+                        { prompt: "もくようび (Thứ năm)", correct: "木曜日", wrong: "本曜日" },
+                        { prompt: "たいぼく (Cây lớn)", correct: "大木", wrong: "大本" },
+                        { prompt: "き (Cây)", correct: "木", wrong: "本" },
+                        { prompt: "きむら (Họ Kimura)", correct: "木村", wrong: "本村" },
+                        { prompt: "きんようび (Thứ sáu)", correct: "金曜日", wrong: "全曜日" },
+                        { prompt: "げんきん (Tiền mặt)", correct: "現金", wrong: "現全" },
+                        { prompt: "おかね (Tiền)", correct: "お金", wrong: "お全" },
+                        { prompt: "かねけ (Vị sắt/Kim loại)", correct: "金気", wrong: "全気" },
+                        { prompt: "どようび (Thứ bảy)", correct: "土曜日", wrong: "士曜日" },
+                        { prompt: "どじん (Thổ dân)", correct: "土人", wrong: "士人" },
+                        { prompt: "とち (Đất đai)", correct: "土地", wrong: "士地" },
+                        { prompt: "つち (Đất)", correct: "土", wrong: "士" },
+                        { prompt: "おみやげ (Quà lưu niệm)", correct: "お土産", wrong: "お土屋" },
+                        { prompt: "ようび (Thứ trong tuần)", correct: "曜日", wrong: "曜目" },
+                        { prompt: "ほん (Sách)", correct: "本", wrong: "木" },
+                        { prompt: "ほんじつ (Hôm nay)", correct: "本日", wrong: "本目" },
+                        { prompt: "まつもと (Họ Matsumoto)", correct: "松本", wrong: "松木" },
+                        { prompt: "なんにん (Mấy người)", correct: "何人", wrong: "何入" },
+                        { prompt: "ベトナムじん (Người VN)", correct: "ベトナム人", wrong: "ベトナム入" },
+                        { prompt: "ひと (Người)", correct: "人", wrong: "入" },
+                        { prompt: "ひとびと (Mọi người)", correct: "人々", wrong: "入々" },
+                        { prompt: "こんしゅう (Tuần này)", correct: "今週", wrong: "介週" },
+                        { prompt: "こんげつ (Tháng này)", correct: "今月", wrong: "今目" },
+                        { prompt: "いま (Bây giờ)", correct: "今", wrong: "介" },
+                        { prompt: "ことし (Năm nay)", correct: "今年", wrong: "今手" },
+                        { prompt: "きょう (Hôm nay)", correct: "今日", wrong: "今目" },
+                        { prompt: "～じ (Chùa...)", correct: "～寺", wrong: "～侍" },
+                        { prompt: "おてら (Chùa)", correct: "お寺", wrong: "お侍" },
+                        { prompt: "じ (Giờ)", correct: "時", wrong: "待" },
+                        { prompt: "じかん (Thời gian)", correct: "時間", wrong: "時門" },
+                        { prompt: "じだい (Thời đại)", correct: "時代", wrong: "待代" }
+                    ]
+                },
+                {
+                    level: 2,
+                    name: "Màn 2: Vị trí & Thiên nhiên",
+                    bgColor: { start: '#3a506b', mid: '#1c2541', end: '#0b132b' }, 
+                    moonOrSun: 'moon',
+                    vocab: [
+                        { prompt: "とき (Khi/Lúc)", correct: "時", wrong: "特" },
+                        { prompt: "ときどき (Thỉnh thoảng)", correct: "時々", wrong: "待々" },
+                        { prompt: "とけい (Đồng hồ)", correct: "時計", wrong: "待計" },
+                        { prompt: "はんぶん (Một nửa)", correct: "半分", wrong: "平分" },
+                        { prompt: "はんとし (Nửa năm)", correct: "半年", wrong: "平年" },
+                        { prompt: "さんじはん (3 giờ rưỡi)", correct: "3時半", wrong: "3時平" },
+                        { prompt: "たんとう (Đoản đao)", correct: "短刀", wrong: "短力" },
+                        { prompt: "かたな (Thanh kiếm)", correct: "刀", wrong: "力" },
+                        { prompt: "ふん/ぶん (Phút/Phần)", correct: "分", wrong: "介" },
+                        { prompt: "わかる (Hiểu)", correct: "分かる", wrong: "介かる" },
+                        { prompt: "わける (Chia ra)", correct: "分ける", wrong: "介ける" },
+                        { prompt: "わかれる (Bị chia rẽ)", correct: "分かれる", wrong: "介かれる" },
+                        { prompt: "じょうず (Giỏi)", correct: "上手", wrong: "下手" },
+                        { prompt: "じょうひん (Tao nhã)", correct: "上品", wrong: "下品" },
+                        { prompt: "あげる (Nâng lên/Cho)", correct: "上げる", wrong: "下げる" },
+                        { prompt: "あがる (Tăng lên)", correct: "上がる", wrong: "下がる" },
+                        { prompt: "うえ (Bên trên)", correct: "上", wrong: "下" },
+                        { prompt: "ぶか (Cấp dưới)", correct: "部下", wrong: "部上" },
+                        { prompt: "げひん (Tầm thường)", correct: "下品", wrong: "上品" },
+                        { prompt: "げしゃ (Xuống xe)", correct: "下車", wrong: "上車" },
+                        { prompt: "さげる (Hạ xuống)", correct: "下げる", wrong: "上げる" },
+                        { prompt: "さがる (Hạ xuống/Giảm)", correct: "下がる", wrong: "上げる" },
+                        { prompt: "した (Bên dưới)", correct: "下", wrong: "上" },
+                        { prompt: "きゅうけいちゅう (Đang nghỉ)", correct: "休憩中", wrong: "休憩内" },
+                        { prompt: "chiゅうごく (Trung Quốc)", correct: "中国", wrong: "内国" },
+                        { prompt: "こくじゅう (Khắp cả nước)", correct: "国中", wrong: "国内" },
+                        { prompt: "なか (Bên trong)", correct: "中", wrong: "内" },
+                        { prompt: "たなかさん (Họ Tanaka)", correct: "田中", wrong: "田内" },
+                        { prompt: "がいこく (Nước ngoài)", correct: "外国", wrong: "処国" },
+                        { prompt: "いがい (Ngoài ra)", correct: "以外", wrong: "以処" },
+                        { prompt: "げか (Ngoại khoa)", correct: "外科", wrong: "処科" },
+                        { prompt: "そと (Bên ngoài)", correct: "外", wrong: "処" },
+                        { prompt: "はずれる (Tuột ra)", correct: "外れる", wrong: "処れる" },
+                        { prompt: "toざま (Người ngoài)", correct: "外様", wrong: "処様" },
+                        { prompt: "うせつ (Rẽ phải)", correct: "右折", wrong: "石折" },
+                        { prompt: "sあゆう (Trái phải)", correct: "左右", wrong: "左石" },
+                        { prompt: "みぎ (Phía bên phải)", correct: "右", wrong: "石" },
+                        { prompt: "みぎて (Tay phải)", correct: "右手", wrong: "石手" },
+                        { prompt: "みぎあし (Chân phải)", correct: "右足", wrong: "石足" },
+                        { prompt: "こうじょう (Nhà máy)", correct: "工場", wrong: "土場" },
+                        { prompt: "こうじ (Công trình)", correct: "工事", wrong: "土事" },
+                        { prompt: "くふう (Công phu/Mày mò)", correct: "工夫", wrong: "土夫" },
+                        { prompt: "させつ (Rẽ trái)", correct: "左折", wrong: "在折" },
+                        { prompt: "ひだり (Phía bên trái)", correct: "左", wrong: "In" },
+                        { prompt: "ひだりめ (Mắt trái)", correct: "左目", wrong: "在目" },
+                        { prompt: "ごぜん (Sáng/AM)", correct: "午前", wrong: "午煎" },
+                        { prompt: "じぜん (Trước tiên)", correct: "事前", wrong: "事煎" },
+                        { prompt: "まえ (Phía trước)", correct: "前", wrong: "揃" },
+                        { prompt: "なまえ (Tên)", correct: "名前", wrong: "名揃" },
+                        { prompt: "おまえ (Mày/Cậu)", correct: "お前", wrong: "お揃" },
+                        { prompt: "ごご (Chiều/PM)", correct: "午後", wrong: "午役" },
+                        { prompt: "さんねんご (3 năm sau)", correct: "３年後", wrong: "３年役" },
+                        { prompt: "こうhai (Hậu bối/Cấp dưới)", correct: "後輩", wrong: "役輩" },
+                        { prompt: "うしろ (Phía sau)", correct: "後ろ", wrong: "役ろ" },
+                        { prompt: "atoで (Để sau)", correct: "後で", wrong: "役で" },
+                        { prompt: "うま (Giờ ngọ)", correct: "午", wrong: "牛" },
+                        { prompt: "うまどし (Năm Ngọ)", correct: "午年", wrong: "牛年" },
+                        { prompt: "もん (Cổng)", correct: "門", wrong: "問" },
+                        { prompt: "にゅうもん (Nhập môn)", correct: "入門", wrong: "入問" },
+                        { prompt: "せんもん (Chuyên môn)", correct: "専門", wrong: "専問" },
+                        { prompt: "かどぐち (Lối ra vào)", correct: "門口", wrong: "問口" },
+                        { prompt: "しゅうかん (Số tuần)", correct: "週間", wrong: "週問" },
+                        { prompt: "にんげん (Con người)", correct: "人間", wrong: "人問" },
+                        { prompt: "あいだ (Ở giữa)", correct: "間", wrong: "門" },
+                        { prompt: "まにあう (Kịp thời)", correct: "間に合う", wrong: "門に合う" },
+                        { prompt: "とうなんアジア (Đông Nam Á)", correct: "東南アジア", wrong: "車南アジア" },
+                        { prompt: "とうきょう (Tokyo)", correct: "東京", wrong: "車京" },
+                        { prompt: "ひがし (Phía Đông)", correct: "東", wrong: "車" },
+                        { prompt: "ひがしぐち (Cửa Đông)", correct: "東口", wrong: "車口" },
+                        { prompt: "ひがしがわ (Phía bên Đông)", correct: "東側", wrong: "車側" },
+                        { prompt: "せいよう (Phương Tây)", correct: "西洋", wrong: "四洋" },
+                        { prompt: "かんさい (Vùng Kansai)", correct: "関西", wrong: "関四" },
+                        { prompt: "にし (Phía Tây)", correct: "西", wrong: "四" },
+                        { prompt: "にしぐち (Cửa Tây)", correct: "西口", wrong: "四口" },
+                        { prompt: "にしがわ (Phía bên Tây)", correct: "西側", wrong: "四側" },
+                        { prompt: "なんぶ (Phía Nam)", correct: "南部", wrong: "楠部" },
+                        { prompt: "みなみ (Phía Nam)", correct: "南", wrong: "楠" },
+                        { prompt: "みなみぐchい (Cửa Nam)", correct: "南口", wrong: "楠口" },
+                        { prompt: "みなみがわ (Phía bên Nam)", correct: "南側", wrong: "楠側" },
+                        { prompt: "ほくぶ (Phía Bắc)", correct: "北部", wrong: "比部" },
+                        { prompt: "とうざいなんぼく (Đông Tây Nam Bắc)", correct: "東西南北", wrong: "車西南北" },
+                        { prompt: "ほっかいどう (Hokkaido)", correct: "北海道", wrong: "比海道" },
+                        { prompt: "きた (Phía Bắc)", correct: "北", wrong: "比" },
+                        { prompt: "きたぐち (Cửa Bắc)", correct: "北口", wrong: "比口" },
+                        { prompt: "きたく (Quận Bắc)", correct: "北区", wrong: "比区" },
+                        { prompt: "ほんださん (Họ Honda)", correct: "本田", wrong: "木田" },
+                        { prompt: "すいでん (Ruộng nước)", correct: "水田", wrong: "氷田" },
+                        { prompt: "いなか (Nông thôn)", correct: "田舎", wrong: "由舎" },
+                        { prompt: "のうりょく (Năng lực)", correct: "能力", wrong: "能刀" },
+                        { prompt: "きょうりょく (Hợp tác)", correct: "協力", wrong: "協刀" },
+                        { prompt: "りきし (Đô vật Sumo)", correct: "力士", wrong: "刀士" },
+                        { prompt: "ちから (Sức lực)", correct: "力", wrong: "刀" },
+                        { prompt: "だんせい (Nam giới)", correct: "男性", wrong: "由性" },
+                        { prompt: "びなん (Mỹ nam)", correct: "美男", wrong: "美田" },
+                        { prompt: "おtoこ (Đàn ông)", correct: "男", wrong: "田" },
+                        { prompt: "おtoこのひと (Người đàn ông)", correct: "男の人", wrong: "田の人" },
+                        { prompt: "じょせい (Nữ giới)", correct: "女性", wrong: "汝性" },
+                        { prompt: "せんにょ (Tiên nữ)", correct: "仙女", wrong: "仙好" },
+                        { prompt: "にょうぼう (Vợ)", correct: "女房", wrong: "好房" },
+                        { prompt: "おんな (Phụ nữ)", correct: "女", wrong: "好" },
+                        { prompt: "おんなのひと (Người phụ nữ)", correct: "女の人", wrong: "好の人" },
+                        { prompt: "めがみ (Nữ thần)", correct: "女神", wrong: "好神" },
+                        { prompt: "だんし (Con trai)", correct: "男子", wrong: "男了" },
+                        { prompt: "でんし (Điện tử)", correct: "電子", wrong: "電了" },
+                        { prompt: "いす (Cái ghế)", correct: "椅子", wrong: "椅了" },
+                        { prompt: "こども (Trẻ em)", correct: "子供", wrong: "了供" },
+                        { prompt: "おんなのこ (Bé gái)", correct: "女の子", wrong: "女 của 了" },
+                        { prompt: "こいぬ (Chó con)", correct: "子犬", wrong: "了犬" },
+                        { prompt: "がくせい (Học sinh)", correct: "学生", wrong: "学先" },
+                        { prompt: "がっこう (Trường học)", correct: "学校", wrong: "学枚" },
+                        { prompt: "だいがく (Đại học)", correct: "大学", wrong: "大字" },
+                        { prompt: "まなぶ (Học tập)", correct: "学ぶ", wrong: "字ぶ" },
+                        { prompt: "うむ (Sinh ra/Đẻ)", correct: "生む", wrong: "先む" },
+                        { prompt: "いきる (Sống)", correct: "生きる", wrong: "先きる" },
+                        { prompt: "haえる (Mọc tóc/cỏ)", correct: "生える", wrong: "先える" },
+                        { prompt: "なまにえる (Chưa chín hẳn)", correct: "生煮える", wrong: "先煮える" },
+                        { prompt: "せんせい (Giáo viên)", correct: "先生", wrong: "先先" },
+                        { prompt: "しょうが (Gừng)", correct: "生姜", wrong: "先姜" }
+                    ]
+                },
+                {
+                    level: 3,
+                    name: "Màn 3: Động từ & Tính từ",
+                    bgColor: { start: '#3d2635', mid: '#2c1a2d', end: '#1a0f22' }, 
+                    moonOrSun: 'sakurasun',
+                    vocab: [
+                        { prompt: "せんぱい (Tiền bối)", correct: "先輩", wrong: "生輩" },
+                        { prompt: "せんげつ (Tháng trước)", correct: "先月", wrong: "生月" },
+                        { prompt: "せんしゅう (Tuần trước)", correct: "先週", wrong: "生週" },
+                        { prompt: "sあきに (Làm trước)", correct: "先に", wrong: "生に" },
+                        { prompt: "まず (Trước hết)", correct: "先ず", wrong: "生ず" },
+                        { prompt: "なんがつ (Tháng mấy)", correct: "何月", wrong: "向月" },
+                        { prompt: "なんようび (Thứ mấy)", correct: "何曜日", wrong: "向曜日" },
+                        { prompt: "なに (Cái gì)", correct: "何", wrong: "向" },
+                        { prompt: "ふし (Bố con)", correct: "父子", wrong: "交子" },
+                        { prompt: "そふ (Ông nội/ngoại)", correct: "祖父", wrong: "祖交" },
+                        { prompt: "ちち (Bố của mình)", correct: "父", wrong: "交" },
+                        { prompt: "ちちおや (Người bố)", correct: "父親", wrong: "交親" },
+                        { prompt: "おとうさん (Bố lịch sự)", correct: "お父さん", wrong: "お交さん" },
+                        { prompt: "そぼ (Bà nội/ngoại)", correct: "祖母", wrong: "祖毎" },
+                        { prompt: "ぼこく (Mẫu quốc)", correct: "母国", wrong: "毎国" },
+                        { prompt: "ぼご (Tiếng mẹ đẻ)", correct: "母語", wrong: "毎語" },
+                        { prompt: "はは (Mẹ của mình)", correct: "母", wrong: "毎" },
+                        { prompt: "ははおや (Người mẹ)", correct: "母親", wrong: "毎親" },
+                        { prompt: "おかあさん (Mẹ lịch sự)", correct: "お母さん", wrong: "お毎さん" },
+                        { prompt: "ねん (Năm)", correct: "年", wrong: "手" },
+                        { prompt: "ねんきん (Lương hưu)", correct: "年金", wrong: "手金" },
+                        { prompt: "としうえ (Lớn tuổi hơn)", correct: "年上", wrong: "手上" },
+                        { prompt: "まいとし (Hàng năm)", correct: "毎年", wrong: "毎手" },
+                        { prompt: "かこ (Quá khứ)", correct: "過去", wrong: "過法" },
+                        { prompt: "きょねん (Năm ngoái)", correct: "去る", wrong: "去手" },
+                        { prompt: "さる (Rời khỏi/Qua)", correct: "去る", wrong: "法る" },
+                        { prompt: "まいにち (Mỗi ngày)", correct: "毎日", wrong: "毎目" },
+                        { prompt: "まいあさ (Mỗi sáng)", correct: "毎朝", wrong: "毎廟" },
+                        { prompt: "まいかい (Mỗi lần)", correct: "毎回", wrong: "毎国" },
+                        { prompt: "ごとに (Mỗi khi)", correct: "毎に", wrong: "無に" },
+                        { prompt: "koくおう (Quốc vương)", correct: "国王", wrong: "国玉" },
+                        { prompt: "おうさま (Đức vua)", correct: "王様", wrong: "玉様" },
+                        { prompt: "じょおう (Nữ hoàng)", correct: "女王", wrong: "女玉" },
+                        { prompt: "こくない (Trong nước)", correct: "国内", wrong: "国중" },
+                        { prompt: "くに (Đất nước)", correct: "国", wrong: "玉" },
+                        { prompt: "くにぐに (Các nước)", correct: "国々", wrong: "玉々" },
+                        { prompt: "いけん (Ý kiến)", correct: "意見", wrong: "意貝" },
+                        { prompt: "けんがく (Kiến tập)", correct: "見学", wrong: "貝学" },
+                        { prompt: "みる (Nhìn/Xem)", correct: "見る", wrong: "貝る" },
+                        { prompt: "みせる (Cho xem)", correct: "見せる", wrong: "貝せる" },
+                        { prompt: "みえる (Nhìn thấy)", correct: "見える", wrong: "貝える" },
+                        { prompt: "りょこう (Du lịch)", correct: "旅行", wrong: "旅術" },
+                        { prompt: "こうどう (Hành động)", correct: "行動", wrong: "術動" },
+                        { prompt: "ぎょう (Hàng/Dòng)", correct: "行", wrong: "術" },
+                        { prompt: "いく (Đi)", correct: "行く", wrong: "行り" },
+                        { prompt: "つれていく (Dẫn đi)", correct: "連れて行く", wrong: "連れて行り" },
+                        { prompt: "おこなう (Tiến hành)", correct: "行う", wrong: "行りう" },
+                        { prompt: "べいか (Giá gạo)", correct: "米価", wrong: "来価" },
+                        { prompt: "しんまい (Người mới)", correct: "新米", wrong: "新来" },
+                        { prompt: "こめ (Gạo)", correct: "米", wrong: "来" },
+                        { prompt: "もちこめ (Gạo nếp)", correct: "もち米", wrong: "もち来" },
+                        { prompt: "らいしゅう (Tuần sau)", correct: "来週", wrong: "米週" },
+                        { prompt: "らいねん (Năm sau)", correct: "来年", wrong: "米年" },
+                        { prompt: "らいにち (Đến Nhật)", correct: "来日", wrong: "米日" },
+                        { prompt: "くる (Đến)", correct: "来る", wrong: "米る" },
+                        { prompt: "もってくる (Mang đến)", correct: "持って来る", wrong: "持って米る" },
+                        { prompt: "りょうしん (Lương tâm)", correct: "良心", wrong: "食心" },
+                        { prompt: "ふりょう (Bất lương/Hỏng)", correct: "不良", wrong: "不食" },
+                        { prompt: "いい/よい (Tốt)", correct: "良い", wrong: "食い" },
+                        { prompt: "しょくどう (Nhà ăn)", correct: "食堂", wrong: "良堂" },
+                        { prompt: "しょくじ (Bữa ăn)", correct: "食事", wrong: "良事" },
+                        { prompt: "ゆうしょく (Bữa tối)", correct: "夕食", wrong: "夕良" },
+                        { prompt: "たべる (Ăn)", correct: "食べる", wrong: "外べる" },
+                        { prompt: "くう (Ăn suồng sã)", correct: "食u", wrong: "良う" },
+                        { prompt: "いんしょく (Ăn uống)", correct: "飲食", wrong: "飲良" },
+                        { prompt: "いんしゅ (Uống rượu)", correct: "飲酒", wrong: "飲酒っ" },
+                        { prompt: "ofむ (Uống)", correct: "飲む", wrong: "飲むっ" },
+                        { prompt: "のみもの (Đồ uống)", correct: "飲み物", wrong: "飲物っ" },
+                        { prompt: "かいsha (Công ty)", correct: "会社", wrong: "会杜" },
+                        { prompt: "かいわ (Hội thoại)", correct: "会話", wrong: "会活" },
+                        { prompt: "ぼうねんかい (Tiệc tất niên)", correct: "忘年会", wrong: "忘年会社" },
+                        { prompt: "あう (Gặp gỡ)", correct: "会au", wrong: "合う" },
+                        { prompt: "ないじ (Tai trong)", correct: "内耳", wrong: "内目" },
+                        { prompt: "がいじ (Tai ngoài)", correct: "外耳", wrong: "外目" },
+                        { prompt: "じびか (Tai mũi họng)", correct: "耳鼻科", wrong: "目鼻科" },
+                        { prompt: "みみ (Tai)", correct: "耳", wrong: "目" },
+                        { prompt: "しんぶん (Báo chí)", correct: "新聞", wrong: "新問" },
+                        { prompt: "でんぶん (Tin đồn)", correct: "伝聞", wrong: "伝問" },
+                        { prompt: "きく (Nghe/Hỏi)", correct: "聞く", wrong: "開く" },
+                        { prompt: "きこえる (Nghe thấy)", correct: "聞こえる", wrong: "開こえる" },
+                        { prompt: "げんご (Ngôn ngữ)", correct: "言語", wrong: "吉語" },
+                        { prompt: "ほうげん (Tiếng địa phương)", correct: "方言", wrong: "方吉" },
+                        { prompt: "でんごん (Lời nhắn)", correct: "伝言", wrong: "伝吉" },
+                        { prompt: "いう (Nói)", correct: "言う", wrong: "吉う" },
+                        { prompt: "いいわけ (Biện bạch)", correct: "言い訳", wrong: "吉い訳" },
+                        { prompt: "でんわ (Điện thoại)", correct: "電話", wrong: "電活" },
+                        { prompt: "はなす (Nói chuyện)", correct: "話す", wrong: "活す" },
+                        { prompt: "はなし (Câu chuyện)", correct: "話", wrong: "活" },
+                        { prompt: "きりつ (Đứng lên)", correct: "起立", wrong: "起位" },
+                        { prompt: "こんりゅう (Kiến lập)", correct: "建立", wrong: "建位" },
+                        { prompt: "たつ (Đứng)", correct: "立つ", wrong: "位つ" },
+                        { prompt: "たてる (Dựng lên)", correct: "立てる", wrong: "位てる" },
+                        { prompt: "役に立つ (Có ích)", correct: "役に立つ", wrong: "役に位つ" },
+                        { prompt: "きたい (Kỳ vọng)", correct: "期待", wrong: "期特" },
+                        { prompt: "しょうたい (Mời chiêu đãi)", correct: "招待", wrong: "招特" },
+                        { prompt: "mあつ (Chờ đợi)", correct: "待つ", wrong: "特つ" },
+                        { prompt: "まちあわせ (Hẹn gặp)", correct: "待ち合わせ", wrong: "特合わせ" },
+                        { prompt: "しゅうへん (Xung quanh)", correct: "周辺", wrong: "同辺" },
+                        { prompt: "しゅうき (Chu kỳ)", correct: "周期", wrong: "同期" },
+                        { prompt: "まわり (Xung quanh)", correct: "周り", wrong: "同り" },
+                        { prompt: "まいしゅう (Hàng tuần)", correct: "毎週", wrong: "毎同" },
+                        { prompt: "だいすき (Rất thích)", correct: "大好き", wrong: "犬好き" },
+                        { prompt: "たいせつ (Quan trọng)", correct: "大切", wrong: "犬切" },
+                        { prompt: "おおきい (To lớn)", correct: "大きい", wrong: "犬きい" },
+                        { prompt: "おとな (Người lớn)", correct: "大人", wrong: "犬人" },
+                        { prompt: "しょうがっこう (Trường tiểu học)", correct: "小学校", wrong: "少学校" },
+                        { prompt: "しょうがくせい (Học sinh tiểu học)", correct: "小学生", wrong: "少学生" },
+                        { prompt: "ちいさい (Nhỏ bé)", correct: "小さい", wrong: "少さい" },
+                        { prompt: "こびと (Người lùn)", correct: "小人", wrong: "少人" },
+                        { prompt: "おがわ (Dòng suối)", correct: "小川", wrong: "少川" },
+                        { prompt: "さいこう (Cao nhất)", correct: "最高", wrong: "最喬" },
+                        { prompt: "こうこう (Trường THPT)", correct: "高校", wrong: "喬校" },
+                        { prompt: "たかい (Cao/Đắt)", correct: "高い", wrong: "喬い" },
+                        { prompt: "たかめる (Nâng cao)", correct: "高める", wrong: "喬める" },
+                        { prompt: "たかはしさん (Họ Takahashi)", correct: "高橋", wrong: "喬橋" },
+                        { prompt: "あんぜん (An toàn)", correct: "安全", wrong: "安金" },
+                        { prompt: "あんしん (An tâm)", correct: "安心", wrong: "安親" },
+                        { prompt: "ふあん (Bất an)", correct: "不安", wrong: "不案" },
+                        { prompt: "やすい (Rẻ)", correct: "安い", wrong: "案い" },
+                        { prompt: "しんねん (Năm mới)", correct: "新年", wrong: "親年" },
+                        { prompt: "あたらしい (Mới)", correct: "新しい", wrong: "親しい" },
+                        { prompt: "ちゅうこ (Đồ cũ)", correct: "中古", wrong: "Chゅう舌" },
+                        { prompt: "こだい (Cổ đại)", correct: "古代", wrong: "舌代" },
+                        { prompt: "ふるい (Cũ)", correct: "古い", wrong: "舌い" }
+                    ]
+                }
+            ];
+
+            let currentStageIdx = 0; 
+            let stageCorrectCount = 0; 
+            
+            let gameState = 'START'; 
+            let score = 0;
+            let bestScore = 0;
+            let currentQuestion = null;
+            
+            let canvasWidth = 0;
+            let canvasHeight = 0;
+
+            const gravity = 0.13;
+            const jumpStrength = -3.7;
+
+            class Crane {
+                constructor() {
+                    this.reset();
+                }
+
+                reset() {
+                    this.x = canvasWidth * 0.22;
+                    this.y = canvasHeight * 0.5;
+                    this.vy = 0;
+                    this.radius = 11; 
+                    this.angle = 0;
+                }
+
+                update() {
+                    this.vy += gravity;
+                    this.y += this.vy;
+                    
+                    if (this.vy > 4.2) this.vy = 4.2;
+                    this.angle = Math.min(Math.PI / 4, Math.max(-Math.PI / 8, this.vy * 0.08));
+
+                    if (this.y + this.radius > canvasHeight) {
+                        this.y = canvasHeight - this.radius;
+                        return true;
+                    }
+                    if (this.y - this.radius < 0) {
+                        this.y = this.radius;
+                        this.vy = 0;
+                    }
+                    return false;
+                }
+
+                jump() {
+                    this.vy = jumpStrength;
+                    playSound('jump');
+                }
+
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.angle);
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.strokeStyle = '#e63946';
+                    ctx.lineWidth = 1.5;
+
+                    ctx.beginPath();
+                    ctx.moveTo(-10, -5);
+                    ctx.lineTo(-5, -28);
+                    ctx.lineTo(5, -5);
+                    ctx.closePath();
+                    ctx.fillStyle = '#fceade';
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.moveTo(-25, 0);
+                    ctx.lineTo(-5, 8);
+                    ctx.lineTo(20, -5);
+                    ctx.lineTo(26, -3);
+                    ctx.lineTo(18, 5);
+                    ctx.lineTo(-5, 10);
+                    ctx.closePath();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.moveTo(-12, 0);
+                    ctx.lineTo(5, -35);
+                    ctx.lineTo(12, 2);
+                    ctx.closePath();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.arc(3, -24, 2.5, 0, Math.PI * 2);
+                    ctx.fillStyle = '#e63946';
+                    ctx.fill();
+
+                    ctx.restore();
+                }
+            }
+
+            class DoubleWideGate {
+                constructor(x, question) {
+                    this.x = x;
+                    this.width = 95;
+                    this.question = question;
+                    
+                    this.isCorrectOnTop = Math.random() < 0.5;
+                    this.topText = this.isCorrectOnTop ? question.correct : question.wrong;
+                    this.bottomText = this.isCorrectOnTop ? question.wrong : question.correct;
+                    
+                    this.topY = canvasHeight * 0.28;
+                    this.bottomY = canvasHeight * 0.72;
+
+                    this.passed = false;
+                }
+
+                update(speed) {
+                    this.x -= speed;
+                }
+
+                draw() {
+                    const dividerHeight = 14;
+                    const dividerY = canvasHeight * 0.5 - dividerHeight / 2;
+                    
+                    ctx.fillStyle = '#b7094c'; 
+                    ctx.fillRect(this.x, dividerY, this.width, dividerHeight);
+                    
+                    ctx.fillStyle = '#111111';
+                    ctx.fillRect(this.x, dividerY - 1, 6, dividerHeight + 2);
+                    ctx.fillRect(this.x + this.width - 6, dividerY - 1, 6, dividerHeight + 2);
+
+                    ctx.fillRect(this.x, 0, this.width, 6);
+                    ctx.fillRect(this.x, canvasHeight - 6, this.width, 6);
+
+                    this.drawOptionSign(this.topY, this.topText);
+                    this.drawOptionSign(this.bottomY, this.bottomText);
+                }
+
+                drawOptionSign(laneY, text) {
+                    ctx.save();
+                    ctx.fillStyle = '#fffdf9';
+                    ctx.strokeStyle = '#3e3d3c';
+                    ctx.lineWidth = 2.5;
+                    
+                    const boxW = 88;
+                    const boxH = 48;
+                    const boxX = this.x + (this.width - boxW) / 2;
+                    const boxY = laneY - boxH / 2;
+                    
+                    ctx.beginPath();
+                    ctx.roundRect(boxX, boxY, boxW, boxH, 10);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#111111';
+                    ctx.font = "bold 24px 'Noto Serif JP', serif";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(text, this.x + this.width / 2, laneY + 1);
+                    ctx.restore();
+                }
+
+                checkDividerCollision(bird) {
+                    const bLeft = bird.x - bird.radius + 3;
+                    const bRight = bird.x + bird.radius - 3;
+                    const bTop = bird.y - bird.radius + 3;
+                    const bBottom = bird.y + bird.radius - 3;
+
+                    const dividerHeight = 14;
+                    const dividerY = canvasHeight * 0.5 - dividerHeight / 2;
+
+                    if (bRight > this.x && bLeft < this.x + this.width) {
+                        if (bTop < 6) return true; 
+                        if (bBottom > canvasHeight - 6) return true; 
+                        if (bBottom > dividerY && bTop < dividerY + dividerHeight) return true; 
+                    }
+                    return false;
+                }
+
+                getChosenLane(birdY) {
+                    return birdY < canvasHeight * 0.5 ? 'TOP' : 'BOTTOM';
+                }
+            }
+
+            class SakuraPetal {
+                constructor(isInitial = false) {
+                    this.x = isInitial ? Math.random() * canvasWidth : canvasWidth + Math.random() * 50;
+                    this.y = Math.random() * canvasHeight;
+                    this.size = Math.random() * 5 + 4;
+                    this.speedX = -(Math.random() * 0.55 + 0.3); 
+                    this.speedY = Math.random() * 0.2 + 0.1;
+                    this.angle = Math.random() * Math.PI * 2;
+                    this.spinSpeed = Math.random() * 0.012 - 0.006;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.angle += this.spinSpeed;
+
+                    if (this.x < -10 || this.y > canvasHeight + 10) {
+                        this.x = canvasWidth + Math.random() * 20;
+                        this.y = -10;
+                    }
+                }
+
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.angle);
+                    ctx.fillStyle = 'rgba(255, 183, 197, 0.85)';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size / 1.5, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            let bird = new Crane();
+            let gates = [];
+            let petals = [];
+            let gameSpeed = 1.0; 
+            let nextGateSpawnCounter = 0;
+
+            function resizeCanvas() {
+                const container = canvas.parentElement;
+                const rect = container.getBoundingClientRect();
+                canvasWidth = rect.width;
+                canvasHeight = rect.height;
+                canvas.width = canvasWidth;
+                canvas.height = canvasHeight;
+
+                if (bird) {
+                    bird.x = canvasWidth * 0.22;
+                }
+            }
+
+            function initPetals() {
+                petals = [];
+                for (let i = 0; i < 15; i++) {
+                    petals.push(new SakuraPetal(true));
+                }
+            }
+
+            function drawBackground() {
+                const stage = stagesData[currentStageIdx];
+                let skyGrad = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+                skyGrad.addColorStop(0, stage.bgColor.start);
+                skyGrad.addColorStop(0.55, stage.bgColor.mid);
+                skyGrad.addColorStop(1, stage.bgColor.end);
+                ctx.fillStyle = skyGrad;
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+                if (stage.level === 2) ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+                if (stage.level === 3) ctx.fillStyle = 'rgba(255, 183, 197, 0.06)';
+                
+                ctx.beginPath();
+                ctx.moveTo(canvasWidth * 0.05, canvasHeight);
+                ctx.lineTo(canvasWidth * 0.5, canvasHeight * 0.5);
+                ctx.lineTo(canvasWidth * 0.95, canvasHeight);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+                ctx.beginPath();
+                ctx.moveTo(canvasWidth * 0.43, canvasHeight * 0.57);
+                ctx.lineTo(canvasWidth * 0.5, canvasHeight * 0.5);
+                ctx.lineTo(canvasWidth * 0.57, canvasHeight * 0.57);
+                ctx.lineTo(canvasWidth * 0.5, canvasHeight * 0.6);
+                ctx.closePath();
+                ctx.fill();
+
+                if (stage.moonOrSun === 'sun') {
+                    ctx.beginPath();
+                    ctx.arc(canvasWidth * 0.5, canvasHeight * 0.68, 55, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(230, 57, 70, 0.08)';
+                    ctx.fill();
+                } else if (stage.moonOrSun === 'moon') {
+                    ctx.save();
+                    ctx.translate(canvasWidth * 0.75, canvasHeight * 0.25);
+                    ctx.fillStyle = '#fffdf0';
+                    ctx.shadowColor = '#fffdf0';
+                    ctx.shadowBlur = 10;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 20, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = stage.bgColor.start;
+                    ctx.beginPath();
+                    ctx.arc(-8, -4, 20, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(canvasWidth * 0.5, canvasHeight * 0.68, 60, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255, 183, 197, 0.05)';
+                    ctx.fill();
+                }
+            }
+
+            function getQuestionForStage() {
+                const vocabList = stagesData[currentStageIdx].vocab;
+                const randIndex = Math.floor(Math.random() * vocabList.length);
+                return vocabList[randIndex];
+            }
+
+            document.querySelectorAll('.stage-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const stageIdx = parseInt(btn.getAttribute('data-stage'));
+                    currentStageIdx = stageIdx;
+                    startNewGameFromSelectedStage();
+                });
+            });
+
+            function startNewGameFromSelectedStage() {
+                stageCorrectCount = 0;
+                score = 0;
+                startNewStage();
+                startScreen.classList.add('hidden');
+                gameOverScreen.classList.add('hidden');
+            }
+
+            function startNewStage() {
+                bird.reset();
+                gates = [];
+                
+                currentQuestion = getQuestionForStage();
+                updateQuestionUI();
+
+                gates.push(new DoubleWideGate(canvasWidth * 1.35, currentQuestion));
+                nextGateSpawnCounter = 0;
+
+                gameState = 'PLAYING';
+                questionCard.classList.remove('hidden');
+            }
+
+            function updateQuestionUI() {
+                if (currentQuestion) {
+                    const currentStage = stagesData[currentStageIdx];
+                    stageNameHUD.textContent = currentStage.name;
+                    stageProgressHUD.textContent = `ĐIỂM: ${stageCorrectCount}`;
+                    questionPrompt.textContent = currentQuestion.prompt;
+                }
+            }
+
+            function triggerGameOver() {
+                gameState = 'GAMEOVER';
+                playSound('hit');
+
+                if (stageCorrectCount > bestScore) {
+                    bestScore = stageCorrectCount;
+                }
+
+                finalStageText.textContent = stagesData[currentStageIdx].name.split(':')[0];
+                highScoreText.textContent = stageCorrectCount;
+
+                if (currentQuestion) {
+                    correctKanjiDisplay.textContent = currentQuestion.correct;
+                    correctReadingDisplay.textContent = `Nghĩa: ${currentQuestion.prompt}`;
+                    learningFeedback.classList.remove('hidden');
+                }
+
+                questionCard.classList.add('hidden');
+                gameOverScreen.classList.remove('hidden');
+            }
+
+            function drawFlightGuides(activeGate) {
+                if (!activeGate) return;
+
+                ctx.save();
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([4, 6]); 
+
+                ctx.strokeStyle = 'rgba(74, 144, 226, 0.45)';
+                ctx.beginPath();
+                ctx.moveTo(bird.x, bird.y);
+                ctx.bezierCurveTo(
+                    bird.x + (activeGate.x - bird.x) * 0.4, bird.y,
+                    bird.x + (activeGate.x - bird.x) * 0.6, activeGate.topY,
+                    activeGate.x, activeGate.topY
+                );
+                ctx.stroke();
+
+                ctx.strokeStyle = 'rgba(74, 144, 226, 0.45)';
+                ctx.beginPath();
+                ctx.moveTo(bird.x, bird.y);
+                ctx.bezierCurveTo(
+                    bird.x + (activeGate.x - bird.x) * 0.4, bird.y,
+                    bird.x + (activeGate.x - bird.x) * 0.6, activeGate.bottomY,
+                    activeGate.x, activeGate.bottomY
+                );
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+            function gameLoop() {
+                ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+                drawBackground();
+
+                for (let petal of petals) {
+                    petal.update();
+                    petal.draw();
+                }
+
+                if (gameState === 'PLAYING') {
+                    const fellDown = bird.update();
+                    if (fellDown) {
+                        triggerGameOver();
+                    }
+
+                    if (gates.length > 0) {
+                        drawFlightGuides(gates[0]);
+                    }
+
+                    for (let i = gates.length - 1; i >= 0; i--) {
+                        gates[i].update(gameSpeed);
+                        gates[i].draw();
+
+                        if (gates[i].checkDividerCollision(bird)) {
+                            triggerGameOver();
+                            break;
+                        }
+
+                        if (!gates[i].passed && gates[i].x + gates[i].width < bird.x) {
+                            gates[i].passed = true;
+                            
+                            const chosenLane = gates[i].getChosenLane(bird.y);
+                            const isTopCorrect = gates[i].isCorrectOnTop;
+
+                            const pickedCorrect = (chosenLane === 'TOP' && isTopCorrect) || (chosenLane === 'BOTTOM' && !isTopCorrect);
+
+                            if (pickedCorrect) {
+                                stageCorrectCount++;
+                                score++;
+                                playSound('score');
+                                
+                                currentQuestion = getQuestionForStage();
+                                updateQuestionUI();
+                                nextGateSpawnCounter = -40; 
+                            } else {
+                                triggerGameOver();
+                                break;
+                            }
+                        }
+
+                        if (gates[i].x + gates[i].width < 0) {
+                            gates.splice(i, 1);
+                        }
+                    }
+
+                    if (gates.length === 0) {
+                        nextGateSpawnCounter++;
+                        if (nextGateSpawnCounter >= 50) {
+                            gates.push(new DoubleWideGate(canvasWidth * 1.15, currentQuestion));
+                        }
+                    }
+
+                } else {
+                    for (let gate of gates) {
+                        gate.draw();
+                    }
+                }
+
+                bird.draw();
+                requestAnimationFrame(gameLoop);
+            }
+
+            function handleJump() {
+                if (gameState === 'PLAYING') {
+                    bird.jump();
+                }
+            }
+
+            canvas.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                handleJump();
+            });
+
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                handleJump();
+            }, { passive: false });
+
+            window.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' || e.code === 'ArrowUp') {
+                    e.preventDefault();
+                    if (gameState === 'PLAYING') {
+                        handleJump();
+                    }
+                }
+            });
+
+            restartButton.addEventListener('click', () => {
+                gameOverScreen.classList.add('hidden');
+                startScreen.classList.remove('hidden');
+            });
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            initPetals();
+
+            requestAnimationFrame(gameLoop);
+        });
+    </script>
+</body>
+</html>
