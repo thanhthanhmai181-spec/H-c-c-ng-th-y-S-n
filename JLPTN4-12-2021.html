@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="referrer" content="no-referrer">
+    <title>Đề thi JLPT N4 - Tháng 12/2021</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        body { -webkit-tap-highlight-color: transparent; background: #f8fafc; }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // ======================= DỮ LIỆU ĐỀ THI =======================
+    const examData = {
+        // ---------- TỪ VỰNG / KANJI (28 câu) ----------
+        vocab: [
+            { id: 'v1', q: '① バスが8時に【出発】します。', opts: ['しゅっはつ', 'しゅうはつ', 'しゅっぱつ', 'しゅうばつ'], ans: 2 },
+            { id: 'v2', q: '② すぐに【答えて】ください。', opts: ['おばえて', 'おしえて', 'かんがえて', 'こたえて'], ans: 3 },
+            { id: 'v3', q: '③ あの人は【心】がきれいです。', opts: ['きもち', 'あたま', 'かたち', 'こころ'], ans: 3 },
+            { id: 'v4', q: '④ 【最後】のページを見てください。', opts: ['さいしょ', 'さいご', 'せいご', 'せいしょ'], ans: 1 },
+            { id: 'v5', q: '⑤ このみちを行くと、少し【遠い】です。', opts: ['おそい', 'ちかい', 'とおい', 'はやい'], ans: 2 },
+            { id: 'v6', q: '⑥ おととしの【冬】、日本をりょこうしました。', opts: ['あき', 'ふゆ', 'なつ', 'はる'], ans: 1 },
+            { id: 'v7', q: '⑦ あしたのじゅぎょうの【予習】をします。', opts: ['よしゅう', 'ようしゅう', 'よしゅ', 'ようしゅ'], ans: 0 },
+            { id: 'v8', q: '⑧ としょかんで 【えいが】 の本をかりました。', opts: ['映語', '英語', '英画', '映画'], ans: 3 },
+            { id: 'v9', q: '⑨ すずきさんは 何を 【つくって】 いますか。', opts: ['送って', '使って', '作って', '売って'], ans: 2 },
+            { id: 'v10', q: '⑩ たくさん 【うんどう】 をしたので、つかれました。', opts: ['運動', '連動', '運働', '連働'], ans: 0 },
+            { id: 'v11', q: '⑪ あそこに 大きな 【ふね】 が見えます。', opts: ['寺', '船', '鳥', '雲'], ans: 1 },
+            { id: 'v12', q: '⑫ わからない かんじを じしょで 【しらべる】。', opts: ['調べる', '訪べる', '試べる', '確べる'], ans: 0 },
+            { id: 'v13', q: '⑬ たくさん話したので ( ) がいたいです。', opts: ['のど', 'ひげ', 'ゆび', 'うで'], ans: 0 },
+            { id: 'v14', q: '⑭ のった電車はとても ( ) いたので、すわれませんでした。', opts: ['あつまって', 'こんで', 'たりて', 'くりかえして'], ans: 1 },
+            { id: 'v15', q: '⑮ 日本に行ったとき、きものをきたり、まつりでおどったり、いろいろな ( ) をしました。', opts: ['けいけん', 'しゅうかん', 'きょうみ', 'けっか'], ans: 0 },
+            { id: 'v16', q: '⑯ どんなまんががすきか、小学生に ( ) をしました。', opts: ['コンサート', 'コンピューター', 'アンケート', 'アルコール'], ans: 2 },
+            { id: 'v17', q: '⑰ わたしがかりているアパートの  ( ) は1か月7万円です。', opts: ['ふりこみ', 'ちょきん', 'おつり', 'やちん'], ans: 3 },
+            { id: 'v18', q: '⑱ このしゃしんに ( ) いるのはわたしのりょうしんです。', opts: ['かかって', 'ついて', 'うつって', 'とどいて'], ans: 2 },
+            { id: 'v19', q: '⑲ しんかんせんのきっぷは、かたみちなら1万円、 ( ) なら2万円です。', opts: ['かいてん', 'おうふく', 'うんてん', 'あんない'], ans: 1 },
+            { id: 'v20', q: '⑳ ひっこしのとき、さらはかみで ( ) はこに入れます。', opts: ['ひろって', 'かたづけて', 'つかまえて', 'つつんで'], ans: 3 },
+            { id: 'v21', q: '㉑ この話は【ひみつ】です。', opts: ['みなさんにはなしてください。', 'だれにも言わないでください。', 'みなさんにも聞きましょう。', 'だれもしかたくないです。'], ans: 1 },
+            { id: 'v22', q: '㉒ もりさんは【にこにこ】していました。', opts: ['やすんでいました。', 'あそんでいました。', 'うたっていました。', 'わらっていました。'], ans: 3 },
+            { id: 'v23', q: '㉓ たなかさんは【どくしん】です。', opts: ['けっこんしています。', 'けっこんしていません。', 'ひとりですんでいます。', 'はたらいていません。'], ans: 1 },
+            { id: 'v24', q: '㉔ これは【やわらかい】ですね。', opts: ['かたくないですね。', 'にがくないですね。', 'つめたくないですね。', 'きたないですね。'], ans: 0 },
+            { id: 'v25', q: '㉕ 【れんらく】', opts: ['きこくしたら、おれいのてがみをやまださんにれんらくします。', 'アルバイトにいく日をカレンダーにれんらくしておきます。', 'はじめて会った人にめいしをれんらくして、あいさつをしました。', 'あしたのかいぎの時間をはやしさんにれんらくしました。'], ans: 3 },
+            { id: 'v26', q: '㉖ 【むしあつい】', opts: ['ゆうべはむしあつくて、あまりねられませんでした。', 'あのひとはむしあついので、すきではありません。', 'このりょうりはむしあついほうがおいしいです。', 'このコートはむしあつくて、きやすいです。'], ans: 0 },
+            { id: 'v27', q: '㉗ 【けいかく】', opts: ['ひこうきのチケットは電話かメールでけいかくができます。', 'あしたはゆうがたから雨がふるけいかくです。', '来月行く りょこうのけいかくがまだきまっていません。', '来週はしごとがいそがしくなるけいかくです。'], ans: 2 },
+            { id: 'v28', q: '㉘ 【そだてる】', opts: ['母がそだてた花がきれいにさきました。', '外国に行きたいので、お金をそだてています。', 'おきゃくさんがくるので、あさからごちそうをそだてました。', '1年前からそだてているビルがもうすぐできます。'], ans: 0 }
+        ],
+        // ---------- NGỮ PHÁP & ĐỌC (29 câu) ----------
+        grammar: [
+            { id: 'g1', q: '① わたしもピアノを習うこと ( ) しました。', opts: ['へ', 'が', 'に', 'で'], ans: 2 },
+            { id: 'g2', q: '② 山田「ジョンさんは日本にどのくらいいる予定ですか。」ジョン「ざんねんですが、一週間 ( ) いられません。」', opts: ['だけ', 'しか', 'くらい', 'でも'], ans: 1 },
+            { id: 'g3', q: '③ 今日は午後から雨が降る ( ) 聞いたので、かさを持ってきました。', opts: ['は', 'を', 'の', 'と'], ans: 3 },
+            { id: 'g4', q: '④ 私の兄は、テニスもサッカー ( ) 上手です。', opts: ['が', 'も', 'で', 'を'], ans: 1 },
+            { id: 'g5', q: '⑤ A「きのうの夜、( ) 電話に出なかったんですか。」 B「ごめんなさい。おふろに入っていました。」', opts: ['どう', 'どうやって', 'どんな', 'どうして'], ans: 3 },
+            { id: 'g6', q: '⑥ 父は朝ごはんの前に ( ) 新聞を読む。', opts: ['もうすぐ', 'かならず', 'なかなか', 'だんだん'], ans: 1 },
+            { id: 'g7', q: '⑦ このアニメは世界 ( ) の子どもたちに人気がある。', opts: ['など', 'ずつ', '間', '中'], ans: 3 },
+            { id: 'g8', q: '⑧ このパソコンは何回 ( ) またすぐこわれる。', opts: ['なおすまえ', 'なおすとき', 'なおしても', 'なおしてから'], ans: 2 },
+            { id: 'g9', q: '⑨ 田中さんは先生に作文を ( ) よろこんでいました。', opts: ['ほめて', 'ほめてしまって', 'ほめられて', 'ほめさせて'], ans: 2 },
+            { id: 'g10', q: '⑩ 私は医者に ( ) ためにいっしょうけんめい勉強しています。', opts: ['なる', 'なり', 'なれる', 'なって'], ans: 0 },
+            { id: 'g11', q: '⑪ A「すみません、山田さんのけいたい電話のばんごうを ( )。」 B「いいですよ。090-11-1111です。」', opts: ['教えてくれませんか', '教えましょうか', '教えてもいいです', '教えましょう'], ans: 0 },
+            { id: 'g12', q: '⑫ 田中さんのけっこんパーティーが、今週の土曜日に ( )。', opts: ['開きます', '開きましょう', '開くでしょう', '開かれます'], ans: 3 },
+            { id: 'g13', q: '⑬ (学校で) 西山「森さんがアルバイトを始めたそうですよ。」中田「ああ、だから最近じゅぎょうのあと急いで ( ) ね。」', opts: ['帰っているんです', '帰っていることです', '帰っているからです', '帰っているところです'], ans: 0 },
+            // Dạng sắp xếp (___ ___ ★ ___)
+            { id: 'g14', q: '⑭ すみません。山下さんが今 ___ ___ ★ ___ わかりますか。', opts: ['① か', '② に', '③ いる', '④ どこ'], ans: 2 },
+            { id: 'g15', q: '⑮ 来週、友だちがうちに ___ ___ ★ ___ になりました。', opts: ['① とまり', '② 来る', '③ に', '④ こと'], ans: 1 },
+            { id: 'g16', q: '⑯ 日本語Aのじゅぎょうの日は、じしょを ___ ___ ★ ___ ようにしてください。', opts: ['① 持ってくる', '② 忘れない', '③ を', '④ の'], ans: 3 },
+            { id: 'g17', q: '⑰ 私はいつもコーヒーは ___ ___ ★ ___ コーヒーも飲みたくなる。', opts: ['① ときどき', '②  さとうを入れないで', '③ あまい', '④ 飲むが'], ans: 0 },
+            // Đọc hiểu đoạn 1 (18-21)
+            { id: 'g18', context: '留学生のイワンさんは作文を書いて、クラスのみんなの前で読みました。\n\n町の図書館\nスミルノフ イワン\nみなさんはこの町にある森図書館を知っていますか。私は先月初めて知りました。日本人の ( 18 ) のです。\n森図書館には大学の図書館にはないものがあります。( 19 )、ようふくのざっしや映画のざっしです。私が好きな旅行のざっしもあります。ざっしの日本語は難しいです。でも、写真を見て、日本のことを知ることができるので、楽しいです。\nいろいろなCDやDVDもあります。先週借りたDVDは京都をしょうかいするDVDです。古いお寺や大きい橋がきれいでした。私はまだ京都に行ったことがありません。DVDを見たあと、京都を ( 20 )。\n森図書館には楽しめるものがたくさんあります。一度 ( 21 )。', q: '（ 18 ）に入る最も適当なものはどれですか。', opts: ['ともだちが教えてあげた', 'ともだちが教えてくれた', 'ともだちに教えてあった', 'ともだちに教えておいた'], ans: 1 },
+            { id: 'g19', context: '※ tiếp đoạn văn trên', q: '（ 19 ）に入る最も適当なものはどれですか。', opts: ['たとえば', 'ですから', 'それに', 'しかし'], ans: 0 },
+            { id: 'g20', context: '※ tiếp đoạn văn trên', q: '（ 20 ）に入る最も適当なものはどれですか。', opts: ['旅行したところです', '旅行するようになりました', '旅行したくなくなりました', '旅行していました'], ans: 1 },
+            { id: 'g21', context: '※ tiếp đoạn văn trên', q: '（ 21 ）に入る最も適当なものはどれですか。', opts: ['行ってみるそうです', '行ってみるかもしれません', '行ってみたほうがいいですか', '行ってみてください'], ans: 3 },
+            // Đọc hiểu đoạn 2 (22-24)
+            { id: 'g22', context: '【バスケットボールのお知らせ】\nこの紙が日本語学校にはってあります。\n\nバスケットボールをしませんか\n10月14日(日)の夜7時から9時まで、市の体育館でバスケットボールをしませんか。利用料金は2時間1,000円なので、10人集まれば、一人100円でできます。一緒にやりたい人は、今週中に私(ユン)のところに来て、クラスと名前を教えてください。\n10月1日(月) ユン・ジホン(Aクラス)', q: '㉒ ユンさんと一緒にバスケットボールをしたい人は、まずどうしなければなりませんか。', opts: ['今週中に、バスケットボールをしたい人を10人集めます。', '今週中に、ユンさんのところに行ってクラスと名前を言います。', '10月14日までに、ユンさんに100円を払います。', '10月14日の夜7時までに、体育館に行きます。'], ans: 1 },
+            { id: 'g23', context: '私と妹はサッカークラブに入っています。毎日、授業のあとに練習があって、とても疲れますから、私は夜早く寝てしまいます。宿題をしないで学校に行ったこともあります。でも、妹は宿題が全部終わるまで寝ません。予習もします。すごいと思います。', q: '㉓ なぜ「私」は妹をすごいと思っていますか。', opts: ['妹は早起きをして、宿題と予習をしているから。', '妹は毎日、夜遅くまでサッカーの練習をしているから。', '妹は「私」より宿題を遅く始めても、いつも早く終わるから。', '妹はサッカーの練習のあとでも、宿題と予習をしてから寝るから。'], ans: 3 },
+            { id: 'g24', context: '友だちからメールがきました。\n\n田中さん\nこんにちは。仕事で日本へ2週間くらい行くことになりました。大阪に1週間いて、それから東京に行きます。新東京ホテルにとまるので、いっしょにおすしを食べませんか。ご都合を教えてください。\nリン\n\n田中さんはリンさんに返事を書きたいと思っていますが、こまっています。どうしてですか。', q: '㉔ どうして困っていますか。', opts: ['リンさんが東京にいつ来るかわからないから。', 'リンさんが東京になぜ来たのかわからないから。', 'リンさんが東京でどこにとまるかわからないから。', 'リンさんが東京で何を食べたいかわからないから。'], ans: 0 },
+            // Đọc hiểu đoạn 3 (25-27)
+            { id: 'g25', context: '3歳になる私の娘は絵をかくのが大好きです。でも、私は絵が上手ではないので娘と一緒に絵をかいたことはありません。ですから、娘はいつも一人で絵をかいています。先週、母がうちに来たとき、娘と絵をかいて遊んでくれました。母と二人で絵をかいている娘は、いつもよりずっと楽しそうでした。\n私も娘と一緒に絵をかいてあげたほうがいいかもしれないと考えていたとき、テレビで面白いものを見ました。「絵封筒」です。「絵封筒」は、封筒にはった切手の周りに自分で絵をかいて作ります。テレビで見た絵封筒の中には、上手な絵ではなくても、とてもいいものがありました。鳥の絵の切手の周りに、木をかいたものです。簡単にかいたものでしたが、かわいいと思いました。\n絵封筒なら、私にもできるかもしれないと思いました。ちょうど、母に娘の写真を送ろうと思っていたので、私もやってみました。犬の絵の切手をはって、周りに草や太陽をかきました。けっこううまくできました。\n絵封筒みたいに、娘のかいている絵の周りに私が簡単に絵をかくやり方だったら、私でもできそうです。娘はきっと喜んでくれるでしょう。', q: '㉕ 娘は絵をかくとき、いつもどうしていましたか。', opts: ['一人でかいていました。', '母と二人でかいていました。', '「私」と二人でかいていました。', '「私」と母と三人でかいていました。'], ans: 0 },
+            { id: 'g26', context: '※ tiếp đoạn văn trên', q: '㉖ テレビを見たあと、「私」はどうやって絵封筒を作りましたか。', opts: ['封筒に鳥と木の絵をかきました。', '封筒に犬の絵の切手と、草と太陽の絵の切手をはりました。', '封筒に貼った鳥の絵の切手の周りに、木の絵をかきました。', '封筒に貼った犬の絵の切手の周りに、草や太陽の絵をかきました。'], ans: 3 },
+            { id: 'g27', context: '※ tiếp đoạn văn trên', q: '㉗ 娘はきっと喜んでくれるでしょうとありますが、どうして「私」は娘が喜ぶと思っていますか。', opts: ['「私」の絵が上手になったから。', '「私」がきれいな封筒を作ったから。', 'これからは「私」が娘と一緒に絵をかくから。', 'これからは「私」が娘に絵を教えるから。'], ans: 2 },
+            // Đọc hiểu đoạn 4 (28-29) bảng thông báo
+            { id: 'g28', context: '【パソコン教室の案内】\n外国人のみなさんに、やさしい日本語でパソコンの使い方を説明します。\n月・日: 9月8日(木),15日(木),22日(木) (全3回) 時間: 18:00～20:00 場所: 山名中学校(コンピューター教室) 料金: 1500円(3回)\nどんな人がパソコン教室で勉強できますか？\n・日本語を100時間以上勉強したことがある人\n・3回全部出られる人\n※パソコンを持っていない人は、教室のパソコンが使えます。\nパソコン教室で勉強したい人は、どうしますか？\n・8月24日(水)までに電話で予約してください。\n・9月1日(木)18時から、山名中学校で説明会を行います。説明会に出られない人は、予約のときに言ってください。\n・料金は説明会のときに集めます。説明会に出られない人は、9月7日(水)までに払ってください。\n山名市世界のともだち会', q: '㉘ 次の4人の中で、パソコン教室で勉強できる人はだれですか。', opts: ['ジェムさん (150時間, 行けない日あり)', 'マリオさん (50時間, あり)', 'ソニアさん (200時間, 15日)', 'リナさん (120時間, 22日)'], ans: 3 },
+            { id: 'g29', context: '※ 同じ案内', q: '㉙ ジェーンさんは説明会に出られません。いつまでにお金を払う必要がありますか。', opts: ['8月24日', '9月1日', '9月7日', '9月8日'], ans: 2 }
+        ],
+        // ---------- NGHE HIỂU (28 câu) – ĐÚNG THEO ĐỀ THI ----------
+        listening: [
+            { id: 'l1', context: '問題１: 1番', q: '男の人は肉を入れた後に、何を入れますか。', opts: ['野菜', '砂糖', '水', '醤油'], ans: 1 },
+            { id: 'l2', context: '問題１: 2番', image: 'https://lh3.googleusercontent.com/d/1zAVJrSKRd0NCosFZmvV4CGAhiz1Q5zg4', q: '息子はどのサンダルを買いますか。', opts: ['1', '2', '3', '4'], ans: 3 },
+            { id: 'l3', context: '問題１: 3番', q: '女の人は何をしますか。', opts: ['部屋を掃除する', '飲み物を買う', '料理を手伝う', '食べ物を買う'], ans: 1 },
+            { id: 'l4', context: '問題１: 4番', q: '女の人はこの後まず何をしますか。', opts: ['スキー教室に行く', '荷物を車に入れる', 'スキーの服を借りる', '部屋に案内してもらう'], ans: 2 },
+            { id: 'l5', context: '問題１: 5番', q: '男の学生はこれからどこへ行きますか。', opts: ['図書館', '家', '教室', '事務所'], ans: 2 },
+            { id: 'l6', context: '問題１: 6番', image: 'https://lh3.googleusercontent.com/d/1eesNbokTyN5dtMmCwIs0ZA6gB_U8vT4Y', q: '男の人は何を片付けますか。', opts: ['1', '2', '3', '4'], ans: 2 },
+            { id: 'l7', context: '問題１: 7番', image: 'https://lh3.googleusercontent.com/d/1WW5O2uxIul7Aln4JEguLohLpiUsffl_4', q: 'この授業で学生は自分でノートを何冊用意しますか。', opts: ['1', '2', '3', '4'], ans: 1 },
+            { id: 'l8', context: '問題１: 8番', image: 'https://lh3.googleusercontent.com/d/1rpmjPSeHtrcuG6S2tbBpHAm2jBofMNOA', q: '女の学生は明日何時から何時まで働きますか。', opts: ['1', '2', '3', '4'], ans: 3 },
+            { id: 'l9', context: '問題２: 1番', q: '男の学生はどうしてカラオケに行きませんか。', opts: ['用事があるから', 'カラオケが嫌いだから', '今週試験があるから', 'のどが痛いから'], ans: 3 },
+            { id: 'l10', context: '問題２: 2番', q: '男の学生は何を頼んでいますか。', opts: ['試合の準備を手伝ってほしい', '練習時間を延ばしてほしい', '体育館を借りてほしい', '試合に出てほしい'], ans: 0 },
+            { id: 'l11', context: '問題２: 3番', q: '女の人はどうしてあまり食べないのですか。', opts: ['寿司が好きじゃない', '気分が悪い', '昼ごはんが遅かった', 'ダイエット中'], ans: 2 },
+            { id: 'l12', context: '問題２: 4番', q: '女の学生は昨日どうやって買い物に行きましたか。', opts: ['バス', '車', '歩き', '自転車'], ans: 1 },
+            { id: 'l13', context: '問題２: 5番', q: '課長は来週は何曜日にオフィスにいますか。', opts: ['火曜と水曜', '火曜と金曜', '水曜と金曜', '火・水・金'], ans: 0 },
+            { id: 'l14', context: '問題２: 6番', q: '明日の天気はどうなると言っていますか。', opts: ['一日中雨', '一日中晴れ', '午前晴れ・午後雨', '午前雨・午後晴れ'], ans: 1 },
+            { id: 'l15', context: '問題２: 7番', q: '女の人はいつ日本語の勉強を始めましたか。', opts: ['小学生のとき', '中学生のとき', '高校生のとき', '大学生のとき'], ans: 3 },
+            { id: 'l16', context: '問題３: 1番', image: 'https://lh3.googleusercontent.com/d/1AIbaGpwakO-th7RWo-N5zA6MYkMzqyvu', q: '料理を作りました。友達に美味しいかどうか聞きたいです、何と言いますか。', opts: ['1', '2', '3'], ans: 1 },
+            { id: 'l17', context: '問題３: 2番', image: 'https://lh3.googleusercontent.com/d/1VVFb8cIVoiuSyoWYdXJ7WejCbCxeQVtm', q: '違う電話番号に電話してしまいました、何と言いますか。', opts: ['1', '2', '3'], ans: 2 },
+            { id: 'l18', context: '問題３: 3番', image: 'https://lh3.googleusercontent.com/d/1lIgtm8FHeZgsBMqIAG365x1DYCxxkc3i', q: '友達が教室の前で話しています、声が小さくて聞こえません。何と言いますか。', opts: ['1', '2', '3'], ans: 0 },
+            { id: 'l19', context: '問題３: 4番', image: 'https://lh3.googleusercontent.com/d/1-LVWVKWD2NNk0YTQ4D9cnDveJyBxUEof', q: '道で前を歩いている人の手袋を拾いました、何と言いますか。', opts: ['1', '2', '3'], ans: 0 },
+            { id: 'l20', context: '問題３: 5番', image: 'https://lh3.googleusercontent.com/d/1zAVJrSKRd0NCosFZmvV4CGAhiz1Q5zg4', q: '喫茶店です。広い席があるので、広い席に行きたいです。店の人に何と言いますか。', opts: ['1', '2', '3'], ans: 2 },
+            { id: 'l21', context: '問題４: 1番', q: 'もう夜遅いですから。今日はそろそろ失礼します。', opts: ['ぜひまた来てくださいね', 'お邪魔します', 'ああ、いらっしゃい'], ans: 0 },
+            { id: 'l22', context: '問題４: 2番', q: '先週先生に借りた本は面白かった？', opts: ['面白い先生だったよ', 'まだ全部読んでいないんだ', 'あまり白くなかった'], ans: 1 },
+            { id: 'l23', context: '問題４: 3番', q: '前にこのレストランに来たことがありますか。', opts: ['レストランの前にありました', '今来たところです', 'いいえ、初めてです'], ans: 2 },
+            { id: 'l24', context: '問題４: 4番', q: '林さん、困ったときは何でも言ってね。', opts: ['大変だったね', 'うん、相談するね', 'あんまり言わないほうがいい？'], ans: 1 },
+            { id: 'l25', context: '問題４: 5番', q: 'この部屋ちょっと寒いよ、エアコンの温度上げてもいい？', opts: ['まだ上げていませんよ', 'すみませんが、消さないでください', 'お願いします。私も寒いです'], ans: 2 },
+            { id: 'l26', context: '問題４: 6番', q: '日本語の試験、いつになったか知っている？', opts: ['九十分になったよ', '水曜日だよ', '試験があるよ'], ans: 1 },
+            { id: 'l27', context: '問題４: 7番', q: '田中さん、荷物をいっぱい持っているね、一つ持とうか。', opts: ['一人で持てるので、大丈夫です', 'じゃ、一つ持ちましょう', '持ってもらえないんですか'], ans: 0 },
+            { id: 'l28', context: '問題４: 8番', q: '昨日からコンピューターが壊れているんです。', opts: ['でもまだインターネットは使えませんよ', '早く直って良かったですね', '私の古いのを使いますか'], ans: 2 }
+        ]
+    };
+
+    const SECTIONS = [
+        { id: 'vocab', title: 'Từ vựng / Kanji', icon: 'fa-solid fa-book-open', time: 25 * 60 },
+        { id: 'grammar', title: 'Ngữ pháp / Đọc', icon: 'fa-solid fa-pen-nib', time: 55 * 60 },
+        { id: 'listening', title: 'Nghe hiểu', icon: 'fa-solid fa-headphones', time: 30 * 60 }
+    ];
+
+    // Modal xác nhận
+    const Modal = ({ isOpen, title, message, onConfirm, onCancel }) => {
+        if (!isOpen) return null;
+        return (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+                <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6">
+                    <h3 className="text-xl font-bold text-slate-800 mb-2">{title}</h3>
+                    <p className="text-slate-600 mb-6">{message}</p>
+                    <div className="flex justify-end gap-3">
+                        {onCancel && <button onClick={onCancel} className="px-4 py-2 rounded-lg font-bold text-slate-500 hover:bg-slate-100">Hủy</button>}
+                        <button onClick={onConfirm} className="px-4 py-2 rounded-lg font-bold bg-blue-600 text-white hover:bg-blue-700">Đồng ý</button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    function App() {
+        const [currentScreen, setCurrentScreen] = useState('home');
+        const [activeSection, setActiveSection] = useState('vocab');
+        const [answers, setAnswers] = useState({});
+        const [timeLeft, setTimeLeft] = useState(SECTIONS[0].time);
+        const [modalConfig, setModalConfig] = useState({ isOpen: false });
+
+        useEffect(() => {
+            let timer;
+            if (currentScreen === 'exam' && timeLeft > 0) {
+                timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
+            }
+            return () => clearInterval(timer);
+        }, [currentScreen, timeLeft]);
+
+        const changeSection = (sectionId) => {
+            setActiveSection(sectionId);
+            setTimeLeft(SECTIONS.find(s => s.id === sectionId).time);
+        };
+
+        const formatTime = (sec) => {
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        };
+
+        const handleSelectAnswer = (qid, idx) => {
+            setAnswers(prev => ({ ...prev, [qid]: idx }));
+        };
+
+        const calculateScore = () => {
+            let totalCorrect = 0, totalQuestions = 0, sections = {};
+            for (let [key, arr] of Object.entries(examData)) {
+                let correct = 0;
+                arr.forEach(q => { if (answers[q.id] === q.ans) correct++; });
+                sections[key] = { correct, total: arr.length };
+                totalCorrect += correct;
+                totalQuestions += arr.length;
+            }
+            return { totalCorrect, totalQuestions, percentage: Math.round(totalCorrect/totalQuestions*100), sections };
+        };
+
+        const showModal = (title, msg, onConfirm, onCancel=null) => setModalConfig({ isOpen: true, title, message: msg, onConfirm, onCancel });
+        const closeModal = () => setModalConfig({ isOpen: false });
+        const handleSubmit = () => showModal("Nộp bài thi", "Bạn chắc chắn muốn nộp bài? Hệ thống sẽ chấm điểm toàn bộ.", () => { closeModal(); setCurrentScreen('results'); window.scrollTo(0,0); }, closeModal);
+
+        const QuestionCard = ({ q, index, showResult }) => {
+            const selected = answers[q.id];
+            const isCorrect = selected === q.ans;
+            const hasImage = q.image && q.image.startsWith('http');
+            const isNumericOptions = q.opts.length > 0 && q.opts.every(opt => /^\d+$/.test(opt));
+            
+            return (
+                <div className={`bg-white p-4 md:p-6 rounded-xl border mb-5 transition-all ${showResult ? (isCorrect ? 'border-green-300 bg-green-50/30' : 'border-red-300 bg-red-50/30') : (selected!==undefined ? 'border-blue-400 shadow-md' : 'border-slate-200 shadow-sm')}`}>
+                    {q.context && <div className="mb-4 bg-slate-50 p-3 rounded-lg text-slate-700 text-[15px] whitespace-pre-wrap">{q.context}</div>}
+                    {hasImage && (
+                        <div className="mb-5 text-center">
+                            <img src={q.image} alt="Hình minh họa" className="max-w-full md:max-w-md mx-auto border border-slate-200 shadow-sm rounded-lg" loading="lazy" onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/400x200?text=Không+thể+tải+ảnh'; }} />
+                        </div>
+                    )}
+                    <h3 className="text-[16px] md:text-lg font-medium text-slate-800 mb-4 flex gap-2 flex-wrap">
+                        <span className="text-blue-600 font-bold">Câu {index+1}:</span>
+                        <span dangerouslySetInnerHTML={{__html: q.q.replace(/【(.*?)】/g, '<u class="font-bold text-blue-700 decoration-2 underline-offset-4">$1</u>')}} />
+                    </h3>
+
+                    {isNumericOptions ? (
+                        <div className="grid gap-2.5" style={{ gridTemplateColumns: `repeat(${q.opts.length}, minmax(0, 80px))`, justifyContent: 'start' }}>
+                            {q.opts.map((opt, i) => {
+                                let btnClass = `px-4 py-3 rounded-xl border transition-all font-medium flex items-center justify-center h-12 w-20 `;
+                                if (showResult) {
+                                    if (q.ans === i) btnClass += "border-green-500 bg-green-100 text-green-800 font-bold";
+                                    else if (selected === i && selected !== q.ans) btnClass += "border-red-400 bg-red-50 text-red-700";
+                                    else btnClass += "border-slate-100 text-slate-400 bg-slate-50";
+                                } else {
+                                    btnClass += selected === i ? "border-blue-500 bg-blue-50 text-blue-800 ring-1 ring-blue-500" : "border-slate-200 text-slate-600 hover:border-blue-300";
+                                }
+                                return (
+                                    <button key={i} disabled={showResult} onClick={() => handleSelectAnswer(q.id, i)} className={btnClass}>
+                                        <span className="text-lg font-bold">{i+1}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="grid gap-2.5 grid-cols-1">
+                            {q.opts.map((opt, i) => {
+                                let btnClass = `px-4 py-3 rounded-xl border transition-all font-medium flex items-center gap-3 text-left `;
+                                if (showResult) {
+                                    if (q.ans === i) btnClass += "border-green-500 bg-green-100 text-green-800 font-bold";
+                                    else if (selected === i && selected !== q.ans) btnClass += "border-red-400 bg-red-50 text-red-700";
+                                    else btnClass += "border-slate-100 text-slate-400 bg-slate-50";
+                                } else {
+                                    btnClass += selected === i ? "border-blue-500 bg-blue-50 text-blue-800 ring-1 ring-blue-500" : "border-slate-200 text-slate-600 hover:border-blue-300";
+                                }
+                                return (
+                                    <button key={i} disabled={showResult} onClick={() => handleSelectAnswer(q.id, i)} className={btnClass}>
+                                        <span className={`w-7 h-7 rounded-full border text-sm flex items-center justify-center flex-shrink-0 ${showResult && q.ans===i ? 'border-green-600 bg-green-500 text-white' : (showResult && selected===i && selected!==q.ans ? 'border-red-500 bg-red-400 text-white' : (selected===i ? 'border-blue-500 bg-blue-500 text-white' : 'border-slate-300'))}`}>{i+1}</span>
+                                        <span className="text-[15px]">{opt}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    {showResult && (
+                        <div className={`mt-4 p-3 rounded-lg flex items-center gap-3 border ${isCorrect ? 'border-green-200 bg-green-50 text-green-700' : 'border-red-200 bg-red-50 text-red-700'}`}>
+                            <i className={`fa-solid ${isCorrect ? 'fa-circle-check text-green-500' : 'fa-circle-xmark text-red-500'} text-xl`}></i>
+                            <span className="text-sm">{isCorrect ? 'Đúng rồi!' : `Đáp án đúng: ${q.ans+1}${!isNumericOptions ? ` (${q.opts[q.ans]})` : ''}`}</span>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const HomeScreen = () => (
+            <div className="min-h-screen bg-sky-50 flex items-center justify-center p-4">
+                <div className="bg-white p-6 md:p-10 rounded-2xl shadow-xl max-w-md w-full text-center border-t-4 border-blue-500">
+                    <i className="fa-solid fa-book-open text-blue-500 text-5xl mb-4"></i>
+                    <h1 className="text-3xl font-extrabold text-slate-800">JLPT N4</h1>
+                    <h2 className="text-xl font-bold text-blue-600 mb-6">Đề thi tháng 12/2021</h2>
+                    <div className="text-left bg-slate-50 p-4 rounded-xl mb-8 text-sm text-slate-600 space-y-2">
+                        <p><i className="fa-solid fa-hourglass-half text-orange-500 w-5"></i> 85 câu trắc nghiệm</p>
+                        <p><i className="fa-solid fa-image text-purple-500 w-5"></i> Câu có ảnh chỉ hiển thị số</p>
+                        <p><i className="fa-solid fa-headphones text-green-500 w-5"></i> File nghe (mở tab mới)</p>
+                    </div>
+                    <button onClick={() => { setCurrentScreen('exam'); changeSection('vocab'); window.scrollTo(0,0); }} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl w-full transition-all shadow-md">Bắt Đầu Thi</button>
+                </div>
+            </div>
+        );
+
+        const ExamScreen = () => (
+            <div className="bg-slate-50 min-h-screen pb-24">
+                <header className="sticky top-0 z-50 bg-blue-600 text-white shadow-md">
+                    <div className="flex justify-between items-center p-4 max-w-3xl mx-auto">
+                        <h1 className="font-bold text-lg">JLPT N4 12/2021</h1>
+                        <div className="flex items-center bg-blue-800/50 px-3 py-1.5 rounded-full text-sm font-bold"><i className="fa-solid fa-clock text-yellow-300 mr-2"></i>{formatTime(timeLeft)}</div>
+                    </div>
+                    <div className="bg-white text-slate-600 border-b overflow-x-auto whitespace-nowrap scrollbar-hide flex">
+                        {SECTIONS.map(sec => {
+                            const total = examData[sec.id].length;
+                            const answered = examData[sec.id].filter(q => answers[q.id]!==undefined).length;
+                            return (
+                                <button key={sec.id} onClick={() => { changeSection(sec.id); window.scrollTo(0,0); }} className={`px-5 py-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 ${activeSection===sec.id ? 'border-blue-600 text-blue-600 bg-blue-50/50' : 'border-transparent'}`}>
+                                    <i className={sec.icon}></i> {sec.title} <span className={`text-[11px] px-1.5 py-0.5 rounded-full ${answered===total ? 'bg-green-100 text-green-700' : 'bg-slate-100'}`}>{answered}/{total}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </header>
+                <main className="max-w-3xl mx-auto p-4 pt-6">
+                    {activeSection === 'listening' && (
+                        <div className="bg-slate-800 text-white p-3 rounded-xl mb-6 flex items-center justify-between">
+                            <span><i className="fa-solid fa-headphones text-sky-400 mr-2"></i>File nghe</span>
+                            <a href="https://drive.google.com/file/d/1x7iQZrIEbfD-0NrypsgOk-0PPuF0oe05/view?usp=sharing" target="_blank" className="bg-sky-500 hover:bg-sky-600 text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-2"><i className="fa-solid fa-play"></i> Mở file nghe</a>
+                        </div>
+                    )}
+                    {examData[activeSection].map((q, idx) => <QuestionCard key={q.id} q={q} index={idx} showResult={false} />)}
+                    <div className="mt-8 pt-4 border-t"><button onClick={handleSubmit} className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl shadow-lg flex justify-center items-center gap-2 text-lg"><i className="fa-solid fa-check-circle"></i> Nộp bài thi</button></div>
+                </main>
+            </div>
+        );
+
+        const ResultsScreen = () => {
+            const { totalCorrect, totalQuestions, percentage, sections } = calculateScore();
+            const passed = percentage >= 60;
+            return (
+                <div className="min-h-screen bg-slate-50 p-4 pb-20">
+                    <div className="max-w-3xl mx-auto">
+                        <div className="bg-white rounded-2xl shadow-md overflow-hidden mb-8 border">
+                            <div className={`p-6 text-center text-white ${passed ? 'bg-green-500' : 'bg-orange-500'}`}>
+                                <h1 className="text-2xl font-bold">{passed ? 'Chúc mừng!' : 'Cố gắng hơn nhé!'}</h1>
+                                <p>Kết quả thi JLPT N4 12/2021</p>
+                            </div>
+                            <div className="p-6 flex flex-col items-center">
+                                <div className="text-center mb-6"><span className="text-5xl font-black">{totalCorrect}</span><span className="text-2xl text-slate-400">/{totalQuestions}</span></div>
+                                {SECTIONS.map(sec => <div key={sec.id} className="w-full bg-slate-50 p-3 rounded-lg flex justify-between items-center mb-2"><span><i className={sec.icon}></i> {sec.title}</span><span>{sections[sec.id].correct}/{sections[sec.id].total}</span></div>)}
+                                <button onClick={() => { setAnswers({}); setCurrentScreen('home'); setActiveSection('vocab'); setTimeLeft(SECTIONS[0].time); }} className="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl mt-4">Làm lại đề</button>
+                            </div>
+                        </div>
+                        <h2 className="text-lg font-bold mb-4">Chi tiết đáp án</h2>
+                        {SECTIONS.map(sec => (
+                            <div key={sec.id}>
+                                <h3 className="text-md font-bold bg-slate-200 p-2 rounded text-center my-4">{sec.title}</h3>
+                                {examData[sec.id].map((q, idx) => <QuestionCard key={q.id} q={q} index={idx} showResult={true} />)}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        return (
+            <div>
+                {currentScreen === 'home' && <HomeScreen />}
+                {currentScreen === 'exam' && <ExamScreen />}
+                {currentScreen === 'results' && <ResultsScreen />}
+                <Modal isOpen={modalConfig.isOpen} title={modalConfig.title} message={modalConfig.message} onConfirm={modalConfig.onConfirm} onCancel={modalConfig.onCancel} />
+            </div>
+        );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+</script>
+</body>
+</html>
