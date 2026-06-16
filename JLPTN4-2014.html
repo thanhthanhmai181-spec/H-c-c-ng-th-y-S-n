@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Thi Thử JLPT N4</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <style>
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Meiryo', 'Yu Gothic'; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-gray-900 selection:bg-blue-200">
+
+    <div id="app">
+        <!-- Header (gọn hơn, tự điều chỉnh theo trạng thái) -->
+        <header class="bg-white shadow-sm sticky top-0 z-20 transition-all">
+            <div class="max-w-5xl mx-auto px-4 py-2 flex justify-between items-center" id="header-inner">
+                <h1 id="header-title" class="text-lg md:text-xl font-bold text-blue-800 flex items-center gap-2">
+                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm md:text-base">JLPT N4</span>
+                    <span class="hidden sm:inline text-gray-600 font-medium text-base">Đề thi tháng 7/2014</span>
+                </h1>
+                <div id="header-right" class="flex flex-col items-end">
+                    <!-- Nội dung động (đồng hồ hoặc nút) -->
+                </div>
+            </div>
+            <div id="progress-container" class="h-1.5 w-full bg-gray-200 hidden">
+                <div id="progress-bar-fill" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </header>
+
+        <main id="main-container" class="max-w-5xl mx-auto px-4 py-6 md:py-8">
+            <!-- Nội dung động -->
+        </main>
+
+        <div id="footer-container"></div>
+    </div>
+
+    <script>
+        // --- DỮ LIỆU ĐỀ THI (giữ nguyên) ---
+        const examData = {
+          moji: [
+            { id: 'm1', question: 'きょうはとても【楽しかった】です。', options: ['うれしかった', 'いそがしかった', 'はずかしかった', 'たのしかった'], correct: 3 },
+            { id: 'm2', question: 'たなかさんはいつから【習って】いるんですか。', options: ['かよって', 'まって', 'ならって', 'のこって'], correct: 2 },
+            { id: 'm3', question: 'このパソコンは【軽い】ですね。', options: ['かるい', 'おもい', 'はやい', 'おそい'], correct: 0 },
+            { id: 'm4', question: 'このスーパーは 食料品が【安いです】。', options: ['しょくりゅうひん', 'しょくりょうひん', 'しゅくりょうひん', 'しゅくりゅうひん'], correct: 1 },
+            { id: 'm5', question: '【顔】に何かついていますよ。', options: ['くつ', 'あたま', 'ふく', 'かお'], correct: 3 },
+            { id: 'm6', question: 'けさは天気【予報】を見ませんでした。', options: ['よほう', 'ようほう', 'ようぼう', 'よぼう'], correct: 0 },
+            { id: 'm7', question: 'やまもとさん、【動かないで】ください。', options: ['あるかないで', 'うごかないで', 'なかないで', 'はたらかないで'], correct: 1 },
+            { id: 'm8', question: 'うちでは子どもが 犬の【世話】をします。', options: ['せいわ', 'せわ', 'せはなし', 'せいはなし'], correct: 1 },
+            { id: 'm9', question: 'もうすぐ 【特急】電車が来ます。', options: ['とっきゅ', 'ときゅう', 'とっきゅう', 'ときゅ'], correct: 2 },
+            { id: 'm10', question: 'その 【えいが】はおもしろかったですよ。', options: ['映面', '央画', '映画', '央面'], correct: 2 },
+            { id: 'm11', question: '魚がたくさん【およいで】います。', options: ['海いで', '泳いで', '港いで', '注いで'], correct: 1 },
+            { id: 'm12', question: 'おもちゃ【うりば】はどこですか。', options: ['売り場', '売り所', '完り場', '完り所'], correct: 0 },
+            { id: 'm13', question: 'コンサートは4時に【おわります】。', options: ['関わります', '始わります', '閉わります', '終わります'], correct: 3 },
+            { id: 'm14', question: 'このあたりに 【ほんや】はありますか。', options: ['本室', '本店', '本屋', '本家'], correct: 2 },
+            { id: 'm15', question: '【かかり】の人に聞いてみましょう。', options: ['糸り', '係り', '員り', '撮り'], correct: 1 },
+            { id: 'm16', question: '二つめのえきで電車からバスに（　）ください。', options: ['おりて', 'のりかえて', 'ひっこしして', 'でて'], correct: 1 },
+            { id: 'm17', question: 'あのレストランの（　）には、英語のせつめいも書いてあります。', options: ['サービス', 'チップ', 'アルバイト', 'メニュー'], correct: 3 },
+            { id: 'm18', question: '先月大学を（　）して、今は日本でしごとをしています。', options: ['ふくしゅう', 'きょういく', 'けんきゅう', 'そつぎょう'], correct: 3 },
+            { id: 'm19', question: 'このみちは （　）をしているので、とおれません。', options: ['こしょう', 'こうじ', 'はんたい', 'しっぱい'], correct: 1 },
+            { id: 'm20', question: 'きょう、 （　）を1まいわってしまいました。', options: ['タオル', 'ふくろ', 'さら', 'ポスター'], correct: 2 },
+            { id: 'm21', question: '日本語がただしいかどうか、もういちど （　）してください。', options: ['チェック', 'コピー', 'スタート', 'サイン'], correct: 0 },
+            { id: 'm22', question: 'どこにりょこうに行くか、クラスのみんなに（　）を 聞いて、きめました。', options: ['そうだん', 'さんせい', 'しつもん', 'いけん'], correct: 0 },
+            { id: 'm23', question: '国からりょうしんが来るので、くうこうへ （　）に行きます。', options: ['むかえ', 'さそい', 'あんない', 'じゅんび'], correct: 0 },
+            { id: 'm24', question: 'このにくはかたいので、 よく （　）たべてください。', options: ['かんで', 'こわして', 'ふんで', 'おして'], correct: 0 },
+            { id: 'm25', question: 'きょうはパーティーがあるので、テーブルに花を（　）。', options: ['かけました', 'おくりました', 'かざりました', 'たてました'], correct: 2 },
+            { id: 'm26', question: 'これはとても【だいじ】です。', options: ['これはとてもゆうめいです。', 'これはとてもたいせつです。', 'これはとてもべんりです。', 'これはとてもじょうぶです。'], correct: 1 },
+            { id: 'm27', question: 'ここは【きんえん】です。', options: ['ここで右にまがってはいけません。', 'ここでしゃしんをとってはいけません。', 'ここでのみものを飲んではいけません。', 'ここでたばこをすってはいけません。'], correct: 3 },
+            { id: 'm28', question: 'きのう父に【しかられました】。', options: ['きのう 父にわらわれました。', 'きのう 父にほめられました。', 'きのう 父にたのまれました。', 'きのう 父におこられました。'], correct: 3 },
+            { id: 'm29', question: 'あした 9時にそちらに【とどけます】。', options: ['あしたの9時にそちらにもっていきます。', 'あしたの9時にそちらにかえします。', 'あしたの 9時にそちらにつきます。', 'あしたの9時にそちらにかえります。'], correct: 0 },
+            { id: 'm30', question: 'ここは車を【せいさん】するところです。', options: ['ここは車をかりるところです。', 'ここは車をとめるところです。', 'ここは車をつくるところです。', 'ここは車をあらうところです。'], correct: 2 },
+            { id: 'm31', question: '【やくそく】', options: ['この ひこうきは 10 時に 日本につく やくそくです。', 'あしたは、母とかいものに行く やくそくがあります。', '電車のきっぷのやくそくはインターネットでできますか。', '今から、きょうの見学のやくそくをせつめいします。'], correct: 1 },
+            { id: 'm32', question: '【おれい】', options: ['おみやげをもらったので、おれいを言いました。', 'にゅういんしたとき、友だちがおれいに来てくれました。', 'きょうは父のたんじょうびのおれいを買いに行きます。', '「しつれいします」と言って、おれいをしてから へやに入ります。'], correct: 0 },
+            { id: 'm33', question: '【ていねい】', options: ['デパートやホテルの人はていねいなことばをつかいます。', '父のたんじょうびに ていねいなレストランに行きました。', '女の人に年を聞くのはていねいではありません。', 'このおかしはあじがとてもていねいですね。'], correct: 0 },
+            { id: 'm34', question: '【ぬれる】', options: ['チョコレートで手がぬれてしまいました。', 'もりの中の空気はいつもぬれています。', '雨で せんたくものがぬれてしまいました。', 'このメロンはぬれていて、おいしいですね。'], correct: 2 },
+            { id: 'm35', question: '【わかす】', options: ['はしる前に、少しうんどうをして、からだをわかしました。', 'わかした たまごを半分にして、サラダに入れました。', 'さむいので、ストーブでへやをわかしましょう。', 'おちゃを入れるから、おゆをわかしてください。'], correct: 3 }
+          ],
+          bunpou: [
+            { id: 'b1', question: 'このレストランでは、料理（　） 使う野菜を庭で育てています。', options: ['は', 'に', 'や', 'の'], correct: 1 },
+            { id: 'b2', question: '(ケーキ屋で)\n客「すみません。 いちごのケーキと、チョコレートのケーキを二つ（　）ください。」', options: ['と', 'が', 'ずつ', 'など'], correct: 2 },
+            { id: 'b3', question: 'きのう（　）違って、今日はいい天気です。', options: ['と', 'の', 'に', 'まで'], correct: 0 },
+            { id: 'b4', question: 'A「このカレーはからいですね。」\nB「えっ?そうですか。 私（　）からくないですよ。」', options: ['では', 'には', 'と', 'へ'], correct: 0 },
+            { id: 'b5', question: 'A 「台所からいいにおい（　）しますね。」\nB「クッキーを焼いているんです。」', options: ['で', 'に', 'を', 'が'], correct: 3 },
+            { id: 'b6', question: 'インターネットを使えば、 （　）買い物ができて、便利です。', options: ['いつでも', 'いつまで', 'どこから', 'どこにも'], correct: 0 },
+            { id: 'b7', question: '明日から三日間 京都へ 行く 予定だが、 泊まる ホテルが （　）決まっていない。', options: ['もう', 'まだ', 'そろそろ', 'もうすぐ'], correct: 1 },
+            { id: 'b8', question: '田中 「森さん、 先週はかぜでお休みでしたね。具合はどうですか。」\n森　「はい、（　）元気になりました。」', options: ['やっと', 'ずっと', 'もっと', 'きっと'], correct: 2 },
+            { id: 'b9', question: 'この神社の祭りは、長い間村の人たち（　）続けられている。', options: ['から', 'より', 'によって', 'について'], correct: 2 },
+            { id: 'b10', question: '入学式の間、子どもたちは先生の話を （　）聞いていました。', options: ['熱心', '熱心な', '熱心で', '熱心に'], correct: 3 },
+            { id: 'b11', question: '私は来年の夏、富士山に（　）つもりです。', options: ['のぼる', 'のぼった', 'のぼろう', 'のぼりたい'], correct: 0 },
+            { id: 'b12', question: '(駅)\n客「あのう、このさいふが落ちて（　）」\n駅員「ありがとうございます。 どこにありましたか。」\n客「トイレの前です。」', options: ['いました', 'しました', 'みました', 'おきました'], correct: 0 },
+            { id: 'b13', question: '朝、私はいつもバナナしか（　） 。', options: ['食べます', '食べません', '食べることができます', '食べるかもしれません'], correct: 1 },
+            { id: 'b14', question: '山下 「森さんのたんじょうびに 何をあげましょうか。」\n田中「花はどうですか。」\n山下「いいですね。 森さんは 花が好きだから、きっと（　）。」', options: ['よろこぶそうです', 'よろこんだんです', 'よろこぶでしょう', 'よろこんだようです'], correct: 2 },
+            { id: 'b15', question: '(駅で)\nA「飲み物がほしいので、急いで買ってきますね。」\nB 「わかりました。出発まで時間はありますから、（　）よ。」', options: ['急がなくなります', '急がなければなりません', '急いだほうがいいです', '急がなくてもいいです'], correct: 3 },
+            { id: 'b16', question: '中川「山下さん、駅からホテルまで 行き方がわかりますか。」\n山下「いいえ、わかりません。 __ __ __ ★ __ __ に聞きましょう。」', options: ['で', 'だれ', '駅', 'か'], correct: 1 },
+            { id: 'b17', question: '最近、仕事がいそがしくて、 __ __ __ ★ __ __ 日が多い。', options: ['帰る', 'なる', '遅く', 'のが'], correct: 3 },
+            { id: 'b18', question: '両親といっしょに __ __ __ ★ __ __ 貯金しています。', options: ['ために', '家を', '住める', '建てる'], correct: 3 },
+            { id: 'b19', question: '明日は朝早く出かけない __ __ __ ★ __ __ かどうか心配です。', options: ['が', 'と', '早起きできる', 'いけないのです'], correct: 1 },
+            { id: 'b20', question: 'きのう パーティーで丸い __ __ __ ★ __ __ くだものを食べました。', options: ['あまい', 'の', '赤くて', '形'], correct: 2 },
+            { id: 'b21', question: '田中さんが日本に帰って、3か月です。 たんじょうびに 田中さんが（21）日 本のカードはとてもきれいですね。 ありがとうございました。', options: ['送ってあげた', '送ってくれた', '送ってやった', '送ってもらった'], correct: 1 },
+            { id: 'b22', question: '私（22）先月大学を卒業して、今は 貿易会社に勤めています。', options: ['なら', 'と', 'が', 'は'], correct: 3 },
+            { id: 'b23', question: '私はずっと 貿易の仕事がしたいと思 っていました。それで、 貿易会社に （23）仕事はいそがしいですが、 楽しいです。', options: ['入りそうです', '入るところです', '入りました', '入ったことがあります'], correct: 2 },
+            { id: 'b24', question: '31 日まで東京にいるのですが、会えませんか。 （24）田中さんに会いたいです。', options: ['ぜひ', 'では', '例えば', 'そして'], correct: 0 },
+            { id: 'b25', question: '私は会社でお茶の輸出の仕事をしています。 （25）。おいしいですよ。', options: ['飲んでみてもいいですか', '飲んでみてください', '飲んでみましょうか', '飲んでみようと思います'], correct: 1 }
+          ],
+          dokkai: [
+            { 
+              id: 'd26', 
+              text: 'お知らせ\n7月8日(火)、 安全チェックのため、エレベーターが止まります。\n北側エレベーター 　14時から15時15分まで\n南側エレベーター　 14時45分から16時まで\n\n* 14時45分から15時15分までは、両方のエレベーターが止まりますので、注意してください。\nよろしくお願いします。\n第一ビルディング',
+              question: '7月8日の15時半に荷物を運ばなければなりません。 どのエレベーターが使えますか。', 
+              options: ['北側エレベーターだけ', '南側エレベーターだけ', '南側エレベーターと北側エレベーター', 'どちらも使えない'], 
+              correct: 0 
+            },
+            { 
+              id: 'd27', 
+              text: '私の家のそばに「元気たまご」という店があります。 卵だけを売る店です。 日本のスーパーでは大きすぎたり小さす ぎたりする卵は売られていません。 しかし、 「元気たまご」では売っています。大きすぎたり小さすぎたりするので、どれ でも1個10円で、 スーパーより安いです。 客は店で売っている紙の箱に卵を入れて、レジに持っていきます。 箱は10 円ですが、丈夫で何回も使えます。 新しくて味もいいので、 「元気たまご」の卵は人気があります。 全部売れたら、店は 閉まります。',
+              question: '「 元気たまご」で売っている卵について、合っているものはどれですか。', 
+              options: ['スーパーでは、売っていない大きさです。', '1個10円で、どれもだいたい同じ大きさです。', 'スーパーでも人気があって、おいしいです。', '味はあまりよくありませんが、とても安いです。'], 
+              correct: 0 
+            },
+            { 
+              id: 'd28', 
+              text: '(Xem lại bài đọc "元気たまご" ở câu trên)',
+              question: '「元気たまご」では、どうやって卵を買いますか。', 
+              options: ['客が箱に卵を入れて、レジに持っていきます。', '客が卵の入っている箱を選んで、レジに持っていきます。', '客が店の人にお金を払って、 箱に卵を入れてもらいます。', '客が店に置いてある箱にお金を入れて、好きな卵を持っていきます。'], 
+              correct: 0 
+            },
+            { 
+              id: 'd29', 
+              text: '(会社で)山口さんの机の上にこのメモがあります。\n\n山口さん \n東山さんから電話がありました。\n電車が止まってしまったそうです。30分ぐらい遅れますが、予定の時間になったら、会議を始めてくださいと言っ ていました。\nそれから、東山さんの作った会議の資料を持っていって、 みなさんに渡しておいてもらいたいそうです。\nルイス \n6月28日 10:32',
+              question: 'このメモを読んで、 山口さんは何をしなければなりませんか。', 
+              options: ['資料を会議に持っていって、 東山さんが来るまで待ちます。', '資料をみんなに渡して、予定の時間になったら会議を始めます。', '会議を30分遅く始めることをみんなに伝えて、資料を渡します。', '30 分待って東山さんが来なかったら、 資料を持っていって、会議を始めます。'], 
+              correct: 1 
+            },
+            { 
+              id: 'd30', 
+              text: '　大学1年の冬休みに大学の本売り場で、「読んでみよう。 4年で100冊!」と書いてあるポスターを見ました。 ①本 を読んで、決められた紙に本の紹介文を書いて出すと、本売り場で使えるチケットがもらえるのだそうです。 ポスターの 周りには、学生が書いた紹介文もたくさんはってありました。\n\n　学生はまず、レジでカードを作ります。 そして、 本を1冊読んで紹介文を1枚出すと、売り場の人がカードにはんこ を1個押してくれます。 本は、 雑誌とマンガと授業のテキスト以外なら何でも良くて、 大学の本売り場で買った本でなく てもいいそうです。そして、はんこを10個集めたら500円のチケットが1枚もらえます。 学生にいろいろな本を読んで もらうために考えたアイデアだそうですが、面白そうなので、私もやってみることにしました。\n\n　私はあまり本を読まない学生だったので、初めは、 10 冊の本を読むのに半年もかかったし、紹介文を書くのも大変 でした。でも、だんだん速く読めるようになって、今ではいつも本を持って歩くようになりました。 もらったチケットで新し い本を買うこともできたし、とても②いいやり方だと思いました。 始めたのはおととしの冬でスタートは遅れましたが、まだ 卒業まで2年ありますから、頑張れば③できると思っています。',
+              question: '①本を読んでとありますが、 どんな本を読みますか。', 
+              options: ['大学の本売り場で買った本なら、何でもいい', '大学の本売り場で売られている、決められた本', '雑誌とマンガと授業のテキスト以外の、決められた本', '雑誌、マンガ、 授業のテキスト以外の本なら、何でもいい'], 
+              correct: 3 
+            },
+            { 
+              id: 'd31', 
+              text: '(Xem lại bài đọc về mượn sách ở câu trên)',
+              question: '500 円のチケットを1枚もらうために、読まなければならない本は何冊で、出さなければならない紹介文は何枚ですか。', 
+              options: ['1冊、1枚', '10冊、1枚', '10冊、10枚', '100冊、10枚'], 
+              correct: 2 
+            },
+            { 
+              id: 'd32', 
+              text: '(Xem lại bài đọc về mượn sách ở câu trên)',
+              question: '②いいやり方だと思いましたとありますが、どうしてですか。', 
+              options: ['本をよく読むようになったし、いろいろなプレゼントがもらえたから', '本をよく読むようになったし、本売り場で使えるチケットももらえたから', '本が速く読めるようになったし、文章を書くのも上手になったから', '本が速く読めるようになったし、 本売り場に紹介文をはってもらえたから'], 
+              correct: 1 
+            },
+            { 
+              id: 'd33', 
+              text: '(Xem lại bài đọc về mượn sách ở câu trên)',
+              question: '③できるとありますが、 何ができますか。', 
+              options: ['上手な紹介文が書けるようになること', 'もらったチケットを全部使うこと', '本が速く読めるようになること', '100 冊の本を読むこと'], 
+              correct: 3 
+            },
+            { 
+              id: 'd34', 
+              text: '今日のカレー\nメニューは、ABCDの4種類から選べます。カレーの種類は下の①、②のグループから選べます。\n\n【Aメニュー 850円】 カレー＋サラダか飲み物\n(カレーは、①グループから選んでください。)\n\n【Bメニュー 950円】 カレー＋サラダか飲み物\n(カレーは、②グループから選んでください。)\n\n【Cメニュー 1,100円】 カレー＋スープ＋サラダ＋飲み物\n(カレーは、①グループと②グループのどちらからでも選べます。)\n\n【Dメニュー 1,300円】 カレー＋スープ＋サラダ＋飲み物＋アイスクリーム\n(カレーは、①グループと②グループのどちらからでも選べます。)\n\n--- カレーの種類 ---\n①グループ: たまごカレー、野菜カレー、チキンカレー\n②グループ: ハンバーグカレー、えびカレー\n\n--- 飲み物の種類 ---\nコーヒー、紅茶、オレンジジュース\n(コーヒーと紅茶は、温かいものと冷たいものが用意できます。)',
+              question: 'エレナさんはカレーと一緒にサラダを食べて、あとでコーヒーを飲みたいと思っています。 エレナさんが選ぶことのできるメニューはどれですか。', 
+              options: ['AとBとCとD', 'AとBとC', 'CとD', 'Cだけ'], 
+              correct: 2 
+            },
+            { 
+              id: 'd35', 
+              text: '(Xem lại bảng Menu Curry ở câu trên)',
+              question: 'チキンカレーを食べたい人が選ぶことのできるメニューはいくつありますか。', 
+              options: ['1つ', '2つ', '3つ', '4つ'], 
+              correct: 2 
+            }
+          ],
+          choukai: [
+            { id: 'c1', question: '問題１ - 1番', options: ['バスてい', 'えいがかん', 'きっさてん', 'ほんや'], correct: 2 },
+            { id: 'c2', question: '問題１ - 2番', image: '1U7767RpoG1Wp--Zdr_LY45NqZLTN3rWJ', options: ['1', '2', '3', '4'], correct: 2 },
+            { id: 'c3', question: '問題１ - 3番', options: ['コンビニ', 'スーパー', 'やおや', 'デパート'], correct: 0 },
+            { id: 'c4', question: '問題１ - 4番', options: ['12時55分', '1時', '1時5分', '1時10分'], correct: 0 },
+            { id: 'c5', question: '問題１ - 5番', options: ['5本', '10本', '15本', '20本'], correct: 3 },
+            { id: 'c6', question: '問題１ - 6番', image: '1FrFrHkXadTyW8I6YRIWVCF1SkXPDzZqV', options: ['1', '2', '3', '4'], correct: 2 },
+            { id: 'c7', question: '問題１ - 7番', options: ['今日のひるやすみ', '今日の6時', 'あしたのひるやすみ', 'あしたの6時'], correct: 2 },
+            { id: 'c8', question: '問題１ - 8番', image: '1Osf1anr5b0KW8QDf82axih4v-4fNiylN', options: ['1', '2', '3', '4'], correct: 1 },
+            { id: 'c9', question: '問題２ - 1番', options: ['いしゃ', '大学の先生', 'エンジニア', 'ぎんこういん'], correct: 1 },
+            { id: 'c10', question: '問題２ - 2番', options: ['えいがを見る', 'そうじをしてえをかざる', '友だちのへやにあそびに行く', '花を買いに行く'], correct: 1 },
+            { id: 'c11', question: '問題２ - 3番', options: ['はれてあたたかい', 'はれるがかぜがつめたい', '午後からくもりになる', '一日中つよい雨がふる'], correct: 1 },
+            { id: 'c12', question: '問題２ - 4番', options: ['いっしょにしょくじをする人', '花やようふくをプレゼントする人', 'てがみやカードをおくる人', 'ケーキをつくる人'], correct: 0 },
+            { id: 'c13', question: '問題２ - 5番', options: ['かいぎに出ること', 'かいぎしりょうをつくること', 'パソコンをなおすこと', 'いすとつくえをならべること'], correct: 2 },
+            { id: 'c14', question: '問題２ - 6番', options: ['ゆうべアルバイトをしたから', 'あさはやくおきたから', 'あさまでねむれなかったから', 'ゆうべおそくまでべんきょうしたから'], correct: 2 },
+            { id: 'c15', question: '問題２ - 7番', options: ['3ページから6ページまで', '4ページから6ページまで', '4ページから9ページまで', '7ページから9ページまで'], correct: 3 },
+            { id: 'c16', question: '問題３ - 1番', image: '1vUZ8RJaTRAuiYnGOLaQxyw1eAxLgqEsr', options: ['1', '2', '3'], correct: 1 },
+            { id: 'c17', question: '問題３ - 2番', image: '1IcMxjeglCC7APw6y1QgpPRh0vApHJ4IL', options: ['1', '2', '3'], correct: 1 },
+            { id: 'c18', question: '問題３ - 3番', image: '1EN2Pm1SAVTCgGxApSMoOfTLTwQgCqiqj', options: ['1', '2', '3'], correct: 0 },
+            { id: 'c19', question: '問題３ - 4番', image: '1Vf9fF8iHHEwqdUhi_eLpFY2PCg0_Xi3R', options: ['1', '2', '3'], correct: 2 },
+            { id: 'c20', question: '問題３ - 5番', image: '1BJ1-Ynuj_Y7QLz48S4C7SKTnW50MX9IM', options: ['1', '2', '3'], correct: 1 },
+            { id: 'c21', question: '問題４ - 1番', options: ['1', '2', '3'], correct: 2 },
+            { id: 'c22', question: '問題４ - 2番', options: ['1', '2', '3'], correct: 2 },
+            { id: 'c23', question: '問題４ - 3番', options: ['1', '2', '3'], correct: 1 },
+            { id: 'c24', question: '問題４ - 4番', options: ['1', '2', '3'], correct: 2 },
+            { id: 'c25', question: '問題４ - 5番', options: ['1', '2', '3'], correct: 0 },
+            { id: 'c26', question: '問題４ - 6番', options: ['1', '2', '3'], correct: 0 },
+            { id: 'c27', question: '問題４ - 7番', options: ['1', '2', '3'], correct: 1 },
+            { id: 'c28', question: '問題４ - 8番', options: ['1', '2', '3'], correct: 0 }
+          ]
+        };
+
+        // --- STATE ---
+        const TOTAL_TIME = 105 * 60;
+        let appState = 'home';
+        let currentSection = 'moji';
+        let answers = {};
+        let timeLeft = TOTAL_TIME;
+        let scores = { moji: 0, bunpou: 0, dokkai: 0, choukai: 0, total: 0 };
+        let timerInterval = null;
+        const totalQuestionsCount = examData.moji.length + examData.bunpou.length + examData.dokkai.length + examData.choukai.length;
+
+        // --- UTILS ---
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+        function getSectionTitle(id) {
+            switch(id) {
+                case 'moji': return '文字・語彙 (Từ vựng)';
+                case 'bunpou': return '文法 (Ngữ pháp)';
+                case 'dokkai': return '読解 (Đọc hiểu)';
+                case 'choukai': return '聴解 (Nghe hiểu)';
+                default: return '';
+            }
+        }
+
+        // --- APP LOGIC ---
+        function startExam() {
+            appState = 'testing';
+            timeLeft = TOTAL_TIME;
+            answers = {};
+            currentSection = 'moji';
+            if(timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitExam(true);
+                }
+            }, 1000);
+            renderView();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function submitExam(force = false) {
+            if (force || window.confirm('Em có chắc chắn muốn nộp bài không? Nhớ kiểm tra lại các câu chưa làm nhé!')) {
+                calculateScore();
+                appState = 'result';
+                if(timerInterval) clearInterval(timerInterval);
+                const audio = document.getElementById('exam-audio');
+                if(audio) audio.pause();
+                renderView();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function reviewExam() {
+            appState = 'review';
+            currentSection = 'moji';
+            renderView();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function backToResult() {
+            appState = 'result';
+            renderView();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function changeSection(secId) {
+            currentSection = secId;
+            document.getElementById('tabs-container').innerHTML = getTabsHTML();
+            document.getElementById('questions-container').innerHTML = getQuestionsHTML();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function selectAnswer(qId, optionIdx) {
+            if (appState !== 'testing') return;
+            answers[qId] = optionIdx;
+            const questionDiv = document.getElementById(`q-${qId}`);
+            if(questionDiv) {
+                const labels = questionDiv.querySelectorAll('label');
+                labels.forEach((label, idx) => {
+                    const input = label.querySelector('input');
+                    if(idx === optionIdx) {
+                        label.className = "flex items-center p-3 border rounded-lg cursor-pointer transition-all bg-blue-50 border-blue-500 shadow-sm";
+                        input.checked = true;
+                    } else {
+                        label.className = "flex items-center p-3 border rounded-lg cursor-pointer transition-all bg-white border-gray-200 hover:border-blue-300 hover:bg-gray-50";
+                        input.checked = false;
+                    }
+                });
+            }
+            updateProgress();
+        }
+
+        function calculateScore() {
+            let newScores = { moji: 0, bunpou: 0, dokkai: 0, choukai: 0, total: 0 };
+            let totalQuestions = 0;
+            let correctAnswers = 0;
+            Object.keys(examData).forEach(section => {
+                let sectionCorrect = 0;
+                examData[section].forEach(q => {
+                    totalQuestions++;
+                    if (answers[q.id] === q.correct) {
+                        sectionCorrect++;
+                        correctAnswers++;
+                    }
+                });
+                newScores[section] = Math.round((sectionCorrect / examData[section].length) * 100);
+            });
+            newScores.total = Math.round((correctAnswers / totalQuestions) * 100);
+            scores = newScores;
+        }
+
+        function updateTimerDisplay() {
+            const timerEl = document.getElementById('timer-display');
+            if (timerEl) {
+                timerEl.innerHTML = `⏳ ${formatTime(timeLeft)}`;
+                if(timeLeft < 300) {
+                    timerEl.className = 'text-base md:text-lg font-mono font-bold px-2 py-1 rounded flex items-center gap-1 bg-red-100 text-red-600 animate-pulse';
+                }
+            }
+        }
+
+        function updateProgress() {
+            if(appState !== 'testing') return;
+            const answeredCount = Object.keys(answers).length;
+            const progressPercent = Math.round((answeredCount / totalQuestionsCount) * 100);
+            const barFill = document.getElementById('progress-bar-fill');
+            if(barFill) barFill.style.width = `${progressPercent}%`;
+            const progressText = document.getElementById('progress-text');
+            if(progressText) progressText.innerHTML = `<span class="text-blue-600">${answeredCount}/${totalQuestionsCount}</span>`;
+        }
+
+        // --- RENDER ---
+        function renderView() {
+            const headerTitle = document.getElementById('header-title');
+            const headerInner = document.getElementById('header-inner');
+            const headerRight = document.getElementById('header-right');
+            const progressContainer = document.getElementById('progress-container');
+            const mainContainer = document.getElementById('main-container');
+            const footerContainer = document.getElementById('footer-container');
+
+            // Điều chỉnh header theo trạng thái
+            if (appState === 'testing') {
+                // Gọn: chỉ giữ tên ngắn và đồng hồ, giảm padding
+                headerTitle.innerHTML = `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">JLPT N4</span>`;
+                headerInner.className = "max-w-5xl mx-auto px-4 py-1.5 flex justify-between items-center";
+                headerRight.innerHTML = `<div id="timer-display" class="text-base md:text-lg font-mono font-bold px-2 py-1 rounded flex items-center gap-1 bg-blue-50 text-blue-700">⏳ ${formatTime(timeLeft)}</div>`;
+                progressContainer.classList.remove('hidden');
+            } else if (appState === 'review') {
+                headerTitle.innerHTML = `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm md:text-base">JLPT N4</span>
+                    <span class="hidden sm:inline text-gray-600 font-medium text-base">Đề thi tháng 7/2014</span>`;
+                headerInner.className = "max-w-5xl mx-auto px-4 py-2 flex justify-between items-center";
+                headerRight.innerHTML = `<button onclick="backToResult()" class="text-blue-600 font-medium hover:underline text-sm">← Quay lại Kết quả</button>`;
+                progressContainer.classList.add('hidden');
+            } else {
+                // Home hoặc result
+                headerTitle.innerHTML = `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm md:text-base">JLPT N4</span>
+                    <span class="hidden sm:inline text-gray-600 font-medium text-base">Đề thi tháng 7/2014</span>`;
+                headerInner.className = "max-w-5xl mx-auto px-4 py-2 flex justify-between items-center";
+                headerRight.innerHTML = '';
+                progressContainer.classList.add('hidden');
+            }
+
+            // Nội dung chính
+            if (appState === 'home') {
+                mainContainer.innerHTML = getHomeHTML();
+                footerContainer.innerHTML = '';
+            } else if (appState === 'result') {
+                mainContainer.innerHTML = getResultHTML();
+                footerContainer.innerHTML = '';
+            } else if (appState === 'testing' || appState === 'review') {
+                mainContainer.innerHTML = `
+                    <div class="relative">
+                        <div id="tabs-container">${getTabsHTML()}</div>
+                        <div id="questions-container" class="space-y-6 pb-24">${getQuestionsHTML()}</div>
+                    </div>
+                `;
+                if (appState === 'testing') {
+                    footerContainer.innerHTML = getFooterHTML();
+                    updateProgress();
+                } else {
+                    footerContainer.innerHTML = '';
+                }
+            }
+        }
+
+        function getHomeHTML() {
+            return `
+                <div class="bg-white p-6 md:p-10 rounded-2xl shadow-sm text-center max-w-2xl mx-auto mt-4 md:mt-10 border border-gray-100">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">🌸</div>
+                    <h2 class="text-2xl md:text-3xl font-bold mb-4 text-gray-800">Kỳ thi thử JLPT N4</h2>
+                    <p class="text-gray-600 mb-8 leading-relaxed text-sm md:text-base">
+                        Sensei chào các em! Đây là bài thi thử sát với đề JLPT thật tháng 7 năm 2014.<br class="hidden md:block"/>
+                        Đề thi có đầy đủ các phần: <strong class="text-blue-600">Từ vựng, Ngữ pháp, Đọc hiểu và Nghe hiểu</strong>.<br/>
+                        Hãy làm bài thật cẩn thận trong thời gian 105 phút nhé! 頑張ってください！
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 mb-8 text-left max-w-sm mx-auto">
+                        <div class="bg-slate-50 p-3 rounded text-sm"><span class="text-gray-500">Số câu hỏi:</span> <br/><strong class="text-lg text-gray-800">${totalQuestionsCount} câu</strong></div>
+                        <div class="bg-slate-50 p-3 rounded text-sm"><span class="text-gray-500">Thời gian:</span> <br/><strong class="text-lg text-gray-800">105 phút</strong></div>
+                    </div>
+                    <button onclick="startExam()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-xl shadow-lg transition-transform hover:scale-105 active:scale-95">
+                        Bắt đầu làm bài
+                    </button>
+                </div>
+            `;
+        }
+
+        function getResultHTML() {
+            const isGood = scores.total >= 60;
+            const message = isGood ? 'Tuyệt vời quá! Sensei chúc mừng em đã hoàn thành rất tốt bài thi!' : 'Đừng buồn nhé! Hãy xem lại những câu sai và cố gắng hơn ở lần sau. Sensei tin em làm được!';
+            const scoreColor = isGood ? 'text-green-500' : 'text-orange-500';
+            let html = `
+                <div class="bg-white p-6 md:p-10 rounded-2xl shadow-sm text-center mb-8 border-t-8 border-green-500 max-w-3xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-2 text-gray-800">Kết quả bài thi của em</h2>
+                    <div class="flex justify-center items-baseline gap-2 mb-2">
+                        <span class="text-6xl font-extrabold ${scoreColor}">${scores.total}</span>
+                        <span class="text-xl text-gray-500">/ 100</span>
+                    </div>
+                    <p class="text-gray-600 mb-8 text-lg">${message}</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            `;
+            ['moji', 'bunpou', 'dokkai', 'choukai'].forEach(sec => {
+                const secScore = scores[sec];
+                const secColor = secScore < 50 ? 'text-red-500' : 'text-gray-800';
+                html += `
+                        <div class="bg-slate-50 p-4 rounded-xl border border-gray-100">
+                            <div class="text-sm text-gray-500 mb-1">${getSectionTitle(sec).split(' ')[0]}</div>
+                            <div class="text-2xl font-bold ${secColor}">${secScore}%</div>
+                        </div>
+                `;
+            });
+            html += `
+                    </div>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button onclick="reviewExam()" class="bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold py-3 px-8 rounded-xl transition-colors">Xem lại Đáp án</button>
+                        <button onclick="startExam()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-8 rounded-xl transition-colors">Làm lại từ đầu</button>
+                    </div>
+                </div>
+            `;
+            return html;
+        }
+
+        function getTabsHTML() {
+            let html = `<div class="flex overflow-x-auto whitespace-nowrap gap-2 mb-6 border-b pb-2 scrollbar-hide">`;
+            Object.keys(examData).forEach(sec => {
+                const isActive = currentSection === sec;
+                const baseClass = "px-4 py-2 rounded-t-lg font-medium transition-all flex-shrink-0 cursor-pointer ";
+                const activeClass = isActive ? "bg-blue-600 text-white shadow-md" : "bg-gray-100 text-gray-600 hover:bg-gray-200";
+                html += `<button onclick="changeSection('${sec}')" class="${baseClass} ${activeClass}">${getSectionTitle(sec)}</button>`;
+            });
+            html += `</div>`;
+            return html;
+        }
+
+        function getQuestionsHTML() {
+            const questions = examData[currentSection];
+            const isReview = appState === 'review';
+            let html = '';
+
+            // Phần Nghe: thay iframe bằng nút mở tab mới
+            if (currentSection === 'choukai') {
+                // Link Google Drive dạng view, mở trực tiếp trong tab mới
+                const audioLink = "https://drive.google.com/file/d/1NxBXUxyq3ekQmkAvWk9toqLigqA37Zdg/view";
+                html += `
+                    <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6 rounded shadow-sm">
+                        <h3 class="font-bold text-yellow-800 mb-3 flex items-center gap-2">
+                            <span>🎧</span> Phần Nghe (聴解)
+                        </h3>
+                        <a href="${audioLink}" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-xl shadow transition-transform hover:scale-105 active:scale-95">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                            </svg>
+                            Mở file nghe (tab mới)
+                        </a>
+                        <p class="text-xs text-yellow-700 mt-2">Bấm vào nút trên để mở audio trong tab mới, sau đó quay lại đây làm bài.</p>
+                    </div>
+                `;
+            }
+
+            questions.forEach((q, index) => {
+                html += `
+                    <div id="q-${q.id}" class="bg-white p-5 md:p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow mb-6">
+                        <div class="flex flex-col md:flex-row gap-3 mb-4">
+                            <span class="font-bold text-blue-600 text-lg min-w-[60px]">Câu ${index + 1}:</span>
+                            <div class="flex-1">
+                `;
+                if (q.text) {
+                    html += `<div class="bg-gray-50 p-4 rounded-lg mb-4 whitespace-pre-wrap font-serif text-gray-800 border-l-4 border-gray-300 text-sm md:text-base leading-relaxed">${q.text}</div>`;
+                }
+                if (q.image) {
+                    html += `
+                        <div class="mb-4 text-center">
+                            <img src="https://drive.google.com/thumbnail?id=${q.image}&sz=w800" alt="Hình ảnh câu hỏi" class="max-w-full h-auto rounded shadow-sm inline-block max-h-[250px] object-contain border border-gray-200" onerror="this.onerror=null; this.src='https://placehold.co/600x200/eeeeee/999999?text=Loi+tai+anh';"/>
+                        </div>
+                    `;
+                }
+                html += `<p class="text-base md:text-lg text-gray-800 whitespace-pre-wrap font-medium">${q.question}</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 gap-3 ml-0 md:ml-[72px] ${q.options.length <= 4 ? 'md:grid-cols-2' : ''}">
+                `;
+                q.options.forEach((opt, optIdx) => {
+                    const isSelected = answers[q.id] === optIdx;
+                    const isCorrect = q.correct === optIdx;
+                    let labelClass = "flex items-center p-3 border rounded-lg cursor-pointer transition-all ";
+                    if (isReview) {
+                        if (isCorrect) labelClass += "bg-green-50 border-green-500 shadow-sm";
+                        else if (isSelected && !isCorrect) labelClass += "bg-red-50 border-red-400";
+                        else labelClass += "bg-white border-gray-200 opacity-60";
+                    } else {
+                        labelClass += isSelected ? "bg-blue-50 border-blue-500 shadow-sm" : "bg-white border-gray-200 hover:border-blue-300 hover:bg-gray-50";
+                    }
+                    const disabledAttr = isReview ? 'disabled' : '';
+                    const checkedAttr = isSelected ? 'checked' : '';
+                    html += `
+                        <label class="${labelClass}">
+                            <input type="radio" name="${q.id}" value="${optIdx}" ${checkedAttr} ${disabledAttr} onchange="selectAnswer('${q.id}', ${optIdx})" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500 mr-3 shrink-0" />
+                            <span class="text-sm md:text-base ${isReview && isCorrect ? 'text-green-700 font-semibold' : 'text-gray-700'}">${opt}</span>
+                            ${isReview && isCorrect ? '<span class="ml-auto text-green-500 text-xl">✓</span>' : ''}
+                            ${isReview && isSelected && !isCorrect ? '<span class="ml-auto text-red-500 text-xl">✗</span>' : ''}
+                        </label>
+                    `;
+                });
+                html += `</div></div>`;
+            });
+            return html;
+        }
+
+        function getFooterHTML() {
+            return `
+                <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur border-t p-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex justify-between items-center z-20">
+                    <div class="max-w-5xl mx-auto w-full flex justify-between items-center px-4">
+                        <div class="text-sm text-gray-600 font-medium">
+                            Đã làm: <span id="progress-text" class="text-blue-600">0/${totalQuestionsCount}</span>
+                        </div>
+                        <button onclick="submitExam()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 md:py-2.5 px-8 md:px-10 rounded-xl shadow-md transition-transform hover:scale-105 text-sm md:text-base">
+                            Nộp bài
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.onload = () => { renderView(); };
+    </script>
+</body>
+</html>
