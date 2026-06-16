@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <!-- Viewport chuẩn để hiển thị tốt trên Điện thoại và Máy tính bảng -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Từ vựng N3 - Thầy Sonkuro (Full 30 Bài)</title>
+    
+    <!-- Tải Tailwind CSS để dựng giao diện Responsive -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tải React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    
+    <!-- Tải Babel để dịch mã JSX trực tiếp trên trình duyệt -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body { margin: 0; padding: 0; background-color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .animate-fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Tùy chỉnh thanh cuộn cho đẹp trên PC */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const IconBookOpen = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>;
+        const IconCheckCircle = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>;
+        const IconList = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>;
+        const IconEdit3 = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>;
+        const IconVolume2 = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>;
+        const IconArrowLeft = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>;
+        const IconCheck = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="20 6 9 17 4 12"></polyline></svg>;
+        const IconX = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
+        const IconBrain = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"></path></svg>;
+        const IconTrophy = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>;
+        const IconSearch = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>;
+        const IconSparkles = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path></svg>;
+        const IconLoader2 = ({size=24, className=""}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>;
+
+        const LESSONS = Array.from({ length: 30 }, (_, i) => i + 1);
+
+        const N3_VOCABULARY = [
+            // --- BÀI 1 ---
+            { id: 101, lesson: 1, kanji: '男性', kana: 'だんせい', meaning: 'Nam giới', example: '理想の男性と結婚する。' },
+            { id: 102, lesson: 1, kanji: '女性', kana: 'じょせい', meaning: 'Nữ giới', example: 'あの女性は誰ですか。' },
+            { id: 103, lesson: 1, kanji: '高齢', kana: 'こうれい', meaning: 'Cao tuổi', example: '祖母は高齢だが、元気だ。' },
+            { id: 104, lesson: 1, kanji: '年上', kana: 'としうえ', meaning: 'Hơn tuổi', example: '年上の友達が多い。' },
+            { id: 105, lesson: 1, kanji: '目上', kana: 'めうえ', meaning: 'Cấp trên', example: '目上の人には敬語を使う。' },
+            { id: 106, lesson: 1, kanji: '先輩', kana: 'せんぱい', meaning: 'Tiền bối', example: '大学の先輩に相談する。' },
+            { id: 107, lesson: 1, kanji: '後輩', kana: 'こうはい', meaning: 'Hậu bối', example: '後輩に仕事を教える。' },
+            { id: 108, lesson: 1, kanji: '上司', kana: 'じょうし', meaning: 'Cấp trên (Công ty)', example: '上司と飲みに行く。' },
+            { id: 109, lesson: 1, kanji: '相手', kana: 'あいて', meaning: 'Đối phương', example: '話し相手を探す。' },
+            { id: 110, lesson: 1, kanji: '知り合い', kana: 'しりあい', meaning: 'Người quen', example: 'パーティーで知り合いに会った。' },
+            { id: 111, lesson: 1, kanji: '友人', kana: 'ゆうじん', meaning: 'Bạn hữu', example: '学生時代の友人。' },
+            { id: 112, lesson: 1, kanji: '仲', kana: 'なか', meaning: 'Quan hệ', example: '私と彼は仲がいい。' },
+            { id: 113, lesson: 1, kanji: '生年月日', kana: 'せいねんがっぴ', meaning: 'Ngày tháng năm sinh', example: '生年月日を記入してください。' },
+            { id: 114, lesson: 1, kanji: '誕生', kana: 'たんじょう', meaning: 'Ra đời', example: '新しい命の誕生を祝う。' },
+            { id: 115, lesson: 1, kanji: '年', kana: 'とし', meaning: 'Năm, tuổi', example: '年を取る。' },
+            { id: 116, lesson: 1, kanji: '出身', kana: 'しゅっしん', meaning: 'Xuất thân', example: 'ご出身はどちらですか。' },
+            { id: 117, lesson: 1, kanji: '故郷', kana: 'ふるさと', meaning: 'Quê', example: '故郷を思い出す。' },
+            { id: 118, lesson: 1, kanji: '成長', kana: 'せいちょう', meaning: 'Trưởng thành', example: '子供の成長は早い。' },
+            { id: 119, lesson: 1, kanji: '成人', kana: 'せいじん', meaning: 'Người lớn', example: '成人式に出席する。' },
+            { id: 120, lesson: 1, kanji: '合格', kana: 'ごうかく', meaning: 'Đỗ', example: '大学に合格する。' },
+            { id: 121, lesson: 1, kanji: '進学', kana: 'しんがく', meaning: 'Học lên', example: '大学院に進学する。' },
+            { id: 122, lesson: 1, kanji: '退学', kana: 'たいがく', meaning: 'Bỏ học', example: '学校を退学する。' },
+            { id: 123, lesson: 1, kanji: '就職', kana: 'しゅうしょく', meaning: 'Tìm việc', example: '旅行会社に就職する。' },
+            { id: 124, lesson: 1, kanji: '退職', kana: 'たいしょく', meaning: 'Nghỉ việc', example: '父は今年退職する。' },
+            { id: 125, lesson: 1, kanji: '失業', kana: 'しつぎょう', meaning: 'Thất nghiệp', example: '会社が倒産して失業した。' },
+            { id: 126, lesson: 1, kanji: '残業', kana: 'ざんぎょう', meaning: 'Tăng ca', example: '今日は残業がある。' },
+            { id: 127, lesson: 1, kanji: '生活', kana: 'せいかつ', meaning: 'Sinh hoạt', example: '日本の生活に慣れる。' },
+            { id: 128, lesson: 1, kanji: '通勤', kana: 'つうきん', meaning: 'Đi làm', example: '通勤に１時間かかる。' },
+            { id: 129, lesson: 1, kanji: '学歴', kana: 'がくれき', meaning: 'Quá trình học', example: '学歴より実力が大事だ。' },
+            { id: 130, lesson: 1, kanji: '給料', kana: 'きゅうりょう', meaning: 'Lương', example: '会社から給料をもらう。' },
+
+            // --- BÀI 2 ---
+            { id: 201, lesson: 2, kanji: '面接', kana: 'めんせつ', meaning: 'Phỏng vấn', example: '明日、アルバイトの面接がある。' },
+            { id: 202, lesson: 2, kanji: '休憩', kana: 'きゅうけい', meaning: 'Giải lao', example: '１０分休憩しましょう。' },
+            { id: 203, lesson: 2, kanji: '観光', kana: 'かんこう', meaning: 'Tham quan', example: '京都を観光する。' },
+            { id: 204, lesson: 2, kanji: '帰国', kana: 'きこく', meaning: 'Về nước', example: '来週、帰国します。' },
+            { id: 205, lesson: 2, kanji: '帰省', kana: 'きせい', meaning: 'Về quê', example: 'お盆に帰省する。' },
+            { id: 206, lesson: 2, kanji: '帰宅', kana: 'きたく', meaning: 'Về nhà', example: '毎日８時に帰宅する。' },
+            { id: 207, lesson: 2, kanji: '参加', kana: 'さんか', meaning: 'Tham gia', example: 'ボランティアに参加する。' },
+            { id: 208, lesson: 2, kanji: '出席', kana: 'しゅっせき', meaning: 'Tham dự', example: '会議に出席する。' },
+            { id: 209, lesson: 2, kanji: '欠席', kana: 'けっせき', meaning: 'Vắng mặt', example: '授業を欠席する。' },
+            { id: 210, lesson: 2, kanji: '遅刻', kana: 'ちこく', meaning: 'Đi muộn', example: '寝坊して遅刻した。' },
+            { id: 211, lesson: 2, kanji: '化粧', kana: 'けしょう', meaning: 'Trang điểm', example: '毎日化粧をする。' },
+            { id: 212, lesson: 2, kanji: '計算', kana: 'けいさん', meaning: 'Tính toán', example: 'お金を計算する。' },
+            { id: 213, lesson: 2, kanji: '計画', kana: 'けいかく', meaning: 'Kế hoạch', example: '旅行の計画を立てる。' },
+            { id: 214, lesson: 2, kanji: '成功', kana: 'せいこう', meaning: 'Thành công', example: '実験に成功する。' },
+            { id: 215, lesson: 2, kanji: '失敗', kana: 'しっぱい', meaning: 'Thất bại', example: 'テストで失敗した。' },
+            { id: 216, lesson: 2, kanji: '準備', kana: 'じゅんび', meaning: 'Chuẩn bị', example: '試験の準備をする。' },
+            { id: 217, lesson: 2, kanji: '整理', kana: 'せいり', meaning: 'Sắp xếp', example: '机の上を整理する。' },
+            { id: 218, lesson: 2, kanji: '注文', kana: 'ちゅうもん', meaning: 'Gọi món', example: 'レストランで料理を注文する。' },
+            { id: 219, lesson: 2, kanji: '貯金', kana: 'ちょきん', meaning: 'Tiết kiệm', example: '毎月１万円貯金する。' },
+            { id: 220, lesson: 2, kanji: '徹夜', kana: 'てつや', meaning: 'Xuốt đêm (Thức đêm)', example: '徹夜で勉強する。' },
+            { id: 221, lesson: 2, kanji: '引越し', kana: 'ひっこし', meaning: 'Chuyển nhà', example: '新しいアパートに引越しする。' },
+            { id: 222, lesson: 2, kanji: '身長', kana: 'しんちょう', meaning: 'Chiều cao', example: '身長を測る。' },
+            { id: 223, lesson: 2, kanji: '体重', kana: 'たいじゅう', meaning: 'Cân nặng', example: '体重が増えた。' },
+            { id: 224, lesson: 2, kanji: '怪我', kana: 'けが', meaning: 'Vết thương', example: '転んで怪我をした。' },
+            { id: 225, lesson: 2, kanji: '会', kana: 'かい', meaning: 'Hội, Tiệc', example: '忘年会を開く。' },
+            { id: 226, lesson: 2, kanji: '趣味', kana: 'しゅみ', meaning: 'Sở thích', example: '趣味は読書です。' },
+            { id: 227, lesson: 2, kanji: '興味', kana: 'きょうみ', meaning: 'Yêu thích, quan tâm', example: '歴史に興味がある。' },
+            { id: 228, lesson: 2, kanji: '思い出', kana: 'おもいで', meaning: 'Kỷ niệm', example: '子供の頃の思い出。' },
+            { id: 229, lesson: 2, kanji: '冗談', kana: 'じょうだん', meaning: 'Đùa', example: '冗談を言う。' },
+            { id: 230, lesson: 2, kanji: '目的', kana: 'もくてき', meaning: 'Mục đích', example: '日本に来た目的は何ですか。' },
+
+            // --- BÀI 3 ---
+            { id: 301, lesson: 3, kanji: '約束', kana: 'やくそく', meaning: 'Hứa hẹn', example: '友達と約束がある。' },
+            { id: 302, lesson: 3, kanji: 'お喋り', kana: 'おしゃべり', meaning: 'Nói chuyện', example: '授業中にお喋りをするな。' },
+            { id: 303, lesson: 3, kanji: '遠慮', kana: 'えんりょ', meaning: 'Ngại ngần', example: '遠慮しないで食べてください。' },
+            { id: 304, lesson: 3, kanji: '我慢', kana: 'がまん', meaning: 'Chịu đựng', example: '痛みを我慢する。' },
+            { id: 305, lesson: 3, kanji: '迷惑', kana: 'めいわく', meaning: 'Làm phiền', example: '人に迷惑をかける。' },
+            { id: 306, lesson: 3, kanji: '希望', kana: 'きぼう', meaning: 'Nguyện vọng', example: '平和を希望する。' },
+            { id: 307, lesson: 3, kanji: '夢', kana: 'ゆめ', meaning: 'Mơ', example: '将来の夢は医者になることだ。' },
+            { id: 308, lesson: 3, kanji: '賛成', kana: 'さんせい', meaning: 'Tán thành', example: 'その意見に賛成だ。' },
+            { id: 309, lesson: 3, kanji: '反対', kana: 'はんたい', meaning: 'Phản đối', example: '計画に反対する。' },
+            { id: 310, lesson: 3, kanji: '想像', kana: 'そうぞう', meaning: 'Tưởng tượng', example: '未来の生活を想像する。' },
+            { id: 311, lesson: 3, kanji: '努力', kana: 'どりょく', meaning: 'Nỗ lực', example: '目標に向かって努力する。' },
+            { id: 312, lesson: 3, kanji: '太陽', kana: 'たいよう', meaning: 'Mặt trời', example: '太陽が昇る。' },
+            { id: 313, lesson: 3, kanji: '地球', kana: 'ちきゅう', meaning: 'Trái đất', example: '地球環境を守る。' },
+            { id: 314, lesson: 3, kanji: '温度', kana: 'おんど', meaning: 'Nhiệt độ', example: 'エアコンの温度を下げる。' },
+            { id: 315, lesson: 3, kanji: '湿度', kana: 'しつど', meaning: 'Độ ẩm', example: '日本の夏は湿度が高い。' },
+            { id: 316, lesson: 3, kanji: '湿気', kana: 'しっけ', meaning: 'Hơi ẩm', example: 'この部屋は湿気が多い。' },
+            { id: 317, lesson: 3, kanji: '梅雨', kana: 'つゆ', meaning: 'Mùa mưa', example: 'もうすぐ梅雨に入る。' },
+            { id: 318, lesson: 3, kanji: '黴', kana: 'かび', meaning: 'Nấm mốc', example: 'パンに黴が生えた。' },
+            { id: 319, lesson: 3, kanji: '暖房', kana: 'だんぼう', meaning: 'Điều hoà ấm', example: '部屋が寒いので暖房をつける。' },
+            { id: 320, lesson: 3, kanji: '皮', kana: 'かわ', meaning: 'Vỏ', example: 'りんごの皮をむく。' },
+            { id: 321, lesson: 3, kanji: '缶', kana: 'かん', meaning: 'Lon', example: '空き缶を捨てる。' },
+            { id: 322, lesson: 3, kanji: '画面', kana: 'がめん', meaning: 'Màn hình', example: 'パソコンの画面を見る。' },
+            { id: 323, lesson: 3, kanji: '番組', kana: 'ばんぐみ', meaning: 'Chương trình', example: 'テレビ番組を見る。' },
+            { id: 324, lesson: 3, kanji: '記事', kana: 'きじ', meaning: 'Kí sự, Bài báo', example: '新聞の記事を読む。' },
+            { id: 325, lesson: 3, kanji: '近所', kana: 'きんじょ', meaning: 'Hàng xóm, lân cận', example: '近所の人に挨拶する。' },
+            { id: 326, lesson: 3, kanji: '警察', kana: 'けいさつ', meaning: 'Cảnh sát', example: '泥棒を警察に届ける。' },
+            { id: 327, lesson: 3, kanji: '犯人', kana: 'はんにん', meaning: 'Thủ phạm', example: '警察が犯人を捕まえた。' },
+            { id: 328, lesson: 3, kanji: '小銭', kana: 'こぜに', meaning: 'Tiền lẻ', example: '小銭がない。' },
+            { id: 329, lesson: 3, kanji: 'ご馳走', kana: 'ごちそう', meaning: 'Chiêu đãi', example: '先輩にご馳走してもらった。' },
+            { id: 330, lesson: 3, kanji: '作者', kana: 'さくしゃ', meaning: 'Tác giả', example: 'この小説の作者は誰ですか。' },
+
+            // --- BÀI 4 ---
+            { id: 401, lesson: 4, kanji: '作品', kana: 'さくひん', meaning: 'Tác phẩm', example: '美術館で作品を見る。' },
+            { id: 402, lesson: 4, kanji: '制服', kana: 'せいふく', meaning: 'Đồng phục', example: '高校の制服を着る。' },
+            { id: 403, lesson: 4, kanji: '洗剤', kana: 'せんざい', meaning: 'Chất tẩy rửa', example: '洗剤で服を洗う。' },
+            { id: 404, lesson: 4, kanji: '底', kana: 'そこ', meaning: 'Đáy', example: '靴の底に穴が空いた。' },
+            { id: 405, lesson: 4, kanji: '地下', kana: 'ちか', meaning: 'Tầng hầm', example: '地下の駐車場。' },
+            { id: 406, lesson: 4, kanji: '寺', kana: 'てら', meaning: 'Chùa', example: '京都の古い寺。' },
+            { id: 407, lesson: 4, kanji: '道路', kana: 'どうろ', meaning: 'Con đường', example: '道路が混んでいる。' },
+            { id: 408, lesson: 4, kanji: '坂', kana: 'さか', meaning: 'Con dốc', example: '急な坂を上る。' },
+            { id: 409, lesson: 4, kanji: '煙', kana: 'けむり', meaning: 'Khói', example: '煙草の煙。' },
+            { id: 410, lesson: 4, kanji: '灰', kana: 'はい', meaning: 'Tro', example: 'タバコの灰。' },
+            { id: 411, lesson: 4, kanji: '判', kana: 'はん', meaning: 'Con dấu / Kích cỡ', example: '書類に判を押す。' },
+            { id: 412, lesson: 4, kanji: '免許', kana: 'めんきょ', meaning: 'Giấy phép', example: '運転免許を取る。' },
+            { id: 413, lesson: 4, kanji: '多く', kana: 'おおく', meaning: 'Nhiều', example: '多くの人が集まった。' },
+            { id: 414, lesson: 4, kanji: '前半', kana: 'ぜんはん', meaning: 'Phần đầu', example: '映画の前半は面白かった。' },
+            { id: 415, lesson: 4, kanji: '後半', kana: 'こうはん', meaning: 'Phần cuối, sau', example: '試合の後半で逆転した。' },
+            { id: 416, lesson: 4, kanji: '最高', kana: 'さいこう', meaning: 'Cao nhất, Tuyệt vời', example: '今日の天気は最高だ。' },
+            { id: 417, lesson: 4, kanji: '最低', kana: 'さいてい', meaning: 'Tối thiểu, Tệ hại', example: '最低の点数を取った。' },
+            { id: 418, lesson: 4, kanji: '最初', kana: 'さいしょ', meaning: 'Đầu tiên', example: '最初からやり直す。' },
+            { id: 419, lesson: 4, kanji: '最後', kana: 'さいご', meaning: 'Cuối cùng', example: '列の最後に並ぶ。' },
+            { id: 420, lesson: 4, kanji: '自動', kana: 'じどう', meaning: 'Tự động', example: '自動ドアが開く。' },
+            { id: 421, lesson: 4, kanji: '種類', kana: 'しゅるい', meaning: 'Chủng loại', example: 'りんごには多くの種類がある。' },
+            { id: 422, lesson: 4, kanji: '性格', kana: 'せいかく', meaning: 'Tính cách', example: '彼は優しい性格だ。' },
+            { id: 423, lesson: 4, kanji: '性質', kana: 'せいしつ', meaning: 'Tính chất', example: 'この布は燃えにくい性質がある。' },
+            { id: 424, lesson: 4, kanji: '順番', kana: 'じゅんばん', meaning: 'Số thứ tự', example: '順番を待つ。' },
+            { id: 425, lesson: 4, kanji: '番', kana: 'ばん', meaning: 'Phiên, lượt', example: '次は私の番だ。' },
+            { id: 426, lesson: 4, kanji: '方法', kana: 'ほうほう', meaning: 'Phương pháp', example: '新しい方法を試す。' },
+            { id: 427, lesson: 4, kanji: '製品', kana: 'せいひん', meaning: 'Sản phẩm', example: '日本の電気製品。' },
+            { id: 428, lesson: 4, kanji: '値上がり', kana: 'ねあがり', meaning: 'Tăng giá', example: 'ガソリンが値上がりした。' },
+            { id: 429, lesson: 4, kanji: '生', kana: 'なま', meaning: 'Tươi, sống', example: '生の魚を食べる。' },
+
+            // --- BÀI 5 ---
+            { id: 501, lesson: 5, kanji: '渇く', kana: 'かわく', meaning: 'Khát', example: 'のどが渇いた。' },
+            { id: 502, lesson: 5, kanji: '嗅ぐ', kana: 'かぐ', meaning: 'Ngửi', example: '花の匂いを嗅ぐ。' },
+            { id: 503, lesson: 5, kanji: '叩く', kana: 'たたく', meaning: 'Đánh, gõ', example: 'ドアを叩く。' },
+            { id: 504, lesson: 5, kanji: '殴る', kana: 'なぐる', meaning: 'Đấm', example: '彼は怒って人を殴った。' },
+            { id: 505, lesson: 5, kanji: '蹴る', kana: 'ける', meaning: 'Đá', example: 'ボールを蹴る。' },
+            { id: 506, lesson: 5, kanji: '抱く', kana: 'だく', meaning: 'Ôm', example: '赤ちゃんを抱く。' },
+            { id: 507, lesson: 5, kanji: '倒れる', kana: 'たおれる', meaning: 'Đổ, ngã', example: '台風で木が倒れた。' },
+            { id: 508, lesson: 5, kanji: '倒す', kana: 'たおす', meaning: 'Làm đổ, đánh bại', example: '花瓶を倒してしまった。' },
+            { id: 509, lesson: 5, kanji: '起きる', kana: 'おきる', meaning: 'Thức dậy, xảy ra', example: '朝７時に起きる。' },
+            { id: 510, lesson: 5, kanji: '起こす', kana: 'おこす', meaning: 'Đánh thức, gây ra', example: '子供を起こす。' },
+            { id: 511, lesson: 5, kanji: '尋ねる', kana: 'たずねる', meaning: 'Hỏi thăm', example: '道を尋ねる。' },
+            { id: 512, lesson: 5, kanji: '呼ぶ', kana: 'よぶ', meaning: 'Gọi', example: 'タクシーを呼ぶ。' },
+            { id: 513, lesson: 5, kanji: '叫ぶ', kana: 'さけぶ', meaning: 'Gào, hét', example: '大声で叫ぶ。' },
+            { id: 514, lesson: 5, kanji: '黙る', kana: 'だまる', meaning: 'Giữ yên lặng', example: '彼は何も言わずに黙った。' },
+            { id: 515, lesson: 5, kanji: '飼う', kana: 'かう', meaning: 'Nuôi', example: '犬を飼っている。' },
+            { id: 516, lesson: 5, kanji: '数える', kana: 'かぞえる', meaning: 'Đếm', example: '数を数える。' },
+            { id: 517, lesson: 5, kanji: '乾く', kana: 'かわく', meaning: 'Khô', example: '洗濯物が乾いた。' },
+            { id: 518, lesson: 5, kanji: '乾かす', kana: 'かわかす', meaning: 'Làm khô', example: 'ドライヤーで髪を乾かす。' },
+            { id: 519, lesson: 5, kanji: '畳む', kana: 'たたむ', meaning: 'Gấp', example: '服を畳む。' },
+            { id: 520, lesson: 5, kanji: '誘う', kana: 'さそう', meaning: 'Mời', example: '友達を映画に誘う。' },
+            { id: 521, lesson: 5, kanji: '奢る', kana: 'おごる', meaning: 'Chiêu đãi', example: '後輩に昼ごはんを奢る。' },
+            { id: 522, lesson: 5, kanji: '預かる', kana: 'あずかる', meaning: 'Cất giữ, trông', example: '友達の荷物を預かる。' },
+            { id: 523, lesson: 5, kanji: '預ける', kana: 'あずける', meaning: 'Gửi', example: '銀行にお金を預ける。' },
+            { id: 524, lesson: 5, kanji: '決まる', kana: 'きまる', meaning: 'Được quyết định', example: '旅行の日程が決まった。' },
+            { id: 525, lesson: 5, kanji: '決める', kana: 'きめる', meaning: 'Quyết định', example: '進学先を決める。' },
+            { id: 526, lesson: 5, kanji: '写る', kana: 'うつる', meaning: 'Được chụp, phản chiếu', example: '写真にきれいに写っている。' },
+            { id: 527, lesson: 5, kanji: '写す', kana: 'うつす', meaning: 'Chụp, chép', example: '黒板の字をノートに写す。' },
+            { id: 528, lesson: 5, kanji: '思い出す', kana: 'おもいだす', meaning: 'Nhớ lại', example: '昔のことを思い出す。' },
+            { id: 529, lesson: 5, kanji: '教わる', kana: 'おそわる', meaning: 'Được dạy', example: '先生に日本語を教わる。' },
+            { id: 530, lesson: 5, kanji: '申し込む', kana: 'もうしこむ', meaning: 'Đăng kí', example: '試験に申し込む。' },
+
+            // --- BÀI 6 ---
+            { id: 601, lesson: 6, kanji: '断る', kana: 'ことわる', meaning: 'Từ chối', example: '誘いを断る。' },
+            { id: 602, lesson: 6, kanji: '見つかる', kana: 'みつかる', meaning: 'Được tìm thấy', example: 'なくした鍵が見つかった。' },
+            { id: 603, lesson: 6, kanji: '見つける', kana: 'みつける', meaning: 'Tìm thấy', example: 'いい仕事を見つける。' },
+            { id: 604, lesson: 6, kanji: '捕まる', kana: 'つかまる', meaning: 'Bị bắt', example: '犯人が警察に捕まった。' },
+            { id: 605, lesson: 6, kanji: '捕まえる', kana: 'つかまえる', meaning: 'Bắt', example: '虫を捕まえる。' },
+            { id: 606, lesson: 6, kanji: '乗る', kana: 'のる', meaning: 'Lên (xe)', example: '電車に乗る。' },
+            { id: 607, lesson: 6, kanji: '乗せる', kana: 'のせる', meaning: 'Cho lên, chất lên', example: '子供を車に乗せる。' },
+            { id: 608, lesson: 6, kanji: '降りる', kana: 'おりる', meaning: 'Xuống (xe)', example: '次の駅で降りる。' },
+            { id: 609, lesson: 6, kanji: '降ろす', kana: 'おろす', meaning: 'Hạ xuống, cho xuống', example: '荷物を車から降ろす。' },
+            { id: 610, lesson: 6, kanji: '直る', kana: 'なおる', meaning: 'Được sửa (Máy)', example: '壊れた時計が直った。' },
+            { id: 611, lesson: 6, kanji: '直す', kana: 'なおす', meaning: 'Sửa', example: '自転車を直す。' },
+            { id: 612, lesson: 6, kanji: '治る', kana: 'なおる', meaning: 'Khỏi (Bệnh)', example: '風邪が治った。' },
+            { id: 613, lesson: 6, kanji: '治す', kana: 'なおす', meaning: 'Chữa bệnh', example: '虫歯を治す。' },
+            { id: 614, lesson: 6, kanji: '亡くなる', kana: 'なくなる', meaning: 'Chết, qua đời', example: '祖父が亡くなった。' },
+            { id: 615, lesson: 6, kanji: '亡くす', kana: 'なくす', meaning: 'Làm mất, mất (người thân)', example: '事故で親を亡くす。' },
+            { id: 616, lesson: 6, kanji: '生まれる', kana: 'うまれる', meaning: 'Được sinh ra', example: '赤ちゃんが生まれる。' },
+            { id: 617, lesson: 6, kanji: '生む', kana: 'うむ', meaning: 'Sinh', example: '妻が男の子を生んだ。' },
+            { id: 618, lesson: 6, kanji: '出会う', kana: 'であう', meaning: 'Gặp (tình cờ)', example: '駅で偶然友達に出会った。' },
+            { id: 619, lesson: 6, kanji: '訪ねる', kana: 'たずねる', meaning: 'Thăm hỏi, ghé thăm', example: '先生の家を訪ねる。' },
+            { id: 620, lesson: 6, kanji: '付き合う', kana: 'つきあう', meaning: 'Hẹn hò, giao du', example: '彼と付き合っている。' },
+            { id: 621, lesson: 6, kanji: '効く', kana: 'きく', meaning: 'Hiệu quả', example: 'この薬はよく効く。' },
+            { id: 622, lesson: 6, kanji: '流行る', kana: 'はやる', meaning: 'Thịnh hành', example: 'インフルエンザが流行っている。' },
+            { id: 623, lesson: 6, kanji: '経つ', kana: 'たつ', meaning: 'Trôi qua', example: '時間が経つのは早い。' },
+            { id: 624, lesson: 6, kanji: '間に合う', kana: 'まにあう', meaning: 'Kịp', example: '電車に間に合った。' },
+            { id: 625, lesson: 6, kanji: '間に合わせる', kana: 'まにあわせる', meaning: 'Làm cho kịp', example: 'レポートを締め切りに間に合わせる。' },
+            { id: 626, lesson: 6, kanji: '通う', kana: 'かよう', meaning: 'Đi lại (thường xuyên)', example: '毎日学校に通う。' },
+            { id: 627, lesson: 6, kanji: '込む', kana: 'こむ', meaning: 'Đông', example: '道が込んでいる。' },
+            { id: 628, lesson: 6, kanji: 'すれ違う', kana: 'すれちがう', meaning: 'Lướt qua', example: '道で彼とすれ違った。' },
+            { id: 629, lesson: 6, kanji: '掛かる', kana: 'かかる', meaning: 'Tốn, được treo', example: '壁に時計が掛かっている。' },
+            { id: 630, lesson: 6, kanji: '掛ける', kana: 'かける', meaning: 'Treo, gọi (điện)', example: '壁にカレンダーを掛ける。' },
+
+            // --- BÀI 7 ---
+            { id: 701, lesson: 7, kanji: '動く', kana: 'うごく', meaning: 'Hoạt động, di chuyển', example: '機械が動かなくなった。' },
+            { id: 702, lesson: 7, kanji: '動かす', kana: 'うごかす', meaning: 'Làm chuyển động', example: '重い机を動かす。' },
+            { id: 703, lesson: 7, kanji: '離れる', kana: 'はなれる', meaning: 'Tránh xa, cách xa', example: '家族と離れて暮らす。' },
+            { id: 704, lesson: 7, kanji: '離す', kana: 'はなす', meaning: 'Rời xa, buông ra', example: '手を離す。' },
+            { id: 705, lesson: 7, kanji: 'ぶつかる', kana: 'ぶつかる', meaning: 'Bị va', example: '自転車が車にぶつかった。' },
+            { id: 706, lesson: 7, kanji: 'ぶつける', kana: 'ぶつける', meaning: 'Đâm, va', example: '頭を壁にぶつけた。' },
+            { id: 707, lesson: 7, kanji: '零れる', kana: 'こぼれる', meaning: 'Bị tràn, văng', example: '涙がこぼれる。' },
+            { id: 708, lesson: 7, kanji: '零す', kana: 'こぼす', meaning: 'Làm tràn, văng', example: 'コーヒーをこぼしてしまった。' },
+            { id: 709, lesson: 7, kanji: '拭く', kana: 'ふく', meaning: 'Phủi, lau', example: '机の上を拭く。' },
+            { id: 710, lesson: 7, kanji: '片付く', kana: 'かたづく', meaning: 'Được dọn', example: '部屋が片付いた。' },
+            { id: 711, lesson: 7, kanji: '片付ける', kana: 'かたづける', meaning: 'Dọn dẹp', example: 'おもちゃを片付ける。' },
+            { id: 712, lesson: 7, kanji: '包む', kana: 'つつむ', meaning: 'Bọc', example: 'プレゼントを包む。' },
+            { id: 713, lesson: 7, kanji: '貼る', kana: 'はる', meaning: 'Dán', example: '壁にポスターを貼る。' },
+            { id: 714, lesson: 7, kanji: '無くす', kana: 'なくす', meaning: 'Làm mất', example: '財布を無くした。' },
+            { id: 715, lesson: 7, kanji: '無くなる', kana: 'なくなる', meaning: 'Mất, hết', example: '自信が無くなる。' },
+            { id: 716, lesson: 7, kanji: '足りる', kana: 'たりる', meaning: 'Đủ', example: 'お金が足りない。' },
+            { id: 717, lesson: 7, kanji: '残る', kana: 'のこる', meaning: 'Sót lại, còn lại', example: 'ご飯が残っている。' },
+            { id: 718, lesson: 7, kanji: '残す', kana: 'のこす', meaning: 'Để lại', example: 'ご飯を残さないで食べなさい。' },
+            { id: 719, lesson: 7, kanji: '腐る', kana: 'くさる', meaning: 'Thiu, hỏng', example: '暑さで肉が腐った。' },
+            { id: 720, lesson: 7, kanji: '剥ける', kana: 'むける', meaning: 'Bong, bị bóc', example: '日焼けで皮が剥けた。' },
+            { id: 721, lesson: 7, kanji: '剥く', kana: 'むく', meaning: 'Bóc, gọt', example: 'みかんの皮を剥く。' },
+            { id: 722, lesson: 7, kanji: '滑る', kana: 'すべる', meaning: 'Trượt té', example: '雪道で滑って転んだ。' },
+            { id: 723, lesson: 7, kanji: '積む', kana: 'つむ', meaning: 'Chất, xếp', example: '車に荷物を積む。' },
+            { id: 724, lesson: 7, kanji: '積もる', kana: 'つもる', meaning: 'Tích tụ, chất đống', example: '雪が積もった。' },
+            { id: 725, lesson: 7, kanji: '空く', kana: 'あく', meaning: 'Trống', example: '席が空いている。' },
+            { id: 726, lesson: 7, kanji: '空ける', kana: 'あける', meaning: 'Làm trống', example: '予定を空けておく。' },
+            { id: 727, lesson: 7, kanji: '下がる', kana: 'さがる', meaning: 'Giảm, hạ', example: '熱が下がった。' },
+            { id: 728, lesson: 7, kanji: '下げる', kana: 'さげる', meaning: 'Làm giảm, hạ', example: 'テレビの音をさげる。' },
+            { id: 729, lesson: 7, kanji: '冷える', kana: 'ひえる', meaning: 'Lạnh đi', example: 'クーラーで体が冷える。' },
+            { id: 730, lesson: 7, kanji: '冷やす', kana: 'ひやす', meaning: 'Làm lạnh', example: 'ジュースを冷蔵庫で冷やす。' },
+
+            // --- BÀI 8 ---
+            { id: 801, lesson: 8, kanji: '冷める', kana: 'さめる', meaning: 'Nguội đi', example: 'スープが冷める。' },
+            { id: 802, lesson: 8, kanji: '冷ます', kana: 'さます', meaning: 'Làm nguội', example: 'お湯を冷ます。' },
+            { id: 803, lesson: 8, kanji: '燃える', kana: 'もえる', meaning: 'Cháy', example: '火が燃えている。' },
+            { id: 804, lesson: 8, kanji: '燃やす', kana: 'もやす', meaning: 'Đốt cháy', example: 'ごみを燃やす。' },
+            { id: 805, lesson: 8, kanji: '沸く', kana: 'わく', meaning: 'Sôi', example: 'お湯が沸いた。' },
+            { id: 806, lesson: 8, kanji: '沸かす', kana: 'わかす', meaning: 'Đun sôi', example: 'お茶のためにお湯を沸かす。' },
+            { id: 807, lesson: 8, kanji: '鳴る', kana: 'なる', meaning: 'Kêu, reo', example: '電話が鳴っている。' },
+            { id: 808, lesson: 8, kanji: '鳴らす', kana: 'ならす', meaning: 'Làm kêu', example: 'ブザーを鳴らす。' },
+            { id: 809, lesson: 8, kanji: '役に立つ', kana: 'やくにたつ', meaning: 'Giúp ích', example: 'この本はとても役に立つ。' },
+            { id: 810, lesson: 8, kanji: '役に立てる', kana: 'やくにたてる', meaning: 'Làm cho có ích', example: '勉強を将来の仕事に役に立てる。' },
+            { id: 811, lesson: 8, kanji: '飾り', kana: 'かざり', meaning: 'Trang trí', example: 'クリスマスの飾り。' },
+            { id: 812, lesson: 8, kanji: '集まり', kana: 'あつまり', meaning: 'Tập hợp', example: '親戚の集まりがある。' },
+            { id: 813, lesson: 8, kanji: '教え', kana: 'おしえ', meaning: 'Lời dạy', example: '先生の教えを守る。' },
+            { id: 814, lesson: 8, kanji: '踊り', kana: 'おどり', meaning: 'Nhảy', example: '日本の伝統的な踊り。' },
+            { id: 815, lesson: 8, kanji: '遊び', kana: 'あそび', meaning: 'Chơi', example: '子供の遊び。' },
+            { id: 816, lesson: 8, kanji: '思い', kana: 'おもい', meaning: 'Ý nghĩ', example: '感謝の思いを伝える。' },
+            { id: 817, lesson: 8, kanji: '働き', kana: 'はたらき', meaning: 'Công việc, chức năng', example: '肝臓の働きが悪い。' },
+            { id: 818, lesson: 8, kanji: '考え', kana: 'かんがえ', meaning: 'Suy nghĩ', example: '良い考えが浮かんだ。' },
+            { id: 819, lesson: 8, kanji: '決まり', kana: 'きまり', meaning: 'Quyết định, quy định', example: '学校の決まりを守る。' },
+            { id: 820, lesson: 8, kanji: '片付け', kana: 'かたづけ', meaning: 'Việc dọn dẹp', example: '部屋の片付けをする。' },
+            { id: 821, lesson: 8, kanji: '騒ぎ', kana: 'さわぎ', meaning: 'Ồn ào, rắc rối', example: '外で大きな騒ぎがあった。' },
+            { id: 822, lesson: 8, kanji: '手伝い', kana: 'てつだい', meaning: 'Sự giúp đỡ', example: '母の料理の手伝いをする。' },
+            { id: 823, lesson: 8, kanji: '知らせ', kana: 'しらせ', meaning: 'Thông báo', example: '合格の知らせが届いた。' },
+            { id: 824, lesson: 8, kanji: '頼み', kana: 'たのみ', meaning: 'Nhờ vả', example: 'あなたに頼みがあるんですが。' },
+            { id: 825, lesson: 8, kanji: '疲れ', kana: 'つかれ', meaning: 'Sự mệt mỏi', example: '疲れがたまる。' },
+            { id: 826, lesson: 8, kanji: '違い', kana: 'ちがい', meaning: 'Sai, nhầm, khác biệt', example: '二つの違いがわからない。' },
+            { id: 827, lesson: 8, kanji: '始め', kana: 'はじめ', meaning: 'Bắt đầu', example: '仕事の始めに挨拶をする。' },
+            { id: 828, lesson: 8, kanji: '続き', kana: 'つづき', meaning: 'Tiếp tục', example: 'ドラマの続きが見たい。' },
+            { id: 829, lesson: 8, kanji: '暮れ', kana: 'くれ', meaning: 'Cuối, hoàng hôn', example: '年の暮れは忙しい。' },
+            { id: 830, lesson: 8, kanji: '行き', kana: 'いき', meaning: 'Đi, chuyến đi', example: '東京行きの電車。' },
+
+            // --- BÀI 9 ---
+            { id: 901, lesson: 9, kanji: '帰り', kana: 'かえり', meaning: 'Đường về', example: '帰りにスーパーへ寄る。' },
+            { id: 902, lesson: 9, kanji: '急ぎ', kana: 'いそぎ', meaning: 'Gấp, vội', example: '急ぎの仕事が入った。' },
+            { id: 903, lesson: 9, kanji: '遅れ', kana: 'おくれ', meaning: 'Chậm, muộn', example: '電車の遅れが生じた。' },
+            { id: 904, lesson: 9, kanji: '貸し', kana: 'かし', meaning: 'Cho vay', example: '彼には千円の貸しがある。' },
+            { id: 905, lesson: 9, kanji: '借り', kana: 'かり', meaning: 'Khoản vay, nợ', example: '友達に借りがある。' },
+            { id: 906, lesson: 9, kanji: '勝ち', kana: 'かち', meaning: 'Thắng', example: '今日の試合は我々の勝ちだ。' },
+            { id: 907, lesson: 9, kanji: '負け', kana: 'まけ', meaning: 'Thua', example: '自分の負けを認める。' },
+            { id: 908, lesson: 9, kanji: '迎え', kana: 'むかえ', meaning: 'Đón', example: '駅まで迎えに行く。' },
+            { id: 909, lesson: 9, kanji: '始まり', kana: 'はじまり', meaning: 'Bắt đầu', example: '新しい生活の始まり。' },
+            { id: 910, lesson: 9, kanji: '終わり', kana: 'おわり', meaning: 'Kết thúc', example: '夏休みももう終わりだ。' },
+            { id: 911, lesson: 9, kanji: '戻り', kana: 'もどり', meaning: 'Trở lại', example: '社長の戻りは3時になります。' },
+            { id: 912, lesson: 9, kanji: '別れ', kana: 'わかれ', meaning: 'Chia ly', example: '卒業式で友達と別れを惜しむ。' },
+            { id: 913, lesson: 9, kanji: '喜び', kana: 'よろこび', meaning: 'Vui mừng', example: '優勝の喜びを分かち合う。' },
+            { id: 914, lesson: 9, kanji: '楽しみ', kana: 'たのしみ', meaning: 'Niềm vui', example: '週末の旅行が楽しみだ。' },
+            { id: 915, lesson: 9, kanji: '笑い', kana: 'わらい', meaning: 'Tiếng cười', example: '教室から笑いが聞こえた。' },
+            { id: 916, lesson: 9, kanji: '驚き', kana: 'おどろき', meaning: 'Kinh ngạc', example: '彼の突然の辞し職は驚きだ。' },
+            { id: 917, lesson: 9, kanji: '怒り', kana: 'いかり', meaning: 'Tức giận', example: '怒りを顔に出す。' },
+            { id: 918, lesson: 9, kanji: '悲しみ', kana: 'かなしみ', meaning: 'Nỗi đau', example: '愛犬を失った悲しみ。' },
+            { id: 919, lesson: 9, kanji: '幸せ', kana: 'しあわせ', meaning: 'Hạnh phúc', example: '家族と一緒にいると幸せだ。' },
+            { id: 920, lesson: 9, kanji: '苦手', kana: 'にがて', meaning: 'Kém', example: '私は英語が苦手です。' },
+            { id: 921, lesson: 9, kanji: '熱心', kana: 'ねっしん', meaning: 'Nhiệt tình', example: '熱心に勉強する。' },
+            { id: 922, lesson: 9, kanji: '夢中', kana: 'むちゅう', meaning: 'Say mê', example: 'ゲームに夢中になる。' },
+            { id: 923, lesson: 9, kanji: '退屈', kana: 'たいくつ', meaning: 'Chán', example: '退屈な授業。' },
+            { id: 924, lesson: 9, kanji: '健康', kana: 'けんこう', meaning: 'Sức khoẻ', example: '健康のために運動する。' },
+            { id: 925, lesson: 9, kanji: '苦しい', kana: 'くるしい', meaning: 'Khổ cực', example: '走った後で息が苦しい。' },
+            { id: 926, lesson: 9, kanji: '悔しい', kana: 'くやしい', meaning: 'Tiếc nuối', example: '試合に負けて悔しい。' },
+            { id: 927, lesson: 9, kanji: '羨ましい', kana: 'うらやましい', meaning: 'Ghen tị', example: '彼の才能が羨ましい。' },
+            { id: 928, lesson: 9, kanji: '痒い', kana: 'かゆい', meaning: 'Ngứa', example: '蚊に刺されて痒い。' },
+            { id: 929, lesson: 9, kanji: '平気', kana: 'へいき', meaning: 'Bình tĩnh, không sao', example: 'これくらいの寒さは平気だ。' },
+
+            // --- BÀI 10 ---
+            { id: 1001, lesson: 10, kanji: '大人しい', kana: 'おとなしい', meaning: 'Ngoan, hiền lành', example: '彼女は子供のころ、とても大人しかった。' },
+            { id: 1002, lesson: 10, kanji: '我慢強い', kana: 'がまんづよい', meaning: 'Chịu đựng tốt, kiên nhẫn', example: '彼は我慢強い性格だ。' },
+            { id: 1003, lesson: 10, kanji: '正直', kana: 'しょうじき', meaning: 'Chính trực', example: '正直に言ってください。' },
+            { id: 1004, lesson: 10, kanji: 'けち', kana: 'けち', meaning: 'Keo kiệt', example: 'あの人はお金にけちだ。' },
+            { id: 1005, lesson: 10, kanji: '我儘', kana: 'わがまま', meaning: 'Cứng đầu, bướng', example: 'わがままな行動はやめなさい。' },
+            { id: 1006, lesson: 10, kanji: '積極的', kana: 'せっきょくてき', meaning: 'Tích cực', example: '積極的に会議で発言する。' },
+            { id: 1007, lesson: 10, kanji: '消極的', kana: 'しょうきょくてき', meaning: 'Tiêu cực', example: '彼は新しいことに対して消極的だ。' },
+            { id: 1008, lesson: 10, kanji: '満足', kana: 'まんぞく', meaning: 'Thoả mãn', example: '今の生活に満足している。' },
+            { id: 1009, lesson: 10, kanji: '不満', kana: 'ふまん', meaning: 'Bất mãn', example: '会社に対して不満がある。' },
+            { id: 1010, lesson: 10, kanji: '不安', kana: 'ふあん', meaning: 'Bất an', example: '将来に不安を感じる。' },
+            { id: 1011, lesson: 10, kanji: '大変', kana: 'たいへん', meaning: 'Vất vả', example: '毎日の仕事が大変だ。' },
+            { id: 1012, lesson: 10, kanji: '無理', kana: 'むり', meaning: 'Không thể', example: '一日で全部覚えるのは無理だ。' },
+            { id: 1013, lesson: 10, kanji: '不注意', kana: 'ふちゅうい', meaning: 'Không chú ý', example: '不注意でミスをしてしまった。' },
+            { id: 1014, lesson: 10, kanji: '楽', kana: 'らく', meaning: 'Nhàn hạ', example: 'もっと楽な仕事がしたい。' },
+            { id: 1015, lesson: 10, kanji: '面倒', kana: 'めんどう', meaning: 'Khó khăn, phiền toái', example: '面倒な手続きを済ませる。' },
+            { id: 1016, lesson: 10, kanji: '失礼', kana: 'しつれい', meaning: 'Thất lễ', example: 'お客様に失礼な態度をとる。' },
+            { id: 1017, lesson: 10, kanji: '当然', kana: 'とうぜん', meaning: 'Đương nhiên', example: '彼が怒るのは当然だ。' },
+            { id: 1018, lesson: 10, kanji: '意外', kana: 'いがい', meaning: 'Ngoài dự liệu', example: '意外な結果になって驚いた。' },
+            { id: 1019, lesson: 10, kanji: '結構', kana: 'けっこう', meaning: 'Tương đối, khá, đủ', example: 'このパソコンは結構高い。' },
+            { id: 1020, lesson: 10, kanji: '派手', kana: 'はで', meaning: 'Sặc sỡ', example: '派手な服を着てパーティーに行く。' },
+            { id: 1021, lesson: 10, kanji: '地味', kana: 'じみ', meaning: 'Đơn giản', example: '彼女はいつも地味な服を着ている。' },
+            { id: 1022, lesson: 10, kanji: 'おしゃれ', kana: 'おしゃれ', meaning: 'Sang trọng', example: 'あのお店のインテリアはおしゃれだ。' },
+            { id: 1023, lesson: 10, kanji: '不思議', kana: 'ふしぎ', meaning: 'Kì, lạ', example: '不思議な現象が起きた。' },
+            { id: 1024, lesson: 10, kanji: 'まし', kana: 'まし', meaning: 'Tốt hơn', example: '何もしないよりはましだ。' },
+            { id: 1025, lesson: 10, kanji: '無駄', kana: 'むだ', meaning: 'Lãng phí', example: '無駄な時間を過ごしてしまった。' },
+            { id: 1026, lesson: 10, kanji: '自由', kana: 'じゆう', meaning: 'Tự do', example: '自由な時間を楽しむ。' },
+            { id: 1027, lesson: 10, kanji: '不自由', kana: 'ふじゆう', meaning: 'Không tự do, khuyết tật', example: '体が不自由な人を助ける。' },
+            { id: 1028, lesson: 10, kanji: '温まる', kana: 'あたたまる', meaning: 'Nóng lên', example: 'お風呂に入って体が温まる。' },
+            { id: 1029, lesson: 10, kanji: '温める', kana: 'あたためる', meaning: 'Làm nóng', example: '電子レンジでスープを温める。' },
+
+            // --- BÀI 11 ---
+            { id: 1101, lesson: 11, kanji: '高まる', kana: 'たかまる', meaning: 'Tăng lên', example: '関心が高まる。' },
+            { id: 1102, lesson: 11, kanji: '高める', kana: 'たかめる', meaning: 'Làm tăng', example: '能力を高める。' },
+            { id: 1103, lesson: 11, kanji: '強まる', kana: 'つよまる', meaning: 'Mạnh lên', example: '風が強まる。' },
+            { id: 1104, lesson: 11, kanji: '弱まる', kana: 'よわまる', meaning: 'Yếu đi', example: '雨が弱まる。' },
+            { id: 1105, lesson: 11, kanji: '弱める', kana: 'よわめる', meaning: 'Làm yếu đi', example: '火を弱める。' },
+            { id: 1106, lesson: 11, kanji: '強める', kana: 'つよめる', meaning: 'Làm mạnh lên', example: '力を強める。' },
+            { id: 1107, lesson: 11, kanji: '広まる', kana: 'ひろまる', meaning: 'Mở rộng', example: 'うわさが広まる。' },
+            { id: 1108, lesson: 11, kanji: '広める', kana: 'ひろめる', meaning: 'Làm lan rộng', example: '知識を広める。' },
+            { id: 1109, lesson: 11, kanji: '深まる', kana: 'ふかまる', meaning: 'Sâu, sâu sắc', example: '秋が深まる。' },
+            { id: 1110, lesson: 11, kanji: '深める', kana: 'ふかめる', meaning: 'Làm sâu thêm', example: '理解を深める。' },
+            { id: 1111, lesson: 11, kanji: '世話', kana: 'せわ', meaning: 'Chăm sóc', example: '子供の世話をする。' },
+            { id: 1112, lesson: 11, kanji: '家庭', kana: 'かてい', meaning: 'Gia đình', example: '温かい家庭を築く。' },
+            { id: 1113, lesson: 11, kanji: '協力', kana: 'きょうりょく', meaning: 'Hợp tác', example: 'みんなで協力する。' },
+            { id: 1114, lesson: 11, kanji: '感謝', kana: 'かんしゃ', meaning: 'Cảm ơn', example: '心から感謝する。' },
+            { id: 1115, lesson: 11, kanji: 'お礼', kana: 'おれい', meaning: 'Lời cảm ơn', example: 'お礼を言う。' },
+            { id: 1116, lesson: 11, kanji: 'お詫び', kana: 'おわび', meaning: 'Lời xin lỗi', example: 'お詫びの手紙を書く。' },
+            { id: 1117, lesson: 11, kanji: 'お辞儀', kana: 'おじぎ', meaning: 'Cúi chào, hành lễ', example: '丁寧にお辞儀をする。' },
+            { id: 1118, lesson: 11, kanji: '握手', kana: 'あくしゅ', meaning: 'Bắt tay', example: '社長と握手する。' },
+            { id: 1119, lesson: 11, kanji: '意地悪', kana: 'いじわる', meaning: 'Xấu tính', example: '意地悪な人。' },
+            { id: 1120, lesson: 11, kanji: 'いたずら', kana: 'いたずら', meaning: 'Nghịch ngợm', example: '子供がいたずらをする。' },
+            { id: 1121, lesson: 11, kanji: '実行', kana: 'じっこう', meaning: 'Thực hành', example: '計画を実行する。' },
+            { id: 1122, lesson: 11, kanji: '節約', kana: 'せつやく', meaning: 'Tiết kiệm', example: '電気を節約する。' },
+            { id: 1123, lesson: 11, kanji: '経営', kana: 'けいえい', meaning: 'Kinh doanh', example: '会社を経営する。' },
+            { id: 1124, lesson: 11, kanji: '反省', kana: 'はんせい', meaning: 'Kiểm điểm', example: '自分の行動を反省する。' },
+            { id: 1125, lesson: 11, kanji: '進歩', kana: 'しんぽ', meaning: 'Tiến bộ', example: '技術が進歩する。' },
+            { id: 1126, lesson: 11, kanji: '変化', kana: 'へんか', meaning: 'Thay đổi', example: '時代が変化する。' },
+            { id: 1127, lesson: 11, kanji: '体力', kana: 'たいりょく', meaning: 'Thể lực', example: '体力をつける。' },
+            { id: 1128, lesson: 11, kanji: '出場', kana: 'しゅつじょう', meaning: 'Tham gia', example: '大会に出場する。' },
+            { id: 1129, lesson: 11, kanji: '活躍', kana: 'かつやく', meaning: 'Hoạt động', example: '世界で活躍する。' },
+            { id: 1130, lesson: 11, kanji: '発達', kana: 'はったつ', meaning: 'Tiến bộ, phát triển', example: '体が発達する。' },
+
+            // --- BÀI 12 ---
+            { id: 1201, lesson: 12, kanji: '競争', kana: 'きょうそう', meaning: 'Cạnh tranh, thi đấu', example: '会社間の競争が激しい。' },
+            { id: 1202, lesson: 12, kanji: '応援', kana: 'おうえん', meaning: 'Giúp đỡ, cổ vũ', example: 'チームを応援する。' },
+            { id: 1203, lesson: 12, kanji: '拍手', kana: 'はくしゅ', meaning: 'Vỗ tay', example: '拍手を送る。' },
+            { id: 1204, lesson: 12, kanji: '人気', kana: 'にんき', meaning: 'Được ưa thích', example: 'この歌手は人気がある。' },
+            { id: 1205, lesson: 12, kanji: '噂', kana: 'うわさ', meaning: 'Lời đồn', example: 'うわさを聞く。' },
+            { id: 1206, lesson: 12, kanji: '情報', kana: 'じょうほう', meaning: 'Thông tin', example: '情報を集める。' },
+            { id: 1207, lesson: 12, kanji: '交換', kana: 'こうかん', meaning: 'Trao đổi', example: '名刺を交換する。' },
+            { id: 1208, lesson: 12, kanji: '流行', kana: 'りゅうこう', meaning: 'Thịnh hành', example: '新しいファッションが流行する。' },
+            { id: 1209, lesson: 12, kanji: '宣伝', kana: 'せんでん', meaning: 'Tuyên truyền', example: '商品を宣伝する。' },
+            { id: 1210, lesson: 12, kanji: '広告', kana: 'こうこく', meaning: 'Quảng cáo', example: '新聞に広告を出す。' },
+            { id: 1211, lesson: 12, kanji: '注目', kana: 'ちゅうもく', meaning: 'Chú ý, để ý', example: '世界から注目される。' },
+            { id: 1212, lesson: 12, kanji: '通訳', kana: 'つうやく', meaning: 'Phiên dịch', example: '英語を通訳する。' },
+            { id: 1213, lesson: 12, kanji: '翻訳', kana: 'ほんやく', meaning: 'Biên dịch', example: '本を翻訳する。' },
+            { id: 1214, lesson: 12, kanji: '伝言', kana: 'でんごん', meaning: 'Lời nhắn', example: '伝言を残す。' },
+            { id: 1215, lesson: 12, kanji: '報告', kana: 'ほうこく', meaning: 'Thông báo', example: '結果を報告する。' },
+            { id: 1216, lesson: 12, kanji: '録画', kana: 'ろくが', meaning: 'Ghi hình', example: 'テレビ番組を録画する。' },
+            { id: 1217, lesson: 12, kanji: '混雑', kana: 'こんざつ', meaning: 'Đông đúc', example: '道が混雑している。' },
+            { id: 1218, lesson: 12, kanji: '渋滞', kana: 'じゅうたい', meaning: 'Tắc nghẽn', example: '交通渋滞に巻き込まれる。' },
+            { id: 1219, lesson: 12, kanji: '衝突', kana: 'しょうとつ', meaning: 'Xung đột, va chạm', example: '車が衝突する。' },
+            { id: 1220, lesson: 12, kanji: '被害', kana: 'ひがい', meaning: 'Thiệt hại', example: '台風の被害を受ける。' },
+            { id: 1221, lesson: 12, kanji: '事故', kana: 'じこ', meaning: 'Tai nạn', example: '交通事故が起きる。' },
+            { id: 1222, lesson: 12, kanji: '事件', kana: 'じけん', meaning: 'Sự việc', example: '殺人事件が発生した。' },
+            { id: 1223, lesson: 12, kanji: '故障', kana: 'こしょう', meaning: 'Hỏng', example: '機械が故障する。' },
+            { id: 1224, lesson: 12, kanji: '修理', kana: 'しゅうり', meaning: 'Sửa chữa', example: '車を修理に出す。' },
+            { id: 1225, lesson: 12, kanji: '停電', kana: 'ていでん', meaning: 'Ngắt điện', example: '雷で停電した。' },
+            { id: 1226, lesson: 12, kanji: '調子', kana: 'ちょうし', meaning: 'Tình trạng', example: '体の調子が悪い。' },
+            { id: 1227, lesson: 12, kanji: '緊張', kana: 'きんちょう', meaning: 'Căng thẳng', example: '面接で緊張する。' },
+            { id: 1228, lesson: 12, kanji: '自信', kana: 'じしん', meaning: 'Tự tin', example: '自分に自信を持つ。' },
+            { id: 1229, lesson: 12, kanji: '自慢', kana: 'じまん', meaning: 'Tự mãn, tự hào', example: '子供を自慢する。' },
+            { id: 1230, lesson: 12, kanji: '関心', kana: 'かんしん', meaning: 'Quan tâm', example: '政治に関心がある。' },
+
+            // --- BÀI 13 ---
+            { id: 1301, lesson: 13, kanji: '感動', kana: 'かんどう', meaning: 'Cảm động', example: '映画を見て感動する。' },
+            { id: 1302, lesson: 13, kanji: '興奮', kana: 'こうふん', meaning: 'Hưng phấn', example: '試合を見て興奮する。' },
+            { id: 1303, lesson: 13, kanji: '感想', kana: 'かんそう', meaning: 'Cảm tưởng', example: '感想を述べる。' },
+            { id: 1304, lesson: 13, kanji: '予想', kana: 'よそう', meaning: 'Dự đoán', example: '結果を予想する。' },
+            { id: 1305, lesson: 13, kanji: '専門', kana: 'せんもん', meaning: 'Chuyên môn', example: '法律を専門に勉強する。' },
+            { id: 1306, lesson: 13, kanji: '研究', kana: 'けんきゅう', meaning: 'Nghiên cứu', example: '大学で研究する。' },
+            { id: 1307, lesson: 13, kanji: '調査', kana: 'ちょうさ', meaning: 'Điều tra', example: 'アンケート調査を行う。' },
+            { id: 1308, lesson: 13, kanji: '原因', kana: 'げんいん', meaning: 'Nguyên nhân', example: '事故の原因を調べる。' },
+            { id: 1309, lesson: 13, kanji: '結果', kana: 'けっか', meaning: 'Kết quả', example: '努力の結果が出た。' },
+            { id: 1310, lesson: 13, kanji: '解決', kana: 'かいけつ', meaning: 'Giải quyết', example: '問題を解決する。' },
+            { id: 1311, lesson: 13, kanji: '確認', kana: 'かくにん', meaning: 'Xác nhận', example: '予約を確認する。' },
+            { id: 1312, lesson: 13, kanji: '利用', kana: 'りよう', meaning: 'Sử dụng', example: '図書館を利用する。' },
+            { id: 1313, lesson: 13, kanji: '理解', kana: 'りかい', meaning: 'Lý giải', example: '相手の気持ちを理解する。' },
+            { id: 1314, lesson: 13, kanji: '発見', kana: 'はっけん', meaning: 'Phát hiện', example: '新しい星を発見する。' },
+            { id: 1315, lesson: 13, kanji: '発明', kana: 'はつめい', meaning: 'Phát minh', example: '電話を発明する。' },
+            { id: 1316, lesson: 13, kanji: '関係', kana: 'かんけい', meaning: 'Quan hệ', example: '二人の関係は良好だ。' },
+            { id: 1317, lesson: 13, kanji: '団体', kana: 'だんたい', meaning: 'Đoàn thể', example: '団体で旅行する。' },
+            { id: 1318, lesson: 13, kanji: '選挙', kana: 'せんきょ', meaning: 'Bầu cử', example: '選挙に行く。' },
+            { id: 1319, lesson: 13, kanji: '税金', kana: 'ぜいきん', meaning: 'Tiền thuế', example: '税金を払う。' },
+            { id: 1320, lesson: 13, kanji: '責任', kana: 'せきにん', meaning: 'Trách nhiệm', example: '責任をとる。' },
+            { id: 1321, lesson: 13, kanji: '書類', kana: 'しょるい', meaning: 'Tài liệu', example: '会議の書類を準備する。' },
+            { id: 1322, lesson: 13, kanji: '題名', kana: 'だいめい', meaning: 'Tiêu đề', example: '本の題名を決める。' },
+            { id: 1323, lesson: 13, kanji: '条件', kana: 'じょうけん', meaning: 'Điều kiện', example: '条件に合う仕事。' },
+            { id: 1324, lesson: 13, kanji: '締め切り', kana: 'しめきり', meaning: 'Hạn chót', example: 'レポートの締め切り。' },
+            { id: 1325, lesson: 13, kanji: '期間', kana: 'きかん', meaning: 'Thời kì', example: 'テストの期間。' },
+            { id: 1326, lesson: 13, kanji: '倍', kana: 'ばい', meaning: 'Gấp bội', example: '値段が2倍になる。' },
+            { id: 1327, lesson: 13, kanji: '籤', kana: 'くじ', meaning: 'Xổ số', example: 'くじを引く。' },
+            { id: 1328, lesson: 13, kanji: '近道', kana: 'ちかみち', meaning: 'Đường tắt', example: '近道をして帰る。' },
+            { id: 1329, lesson: 13, kanji: '中心', kana: 'ちゅうしん', meaning: 'Trung tâm', example: '町の中心。' },
+            { id: 1330, lesson: 13, kanji: '辺り', kana: 'あたり', meaning: 'Gần, lân cận', example: 'この辺りは静かだ。' },
+
+            // --- BÀI 14 ---
+            { id: 1401, lesson: 14, kanji: '周り', kana: 'まわり', meaning: 'Xung quanh', example: '池の周りを歩く。' },
+            { id: 1402, lesson: 14, kanji: '穴', kana: 'あな', meaning: 'Hố', example: '壁に穴が開く。' },
+            { id: 1403, lesson: 14, kanji: '列', kana: 'れつ', meaning: 'Hàng', example: '列に並ぶ。' },
+            { id: 1404, lesson: 14, kanji: '幅', kana: 'はば', meaning: 'Rộng', example: '道の幅が広い。' },
+            { id: 1405, lesson: 14, kanji: '範囲', kana: 'はんい', meaning: 'Phạm vi', example: 'テストの範囲。' },
+            { id: 1406, lesson: 14, kanji: '内容', kana: 'ないよう', meaning: 'Nội dung', example: '本の内容を説明する。' },
+            { id: 1407, lesson: 14, kanji: '中身', kana: 'なかみ', meaning: 'Bên trong', example: '箱の中身を見る。' },
+            { id: 1408, lesson: 14, kanji: '特徴', kana: 'とくちょう', meaning: 'Đặc trưng', example: '彼には特徴がある。' },
+            { id: 1409, lesson: 14, kanji: '普通', kana: 'ふつう', meaning: 'Thông thường', example: '普通の生活を送る。' },
+            { id: 1410, lesson: 14, kanji: '当たり前', kana: 'あたりまえ', meaning: 'Đương nhiên', example: '親が子供を育てるのは当たり前だ。' },
+            { id: 1411, lesson: 14, kanji: '偽', kana: 'にせ', meaning: 'Giả', example: '偽の札。' },
+            { id: 1412, lesson: 14, kanji: '別', kana: 'べつ', meaning: 'Khác, đặc biệt', example: '別の方法を考える。' },
+            { id: 1413, lesson: 14, kanji: '国籍', kana: 'こくせき', meaning: 'Quốc tịch', example: '国籍を問わない。' },
+            { id: 1414, lesson: 14, kanji: '東洋', kana: 'とうよう', meaning: 'Phương Đông', example: '東洋の文化。' },
+            { id: 1415, lesson: 14, kanji: '西洋', kana: 'せいよう', meaning: 'Phương Tây', example: '西洋の建築。' },
+            { id: 1416, lesson: 14, kanji: '国際', kana: 'こくさい', meaning: 'Quốc tế', example: '国際会議に出席する。' },
+            { id: 1417, lesson: 14, kanji: '自然', kana: 'しぜん', meaning: 'Tự nhiên', example: '自然を守る。' },
+            { id: 1418, lesson: 14, kanji: '景色', kana: 'けしき', meaning: 'Phong cảnh', example: '山の景色が美しい。' },
+            { id: 1419, lesson: 14, kanji: '宗教', kana: 'しゅうきょう', meaning: 'Tôn giáo', example: '宗教を信じる。' },
+            { id: 1420, lesson: 14, kanji: '愛', kana: 'あい', meaning: 'Tình yêu', example: '家族への愛。' },
+            { id: 1421, lesson: 14, kanji: '届く', kana: 'とどく', meaning: 'Được gửi đến', example: '手紙が届く。' },
+            { id: 1422, lesson: 14, kanji: '届ける', kana: 'とどける', meaning: 'Gửi đến', example: '荷物を届ける。' },
+            { id: 1423, lesson: 14, kanji: '掻く', kana: 'かく', meaning: 'Gãi', example: '頭を掻く。' },
+            { id: 1424, lesson: 14, kanji: '掴む', kana: 'つかむ', meaning: 'Tóm, nắm bắt', example: 'チャンスを掴む。' },
+            { id: 1425, lesson: 14, kanji: '握る', kana: 'にぎる', meaning: 'Nắm chặt, tóm', example: '手を強く握る。' },
+            { id: 1426, lesson: 14, kanji: '抑える', kana: 'おさえる', meaning: 'Giữ, kìm nén', example: '怒りを抑える。' },
+            { id: 1427, lesson: 14, kanji: '近づく', kana: 'ちかづく', meaning: 'Tới gần', example: '冬が近づく。' },
+            { id: 1428, lesson: 14, kanji: '近づける', kana: 'ちかづける', meaning: 'Mang tới gần', example: '顔を近づける。' },
+            { id: 1429, lesson: 14, kanji: '合う', kana: 'あう', meaning: 'Hợp', example: 'サイズが合う。' },
+            { id: 1430, lesson: 14, kanji: '合わせる', kana: 'あわせる', meaning: 'Điều chỉnh, làm hợp', example: '時計の時間を合わせる。' },
+
+            // --- BÀI 15 ---
+            { id: 1501, lesson: 15, kanji: '当たる', kana: 'あたる', meaning: 'Trúng', example: '宝くじが当たる。' },
+            { id: 1502, lesson: 15, kanji: '当てる', kana: 'あてる', meaning: 'Đánh, chạm', example: 'ボールを当てる。' },
+            { id: 1503, lesson: 15, kanji: '比べる', kana: 'くらべる', meaning: 'So sánh', example: '値段を比べる。' },
+            { id: 1504, lesson: 15, kanji: '似合う', kana: 'にあう', meaning: 'Hợp', example: 'その服、よく似合うね。' },
+            { id: 1505, lesson: 15, kanji: '似る', kana: 'にる', meaning: 'Giống', example: '母に顔が似ている。' },
+            { id: 1506, lesson: 15, kanji: '似せる', kana: 'にせる', meaning: 'Bắt trước', example: '声を似せる。' },
+            { id: 1507, lesson: 15, kanji: '分かれる', kana: 'わかれる', meaning: 'Được chia', example: '意見が分かれる。' },
+            { id: 1508, lesson: 15, kanji: '分ける', kana: 'わける', meaning: 'Phân chia', example: 'ケーキを３つに分ける。' },
+            { id: 1509, lesson: 15, kanji: '足す', kana: 'たす', meaning: 'Cộng thêm', example: '塩を足す。' },
+            { id: 1510, lesson: 15, kanji: '引く', kana: 'ひく', meaning: 'Trừ đi', example: '線を引く。' },
+            { id: 1511, lesson: 15, kanji: '増える', kana: 'ふえる', meaning: 'Tăng lên', example: '体重が増える。' },
+            { id: 1512, lesson: 15, kanji: '増やす', kana: 'ふやす', meaning: 'Làm tăng lên', example: '貯金を増やす。' },
+            { id: 1513, lesson: 15, kanji: '減る', kana: 'へる', meaning: 'Giảm đi', example: '人口が減る。' },
+            { id: 1514, lesson: 15, kanji: '減らす', kana: 'へらす', meaning: 'Làm giảm đi', example: 'ごみを減らす。' },
+            { id: 1515, lesson: 15, kanji: '変わる', kana: 'かわる', meaning: 'Thay đổi', example: '季節が変わる。' },
+            { id: 1516, lesson: 15, kanji: '変える', kana: 'かえる', meaning: 'Làm thay đổi', example: '予定を変える。' },
+            { id: 1517, lesson: 15, kanji: '換わる', kana: 'かわる', meaning: 'Thay thế', example: '社長が代わる。' },
+            { id: 1518, lesson: 15, kanji: '換える', kana: 'かえる', meaning: 'Đổi', example: '円をドルに換える。' },
+            { id: 1519, lesson: 15, kanji: '返る', kana: 'かえる', meaning: 'Được trả', example: '落とし物が返る。' },
+            { id: 1520, lesson: 15, kanji: '返す', kana: 'かえす', meaning: 'Trả lại', example: '本を返す。' },
+            { id: 1521, lesson: 15, kanji: '譲る', kana: 'ゆずる', meaning: 'Nhường', example: '席を譲る。' },
+            { id: 1522, lesson: 15, kanji: '助かる', kana: 'たすかる', meaning: 'Được giúp', example: '命が助かる。' },
+            { id: 1523, lesson: 15, kanji: '助ける', kana: 'たすける', meaning: 'Giúp đỡ', example: '困っている人を助ける。' },
+            { id: 1524, lesson: 15, kanji: '虐める', kana: 'いじめる', meaning: 'Bắt nạt', example: '弱い子を虐める。' },
+            { id: 1525, lesson: 15, kanji: '騙す', kana: 'だます', meaning: 'Lừa', example: '人を騙す。' },
+            { id: 1526, lesson: 15, kanji: '盗む', kana: 'ぬすむ', meaning: 'Trộm', example: 'お金を盗む。' },
+            { id: 1527, lesson: 15, kanji: '刺さる', kana: 'ささる', meaning: 'Bị đâm, hóc', example: '指にとげが刺さる。' },
+            { id: 1528, lesson: 15, kanji: '刺す', kana: 'さす', meaning: 'Đâm, chọc, chích', example: '蚊に刺される。' },
+            { id: 1529, lesson: 15, kanji: '殺す', kana: 'ころす', meaning: 'Giết', example: '虫を殺す。' },
+            { id: 1530, lesson: 15, kanji: '隠れる', kana: 'かくれる', meaning: 'Ẩn trốn', example: 'ドアの後ろに隠れる。' },
+
+            // --- BÀI 16 ---
+            { id: 1601, lesson: 16, kanji: '隠す', kana: 'かくす', meaning: 'Che giấu', example: '秘密を隠す。' },
+            { id: 1602, lesson: 16, kanji: '埋まる', kana: 'うまる', meaning: 'Bị chôn', example: '雪に埋まる。' },
+            { id: 1603, lesson: 16, kanji: '埋める', kana: 'うめる', meaning: 'Chôn', example: 'ゴミを土に埋める。' },
+            { id: 1604, lesson: 16, kanji: '囲む', kana: 'かこむ', meaning: 'Vây quanh', example: 'テーブルを囲む。' },
+            { id: 1605, lesson: 16, kanji: '詰まる', kana: 'つまる', meaning: 'Đầy, nghẹt, tắc', example: '予定が詰まる。' },
+            { id: 1606, lesson: 16, kanji: '詰める', kana: 'つめる', meaning: 'Đóng gói', example: 'かばんに荷物を詰める。' },
+            { id: 1607, lesson: 16, kanji: '開く', kana: 'ひらく', meaning: 'Mở', example: 'ドアが開く。' },
+            { id: 1608, lesson: 16, kanji: '閉じる', kana: 'とじる', meaning: 'Đóng', example: '本を閉じる。' },
+            { id: 1609, lesson: 16, kanji: '飛ぶ', kana: 'とぶ', meaning: 'Bay', example: '鳥が空を飛ぶ。' },
+            { id: 1610, lesson: 16, kanji: '飛ばす', kana: 'とばす', meaning: 'Phóng, làm bay', example: '紙飛行機を飛ばす。' },
+            { id: 1611, lesson: 16, kanji: '振る', kana: 'ふる', meaning: 'Rung, vẫy, lắc', example: '手を振る。' },
+            { id: 1612, lesson: 16, kanji: 'めくる', kana: 'めくる', meaning: 'Lật', example: 'カレンダーをめくる。' },
+            { id: 1613, lesson: 16, kanji: '見かける', kana: 'みかける', meaning: 'Bắt gặp, nhìn thấy', example: '町で先生を見かける。' },
+            { id: 1614, lesson: 16, kanji: '確かめる', kana: 'たしかめる', meaning: 'Xác nhận', example: '答えを確かめる。' },
+            { id: 1615, lesson: 16, kanji: '試す', kana: 'ためす', meaning: 'Thử', example: '新しい方法を試す。' },
+            { id: 1616, lesson: 16, kanji: '繰り返す', kana: 'くりかえす', meaning: 'Lặp lại', example: '同じ失敗を繰り返す。' },
+            { id: 1617, lesson: 16, kanji: '訳す', kana: 'やくす', meaning: 'Dịch', example: '日本語を英語に訳す。' },
+            { id: 1618, lesson: 16, kanji: '行う', kana: 'おこなう', meaning: 'Tổ chức', example: '会議を行う。' },
+            { id: 1619, lesson: 16, kanji: '間違う', kana: 'まちがう', meaning: 'Sai xót', example: '計算が間違う。' },
+            { id: 1620, lesson: 16, kanji: '間違える', kana: 'まちがえる', meaning: 'Nhầm lẫn', example: '道を間違える。' },
+            { id: 1621, lesson: 16, kanji: '慣れる', kana: 'なれる', meaning: 'Quen', example: '日本の生活に慣れる。' },
+            { id: 1622, lesson: 16, kanji: '慣らす', kana: 'ならす', meaning: 'Làm cho quen', example: '体を慣らす。' },
+            { id: 1623, lesson: 16, kanji: '立つ', kana: 'たつ', meaning: 'Đứng', example: '席から立つ。' },
+            { id: 1624, lesson: 16, kanji: '立てる', kana: 'たてる', meaning: 'Dựng lên', example: '計画を立てる。' },
+            { id: 1625, lesson: 16, kanji: '建つ', kana: 'たつ', meaning: 'Được xây', example: '新しいビルが建つ。' },
+            { id: 1626, lesson: 16, kanji: '建てる', kana: 'たてる', meaning: 'Xây', example: '家を建てる。' },
+            { id: 1627, lesson: 16, kanji: '育つ', kana: 'そだつ', meaning: 'Được nuôi dưỡng', example: '子供が元気に育つ。' },
+            { id: 1628, lesson: 16, kanji: '育てる', kana: 'そだてる', meaning: 'Nuôi dưỡng', example: '花を育てる。' },
+            { id: 1629, lesson: 16, kanji: '生える', kana: 'はえる', meaning: 'Mọc lên, sinh ra', example: '草が生える。' },
+            { id: 1630, lesson: 16, kanji: '許す', kana: 'ゆるす', meaning: 'Tha thứ', example: '罪を許す。' },
+
+            // --- BÀI 17 ---
+            { id: 1701, lesson: 17, kanji: '生やす', kana: 'はやす', meaning: 'Trồng trọt, mọc', example: 'ひげを生やす。' },
+            { id: 1702, lesson: 17, kanji: '汚れる', kana: 'よごれる', meaning: 'Bị bẩn', example: '服が汚れる。' },
+            { id: 1703, lesson: 17, kanji: '汚す', kana: 'よごす', meaning: 'Làm bẩn', example: '手を汚す。' },
+            { id: 1704, lesson: 17, kanji: '壊れる', kana: 'こわれる', meaning: 'Bị hỏng', example: '時計が壊れる。' },
+            { id: 1705, lesson: 17, kanji: '壊す', kana: 'こわす', meaning: 'Làm hỏng', example: 'おもちゃを壊す。' },
+            { id: 1706, lesson: 17, kanji: '割れる', kana: 'われる', meaning: 'Bị vỡ', example: 'ガラスが割れる。' },
+            { id: 1707, lesson: 17, kanji: '割る', kana: 'わる', meaning: 'Làm vỡ', example: '卵を割る。' },
+            { id: 1708, lesson: 17, kanji: '折れる', kana: 'おれる', meaning: 'Bị gãy, gập, gấp', example: '木の枝が折れる。' },
+            { id: 1709, lesson: 17, kanji: '折る', kana: 'おる', meaning: 'Bẻ, gấp, gập', example: '紙を半分に折る。' },
+            { id: 1710, lesson: 17, kanji: '破れる', kana: 'やぶれる', meaning: 'Bị rách', example: 'ズボンが破れる。' },
+            { id: 1711, lesson: 17, kanji: '破る', kana: 'やぶる', meaning: 'Xé, làm rách', example: '手紙を破る。' },
+            { id: 1712, lesson: 17, kanji: '曲がる', kana: 'まがる', meaning: 'Rẽ, quẹo', example: '角を右に曲がる。' },
+            { id: 1713, lesson: 17, kanji: '曲げる', kana: 'まげる', meaning: 'Bẻ cong', example: '針金を曲げる。' },
+            { id: 1714, lesson: 17, kanji: '外れる', kana: 'はずれる', meaning: 'Bung, tuột', example: 'ボタンが外れる。' },
+            { id: 1715, lesson: 17, kanji: '外す', kana: 'はずす', meaning: 'Tháo, tách', example: 'メガネを外す。' },
+            { id: 1716, lesson: 17, kanji: '揺れる', kana: 'ゆれる', meaning: 'Rung lắc', example: '地震で家が揺れる。' },
+            { id: 1717, lesson: 17, kanji: '揺らす', kana: 'ゆらす', meaning: 'Đung đưa, lắc', example: '木を揺らす。' },
+            { id: 1718, lesson: 17, kanji: '流れる', kana: 'ながれる', meaning: 'Chảy', example: '川が流れる。' },
+            { id: 1719, lesson: 17, kanji: '流す', kana: 'ながす', meaning: 'Xả trôi', example: '涙を流す。' },
+            { id: 1720, lesson: 17, kanji: '濡れる', kana: 'ぬれる', meaning: 'Ướt', example: '雨に濡れる。' },
+            { id: 1721, lesson: 17, kanji: '濡らす', kana: 'ぬらす', meaning: 'Làm ướt', example: 'タオルを濡らす。' },
+            { id: 1722, lesson: 17, kanji: '迷う', kana: 'まよう', meaning: 'Lạc, đắn đo', example: '道に迷う。' },
+            { id: 1723, lesson: 17, kanji: '悩む', kana: 'なやむ', meaning: 'Lo âu', example: '進学のことで悩む。' },
+            { id: 1724, lesson: 17, kanji: '慌てる', kana: 'あわてる', meaning: 'Hấp tấp, lúng túng', example: '慌てて家を出る。' },
+            { id: 1725, lesson: 17, kanji: '覚める', kana: 'さめる', meaning: 'Thức dậy, tỉnh', example: '目が覚める。' },
+            { id: 1726, lesson: 17, kanji: '覚ます', kana: 'さます', meaning: 'Đánh thức', example: '目を覚ます。' },
+            { id: 1727, lesson: 17, kanji: '眠る', kana: 'ねむる', meaning: 'Ngủ', example: '深く眠る。' },
+            { id: 1728, lesson: 17, kanji: '祈る', kana: 'いのる', meaning: 'Cầu nguyện', example: '平和を祈る。' },
+            { id: 1729, lesson: 17, kanji: '祝う', kana: 'いわう', meaning: 'Chúc', example: '誕生日を祝う。' },
+            { id: 1730, lesson: 17, kanji: '感じる', kana: 'かんじる', meaning: 'Cảm thấy', example: '痛みを感じる。' },
+
+            // --- BÀI 18 ---
+            { id: 1801, lesson: 18, kanji: 'クラスメート', kana: 'クラスメート', meaning: 'Bạn cùng lớp', example: 'クラスメートと話す。' },
+            { id: 1802, lesson: 18, kanji: 'グループ', kana: 'グループ', meaning: 'Nhóm', example: 'グループで作業する。' },
+            { id: 1803, lesson: 18, kanji: 'チーム', kana: 'チーム', meaning: 'Đội', example: '野球のチームに入る。' },
+            { id: 1804, lesson: 18, kanji: 'プロ', kana: 'プロ', meaning: 'Chuyên nghiệp', example: 'プロのスポーツ選手。' },
+            { id: 1805, lesson: 18, kanji: 'アマチュア', kana: 'アマチュア', meaning: 'Nghiệp dư', example: 'アマチュアの大会。' },
+            { id: 1806, lesson: 18, kanji: 'トレーニング', kana: 'トレーニング', meaning: 'Đào tạo', example: '毎日トレーニングをする。' },
+            { id: 1807, lesson: 18, kanji: 'アイディア', kana: 'アイディア', meaning: 'Ý tưởng', example: 'いいアイディアが浮かんだ。' },
+            { id: 1808, lesson: 18, kanji: 'トップ', kana: 'トップ', meaning: 'Hàng đầu', example: 'クラスでトップになる。' },
+            { id: 1809, lesson: 18, kanji: 'バイク', kana: 'バイク', meaning: 'Xe máy', example: 'バイクに乗る。' },
+            { id: 1810, lesson: 18, kanji: 'ヘルメット', kana: 'ヘルメット', meaning: 'Mũ bảo hộ', example: 'ヘルメットをかぶる。' },
+            { id: 1811, lesson: 18, kanji: 'マッサージ', kana: 'マッサージ', meaning: 'Mát xa', example: 'マッサージを受ける。' },
+            { id: 1812, lesson: 18, kanji: 'アドバイス', kana: 'アドバイス', meaning: 'Lời khuyên', example: '先生にアドバイスをもらう。' },
+            { id: 1813, lesson: 18, kanji: 'スピード', kana: 'スピード', meaning: 'Tốc độ', example: 'スピードを出す。' },
+            { id: 1814, lesson: 18, kanji: 'ラッシュ', kana: 'ラッシュ', meaning: 'Giờ cao điểm', example: 'ラッシュを避ける。' },
+            { id: 1815, lesson: 18, kanji: 'コンタクトレンズ', kana: 'コンタクトレンズ', meaning: 'Kính áp tròng', example: 'コンタクトレンズをする。' },
+            { id: 1816, lesson: 18, kanji: 'ガラス', kana: 'ガラス', meaning: 'Kính', example: 'ガラスが割れる。' },
+            { id: 1817, lesson: 18, kanji: 'プラスチック', kana: 'プラスチック', meaning: 'Nhựa', example: 'プラスチックのごみ。' },
+            { id: 1818, lesson: 18, kanji: 'ベランダ', kana: 'ベランダ', meaning: 'Hàng rào/Ban công', example: 'ベランダで洗濯物を干す。' },
+            { id: 1819, lesson: 18, kanji: 'ペット', kana: 'ペット', meaning: 'Thú cưng', example: 'ペットを飼う。' },
+            { id: 1820, lesson: 18, kanji: 'ベンチ', kana: 'ベンチ', meaning: 'Ghế dài', example: '公園のベンチに座る。' },
+            { id: 1821, lesson: 18, kanji: 'デザイン', kana: 'デザイン', meaning: 'Thiết kế', example: '服のデザインが良い。' },
+            { id: 1822, lesson: 18, kanji: 'バーゲンセール', kana: 'バーゲンセール', meaning: 'Đại hạ giá', example: 'バーゲンセールに行く。' },
+            { id: 1823, lesson: 18, kanji: 'パート', kana: 'パート', meaning: 'Làm thêm', example: 'パートで働く。' },
+            { id: 1824, lesson: 18, kanji: 'コンビニエンスストア', kana: 'コンビニエンスストア', meaning: 'Cửa hàng tiện lợi', example: 'コンビニで弁当を買う。' },
+            { id: 1825, lesson: 18, kanji: 'レジ', kana: 'レジ', meaning: 'Máy tính tiền', example: 'レジでお金を払う。' },
+            { id: 1826, lesson: 18, kanji: 'レシート', kana: 'レシート', meaning: 'Hoá đơn', example: 'レシートを受け取る。' },
+            { id: 1827, lesson: 18, kanji: 'インスタント', kana: 'インスタント', meaning: 'Ăn liền', example: 'インスタントラーメンを食べる。' },
+            { id: 1828, lesson: 18, kanji: 'ファストフード', kana: 'ファストフード', meaning: 'Đồ ăn nhanh', example: 'ファストフード店に行く。' },
+            { id: 1829, lesson: 18, kanji: 'フルーツ', kana: 'フルーツ', meaning: 'Hoa quả', example: 'フルーツを食べる。' },
+            { id: 1830, lesson: 18, kanji: 'デザート', kana: 'デザート', meaning: 'Tráng miệng', example: '食後のデザート。' },
+
+            // --- BÀI 19 ---
+            { id: 1901, lesson: 19, kanji: 'インターネット', kana: 'インターネット', meaning: 'Mạng', example: 'インターネットで調べる。' },
+            { id: 1902, lesson: 19, kanji: 'チャイム', kana: 'チャイム', meaning: 'Chuông', example: 'ドアのチャイムが鳴る。' },
+            { id: 1903, lesson: 19, kanji: 'アナウンス', kana: 'アナウンス', meaning: 'Thông báo', example: '駅でアナウンスを聞く。' },
+            { id: 1904, lesson: 19, kanji: 'メッセージ', kana: 'メッセージ', meaning: 'Tin nhắn', example: 'メッセージを送る。' },
+            { id: 1905, lesson: 19, kanji: 'パンフレット', kana: 'パンフレット', meaning: 'Tờ rơi', example: '旅行のパンフレットをもらう。' },
+            { id: 1906, lesson: 19, kanji: 'カード', kana: 'カード', meaning: 'Thẻ', example: 'クレジットカードで払う。' },
+            { id: 1907, lesson: 19, kanji: 'インタビュー', kana: 'インタビュー', meaning: 'Phỏng vấn', example: 'インタビューを受ける。' },
+            { id: 1908, lesson: 19, kanji: 'アンケート', kana: 'アンケート', meaning: 'Phiếu điều tra', example: 'アンケートに答える。' },
+            { id: 1909, lesson: 19, kanji: 'データ', kana: 'データ', meaning: 'Dữ liệu', example: 'データを保存する。' },
+            { id: 1910, lesson: 19, kanji: 'パーセント', kana: 'パーセント', meaning: 'Phần trăm', example: '10パーセント引き。' },
+            { id: 1911, lesson: 19, kanji: '濃い', kana: 'こい', meaning: 'Nồng, đậm', example: '味が濃い。' },
+            { id: 1912, lesson: 19, kanji: '薄い', kana: 'うすい', meaning: 'Nhạt, mỏng', example: '色が薄い。' },
+            { id: 1913, lesson: 19, kanji: '酸っぱい', kana: 'すっぱい', meaning: 'Chua', example: 'レモンは酸っぱい。' },
+            { id: 1914, lesson: 19, kanji: '臭い', kana: 'くさい', meaning: 'Thối, hôi', example: 'ごみが臭い。' },
+            { id: 1915, lesson: 19, kanji: '可笑しい', kana: 'おかしい', meaning: 'Lạ, kì quặc', example: '彼の話は可笑しい。' },
+            { id: 1916, lesson: 19, kanji: '格好いい', kana: 'かっこういい', meaning: 'Đẹp trai, ngầu', example: 'あの俳優は格好いい。' },
+            { id: 1917, lesson: 19, kanji: '上手い', kana: 'うまい', meaning: 'Giỏi, ngon', example: '料理が上手い。' },
+            { id: 1918, lesson: 19, kanji: '親しい', kana: 'したしい', meaning: 'Thân thiết', example: '親しい友達。' },
+            { id: 1919, lesson: 19, kanji: '詳しい', kana: 'くわしい', meaning: 'Chi tiết', example: '地図に詳しい。' },
+            { id: 1920, lesson: 19, kanji: '細かい', kana: 'こまかい', meaning: 'Tiểu tiết, bé', example: '細かいお金がない。' },
+            { id: 1921, lesson: 19, kanji: '浅い', kana: 'あさい', meaning: 'Nông', example: '川が浅い。' },
+            { id: 1922, lesson: 19, kanji: '固い/硬い', kana: 'かたい', meaning: 'Cứng', example: 'パンが固い。' },
+            { id: 1923, lesson: 19, kanji: 'ぬるい', kana: 'ぬるい', meaning: 'Nguội', example: 'お茶がぬるい。' },
+            { id: 1924, lesson: 19, kanji: 'まぶしい', kana: 'まぶしい', meaning: 'Chói', example: '太陽がまぶしい。' },
+            { id: 1925, lesson: 19, kanji: '蒸し暑い', kana: 'むしあつい', meaning: 'Oi bức', example: '日本の夏は蒸し暑い。' },
+            { id: 1926, lesson: 19, kanji: '清潔', kana: 'せいけつ', meaning: 'Sạch sẽ', example: '清潔な部屋。' },
+            { id: 1927, lesson: 19, kanji: '新鮮', kana: 'しんせん', meaning: 'Tươi', example: '新鮮な魚。' },
+            { id: 1928, lesson: 19, kanji: '豊かな', kana: 'ゆたかな', meaning: 'Giàu có, phong phú', example: '自然が豊かだ。' },
+            { id: 1929, lesson: 19, kanji: '立派', kana: 'りっぱ', meaning: 'Lộng lẫy, tuyệt vời', example: '立派な建物。' },
+            { id: 1930, lesson: 19, kanji: '正確', kana: 'せいかく', meaning: 'Chính xác', example: '正確な時間を計る。' },
+
+            // --- BÀI 20 ---
+            { id: 2001, lesson: 20, kanji: '確か', kana: 'たしか', meaning: 'Chính xác, chắc chắn', example: '確かな情報。' },
+            { id: 2002, lesson: 20, kanji: '重要', kana: 'じゅうよう', meaning: 'Quan trọng', example: '重要な会議。' },
+            { id: 2003, lesson: 20, kanji: '必要', kana: 'ひつよう', meaning: 'Cần thiết', example: 'パスポートが必要だ。' },
+            { id: 2004, lesson: 20, kanji: 'もったいない', kana: 'もったいない', meaning: 'Lãng phí', example: '食べ物を捨てるのはもったいない。' },
+            { id: 2005, lesson: 20, kanji: 'すごい', kana: 'すごい', meaning: 'Tuyệt vời', example: 'すごい才能だ。' },
+            { id: 2006, lesson: 20, kanji: '酷い', kana: 'ひどい', meaning: 'Kinh khủng, tồi tệ', example: 'ひどい雨だった。' },
+            { id: 2007, lesson: 20, kanji: '激しい', kana: 'はげしい', meaning: 'Gay gắt, mãnh liệt', example: '競争が激しい。' },
+            { id: 2008, lesson: 20, kanji: 'そっくり', kana: 'そっくり', meaning: 'Giống hệt', example: '父親にそっくりだ。' },
+            { id: 2009, lesson: 20, kanji: '急', kana: 'きゅう', meaning: 'Đột nhiên', example: '急に雨が降ってきた。' },
+            { id: 2010, lesson: 20, kanji: '適当', kana: 'てきとう', meaning: 'Phù hợp, tương thích', example: '適当な服を選ぶ。' },
+            { id: 2011, lesson: 20, kanji: '特別', kana: 'とくべつ', meaning: 'Đặc biệt', example: '今日は特別な日だ。' },
+            { id: 2012, lesson: 20, kanji: '完全', kana: 'かんぜん', meaning: 'Toàn bộ', example: '完全に理解した。' },
+            { id: 2013, lesson: 20, kanji: '盛ん', kana: 'さかん', meaning: 'Thịnh vượng, phổ biến', example: 'スポーツが盛んだ。' },
+            { id: 2014, lesson: 20, kanji: '様々', kana: 'さまざま', meaning: 'Đa dạng', example: '様々な意見がある。' },
+            { id: 2015, lesson: 20, kanji: '可能', kana: 'かのう', meaning: 'Khả thi', example: '可能なら行きます。' },
+            { id: 2016, lesson: 20, kanji: '不可能', kana: 'ふかのう', meaning: 'Không khả thi', example: 'それは不可能だ。' },
+            { id: 2017, lesson: 20, kanji: '基本的', kana: 'きほんてき', meaning: 'Tính cơ bản', example: '基本的なルール。' },
+            { id: 2018, lesson: 20, kanji: '国際的', kana: 'こくさいてき', meaning: 'Tính quốc tế', example: '国際的な会議。' },
+            { id: 2019, lesson: 20, kanji: 'ばらばら', kana: 'ばらばら', meaning: 'Phân tán, lung tung', example: '意見がばらばらだ。' },
+            { id: 2020, lesson: 20, kanji: 'ぼろぼろ', kana: 'ぼろぼろ', meaning: 'Tả tơi, bù xù', example: '服がぼろぼろだ。' },
+            { id: 2021, lesson: 20, kanji: '非常に', kana: 'ひじょうに', meaning: 'Khẩn cấp, phi thường', example: '非常に危険だ。' },
+            { id: 2022, lesson: 20, kanji: '大体', kana: 'だいたい', meaning: 'Đại khái', example: '大体わかった。' },
+            { id: 2023, lesson: 20, kanji: 'かなり', kana: 'かなり', meaning: 'Khá, tương đối', example: 'かなり難しい。' },
+            { id: 2024, lesson: 20, kanji: '大分', kana: 'だいぶん', meaning: 'Khá, nhiều', example: '大分よくなった。' },
+            { id: 2025, lesson: 20, kanji: 'ずいぶん', kana: 'ずいぶん', meaning: 'Tương đối', example: 'ずいぶん時間がかかった。' },
+            { id: 2026, lesson: 20, kanji: '結構', kana: 'けっこう', meaning: 'Tạm được, khá', example: '結構美味しい。' },
+            { id: 2027, lesson: 20, kanji: '大変', kana: 'たいへん', meaning: 'Vất vả, rất', example: '大変お世話になりました。' },
+            { id: 2028, lesson: 20, kanji: 'ほとんど', kana: 'ほとんど', meaning: 'Hầu hết', example: '仕事はほとんど終わった。' },
+            { id: 2029, lesson: 20, kanji: 'もっと', kana: 'もっと', meaning: 'Hơn nữa', example: 'もっと頑張りたい。' },
+            { id: 2030, lesson: 20, kanji: 'すっかり', kana: 'すっかり', meaning: 'Hoàn toàn', example: 'すっかり忘れていた。' },
+
+            // --- BÀI 21 ---
+            { id: 2101, lesson: 21, kanji: '一杯', kana: 'いっぱい', meaning: 'No, đầy', example: 'お腹がいっぱいだ。' },
+            { id: 2102, lesson: 21, kanji: 'ぎりぎり', kana: 'ぎりぎり', meaning: 'Sát nút', example: '電車にぎりぎり間に合った。' },
+            { id: 2103, lesson: 21, kanji: 'ぴったり', kana: 'ぴったり', meaning: 'Vừa vặn', example: 'サイズがぴったりだ。' },
+            { id: 2104, lesson: 21, kanji: '大抵', kana: 'たいてい', meaning: 'Thông thường', example: '日曜日は大抵家にいる。' },
+            { id: 2105, lesson: 21, kanji: '前もって', kana: 'まえもって', meaning: 'Trước (Thời gian)', example: '前もって連絡してください。' },
+            { id: 2106, lesson: 21, kanji: '同時に', kana: 'どうじに', meaning: 'Cùng lúc', example: '二人が同時に話した。' },
+            { id: 2107, lesson: 21, kanji: '直ぐに', kana: 'すぐに', meaning: 'Ngay', example: '直ぐに行きます。' },
+            { id: 2108, lesson: 21, kanji: 'もうすぐ', kana: 'もうすぐ', meaning: 'Sắp', example: 'もうすぐ春が来る。' },
+            { id: 2109, lesson: 21, kanji: '突然', kana: 'とつぜん', meaning: 'Đột nhiên', example: '突然雨が降り出した。' },
+            { id: 2110, lesson: 21, kanji: 'あっという間に', kana: 'あっというまに', meaning: 'Loáng cái', example: '休みはあっという間に終わった。' },
+            { id: 2111, lesson: 21, kanji: 'いつの間にか', kana: 'いつのまにか', meaning: 'Từ lúc nào không biết', example: 'いつの間にか寝ていた。' },
+            { id: 2112, lesson: 21, kanji: 'しばらく', kana: 'しばらく', meaning: 'Một chút (thời gian)', example: 'しばらくお待ちください。' },
+            { id: 2113, lesson: 21, kanji: '相変わらず', kana: 'あいかわらず', meaning: 'Như mọi khi', example: '彼は相変わらず元気だ。' },
+            { id: 2114, lesson: 21, kanji: '次々に', kana: 'つぎつぎに', meaning: 'Lần lượt nối tiếp', example: 'お客さんが次々に来る。' },
+            { id: 2115, lesson: 21, kanji: 'どんどん', kana: 'どんどん', meaning: 'Dần dần', example: '日本語がどんどん上達する。' },
+            { id: 2116, lesson: 21, kanji: 'ますます', kana: 'ますます', meaning: 'Càng ngày càng', example: '雨がますます強くなった。' },
+            { id: 2117, lesson: 21, kanji: 'やっと', kana: 'やっと', meaning: 'Cuối cùng thì', example: 'やっと仕事が終わった。' },
+            { id: 2118, lesson: 21, kanji: 'とうとう', kana: 'とうとう', meaning: 'Sau cùng thì', example: 'とうとう雨が降ってきた。' },
+            { id: 2119, lesson: 21, kanji: 'ついに', kana: 'ついに', meaning: 'Cuối cùng thì', example: 'ついに夢が実現した。' },
+            { id: 2120, lesson: 21, kanji: 'もちろん', kana: 'もちろん', meaning: 'Tất nhiên', example: '明日のパーティーにはもちろん行くよ。' },
+            { id: 2121, lesson: 21, kanji: 'やはり', kana: 'やはり', meaning: 'Quả nhiên', example: 'やはり彼が一番だった。' },
+            { id: 2122, lesson: 21, kanji: 'きっと', kana: 'きっと', meaning: 'Chắc chắn', example: '明日はきっと晴れるだろう。' },
+            { id: 2123, lesson: 21, kanji: 'ぜひ', kana: 'ぜひ', meaning: 'Nhất định', example: 'ぜひ私の国へ来てください。' },
+            { id: 2124, lesson: 21, kanji: 'なるべく', kana: 'なるべく', meaning: 'Cố gắng', example: 'なるべく早く来てください。' },
+            { id: 2125, lesson: 21, kanji: '案外', kana: 'あんがい', meaning: 'Không ngờ đến', example: 'この店は案外安い。' },
+            { id: 2126, lesson: 21, kanji: 'もしかすると', kana: 'もしかすると', meaning: 'Có lẽ', example: 'もしかすると彼は来ないかもしれない。' },
+            { id: 2127, lesson: 21, kanji: 'まさか', kana: 'まさか', meaning: 'Không ngờ', example: 'まさか彼が犯人だとは。' },
+            { id: 2128, lesson: 21, kanji: 'うっかり', kana: 'うっかり', meaning: 'Ngơ ngác, lơ đễnh', example: 'うっかりして秘密を話してしまった。' },
+            { id: 2129, lesson: 21, kanji: 'つい', kana: 'つい', meaning: 'Lỡ, vô ý', example: 'つい甘いものを食べてしまう。' },
+
+            // --- BÀI 22 ---
+            { id: 2201, lesson: 22, kanji: '思わず', kana: 'おもわず', meaning: 'Bất giác', example: '痛くて思わず叫んだ。' },
+            { id: 2202, lesson: 22, kanji: 'ほっと', kana: 'ほっと', meaning: 'Thở phào', example: 'テストが終わってほっとした。' },
+            { id: 2203, lesson: 22, kanji: 'いらいら', kana: 'いらいら', meaning: 'Nóng lòng, bực bội', example: '電車が来なくていらいらする。' },
+            { id: 2204, lesson: 22, kanji: 'のんびり', kana: 'のんびり', meaning: 'Thong thả', example: '休日は家でのんびり過ごす。' },
+            { id: 2205, lesson: 22, kanji: '実は', kana: 'じつは', meaning: 'Thực ra thì', example: '実は、来月結婚します。' },
+            { id: 2206, lesson: 22, kanji: '読書', kana: 'どくしょ', meaning: 'Đọc sách', example: '趣味は読書です。' },
+            { id: 2207, lesson: 22, kanji: '演奏', kana: 'えんそう', meaning: 'Biểu diễn', example: 'ピアノの演奏を聴く。' },
+            { id: 2208, lesson: 22, kanji: '芸術', kana: 'げいじゅつ', meaning: 'Nghệ thuật', example: '芸術に興味がある。' },
+            { id: 2209, lesson: 22, kanji: '検査', kana: 'けんさ', meaning: 'Kiểm tra', example: '病院で検査を受ける。' },
+            { id: 2210, lesson: 22, kanji: '血液', kana: 'けつえき', meaning: 'Máu', example: '血液型を調べる。' },
+            { id: 2211, lesson: 22, kanji: '治療', kana: 'ちりょう', meaning: 'Trị liệu', example: '歯の治療をする。' },
+            { id: 2212, lesson: 22, kanji: '症状', kana: 'しょうじょう', meaning: 'Triệu chứng', example: '風邪の症状が出る。' },
+            { id: 2213, lesson: 22, kanji: '予防', kana: 'よぼう', meaning: 'Đề phòng, dự phòng', example: '病気を予防する。' },
+            { id: 2214, lesson: 22, kanji: '栄養', kana: 'えいよう', meaning: 'Dinh dưỡng', example: '栄養のある食事をとる。' },
+            { id: 2215, lesson: 22, kanji: '手術', kana: 'しゅじゅつ', meaning: 'Phẫu thuật', example: '目の手術を受ける。' },
+            { id: 2216, lesson: 22, kanji: '死亡', kana: 'しぼう', meaning: 'Tử vong', example: '事故で死亡する。' },
+            { id: 2217, lesson: 22, kanji: '命', kana: 'いのち', meaning: 'Sinh mệnh', example: '命は大切だ。' },
+            { id: 2218, lesson: 22, kanji: '一生', kana: 'いっしょう', meaning: 'Cuộc sống, cả đời', example: '一生懸命働く。' },
+            { id: 2219, lesson: 22, kanji: '誤解', kana: 'ごかい', meaning: 'Hiểu nhầm', example: '誤解を解く。' },
+            { id: 2220, lesson: 22, kanji: '後悔', kana: 'こうかい', meaning: 'Hối hận', example: '若い頃もっと勉強すればよかったと後悔している。' },
+            { id: 2221, lesson: 22, kanji: '礼儀', kana: 'れいぎ', meaning: 'Lễ nghĩa, lịch sự', example: '礼儀正しい若者。' },
+            { id: 2222, lesson: 22, kanji: '訳', kana: 'わけ', meaning: 'Lý do', example: '遅れた訳を説明する。' },
+            { id: 2223, lesson: 22, kanji: '態度', kana: 'たいど', meaning: 'Thái độ', example: 'まじめな態度で授業を受ける。' },
+            { id: 2224, lesson: 22, kanji: '癖', kana: 'くせ', meaning: 'Tật, thói quen', example: '爪をかむ癖がある。' },
+            { id: 2225, lesson: 22, kanji: '文句', kana: 'もんく', meaning: 'Than phiền', example: '文句を言うな。' },
+            { id: 2226, lesson: 22, kanji: '表情', kana: 'ひょうじょう', meaning: 'Nét mặt', example: '豊かな表情。' },
+            { id: 2227, lesson: 22, kanji: '表面', kana: 'ひょうめん', meaning: 'Bề ngoài, mặt trên', example: '地球の表面。' },
+            { id: 2228, lesson: 22, kanji: '禁煙', kana: 'きんえん', meaning: 'Cấm hút thuốc', example: 'このレストランは禁煙だ。' },
+            { id: 2229, lesson: 22, kanji: '禁止', kana: 'きんし', meaning: 'Cấm chỉ', example: '駐車禁止。' },
+            { id: 2230, lesson: 22, kanji: '完成', kana: 'かんせい', meaning: 'Hoàn thành', example: '新しいビルが完成した。' },
+
+            // --- BÀI 23 ---
+            { id: 2301, lesson: 23, kanji: '課題', kana: 'かだい', meaning: 'Vấn đề, chủ đề', example: '環境問題は現代の大きな課題だ。' },
+            { id: 2302, lesson: 23, kanji: '例外', kana: 'れいがい', meaning: 'Ngoại lệ', example: 'どんな規則にも例外はある。' },
+            { id: 2303, lesson: 23, kanji: '基本', kana: 'きほん', meaning: 'Cơ bản', example: '基本をしっかり学ぶ。' },
+            { id: 2304, lesson: 23, kanji: '状態', kana: 'じょうたい', meaning: 'Trạng thái', example: '健康状態がいい。' },
+            { id: 2305, lesson: 23, kanji: '出来事', kana: 'できごと', meaning: 'Sự kiện', example: '今日あった出来事を話す。' },
+            { id: 2306, lesson: 23, kanji: '記録', kana: 'きろく', meaning: 'Ghi chép, kỷ lục', example: '会議の内容を記録する。' },
+            { id: 2307, lesson: 23, kanji: '場面', kana: 'ばめん', meaning: 'Tình huống, bối cảnh', example: '映画の感動的な場面。' },
+            { id: 2308, lesson: 23, kanji: '機会', kana: 'きかい', meaning: 'Cơ hội', example: '留学する機会を得た。' },
+            { id: 2309, lesson: 23, kanji: '距離', kana: 'きょり', meaning: 'Khoảng cách', example: '駅からの距離を測る。' },
+            { id: 2310, lesson: 23, kanji: '提案', kana: 'ていあん', meaning: 'Đề xuất', example: '新しい計画を提案する。' },
+            { id: 2311, lesson: 23, kanji: 'やり取り', kana: 'やりとり', meaning: 'Trao đổi (Thông tin)', example: 'メールでやり取りする。' },
+            { id: 2312, lesson: 23, kanji: '知識', kana: 'ちしき', meaning: 'Tri thức', example: '専門的な知識が必要だ。' },
+            { id: 2313, lesson: 23, kanji: '実力', kana: 'じつりょく', meaning: 'Thực lực', example: '試合で実力を出す。' },
+            { id: 2314, lesson: 23, kanji: '手段', kana: 'しゅだん', meaning: 'Cách thức', example: '目的のためには手段を選ばない。' },
+            { id: 2315, lesson: 23, kanji: '代表', kana: 'だいひょう', meaning: 'Đại diện', example: 'クラスの代表として意見を言う。' },
+            { id: 2316, lesson: 23, kanji: '影響', kana: 'えいきょう', meaning: 'Ảnh hưởng', example: '親の考えに影響される。' },
+            { id: 2317, lesson: 23, kanji: '効果', kana: 'こうか', meaning: 'Hiệu quả', example: 'この薬はすぐに効果が出る。' },
+            { id: 2318, lesson: 23, kanji: '印象', kana: 'いんしょう', meaning: 'Ấn tượng', example: '彼女の第一印象は良かった。' },
+            { id: 2319, lesson: 23, kanji: '印', kana: 'しるし', meaning: 'Biểu tượng', example: '地図に印をつける。' },
+            { id: 2320, lesson: 23, kanji: '合図', kana: 'あいず', meaning: 'Dấu hiệu, hiệu lệnh', example: '手を挙げて合図する。' },
+            { id: 2321, lesson: 23, kanji: '共通', kana: 'きょうつう', meaning: 'Điểm chung', example: '二人に共通の趣味がある。' },
+            { id: 2322, lesson: 23, kanji: '強調', kana: 'きょうちょう', meaning: 'Cường điệu, nhấn mạnh', example: '重要なポイントを強調する。' },
+            { id: 2323, lesson: 23, kanji: '省略', kana: 'しょうりゃく', meaning: 'Giản lược', example: '詳しい説明は省略する。' },
+            { id: 2324, lesson: 23, kanji: '挑戦', kana: 'ちょうせん', meaning: 'Thử thách', example: '新しい仕事に挑戦する。' },
+            { id: 2325, lesson: 23, kanji: 'やる気', kana: 'やるき', meaning: 'Động lực', example: 'ほめられてやる気が出た。' },
+            { id: 2326, lesson: 23, kanji: '勇気', kana: 'ゆうき', meaning: 'Dũng cảm', example: '勇気を出して告白する。' },
+            { id: 2327, lesson: 23, kanji: '資格', kana: 'しかく', meaning: 'Tư cách', example: '弁護士の資格を取る。' },
+            { id: 2328, lesson: 23, kanji: '申請', kana: 'しんせい', meaning: 'Đăng kí, yêu cầu', example: 'ビザの申請をする。' },
+            { id: 2329, lesson: 23, kanji: '本人', kana: 'ほんにん', meaning: 'Chính chủ', example: '本人が直接サインする。' },
+            { id: 2330, lesson: 23, kanji: '契約', kana: 'けいやく', meaning: 'Hợp đồng', example: 'アパートの契約をする。' },
+
+            // --- BÀI 24 ---
+            { id: 2401, lesson: 24, kanji: '証明', kana: 'しょうめい', meaning: 'Chứng minh', example: '身分を証明する。' },
+            { id: 2402, lesson: 24, kanji: '変更', kana: 'へんこう', meaning: 'Thay đổi, biến đổi', example: '予定を変更する。' },
+            { id: 2403, lesson: 24, kanji: '保存', kana: 'ほぞん', meaning: 'Bảo quản', example: 'データをパソコンに保存する。' },
+            { id: 2404, lesson: 24, kanji: '保護', kana: 'ほご', meaning: 'Bảo hộ', example: '自然を保護する。' },
+            { id: 2405, lesson: 24, kanji: '環境', kana: 'かんきょう', meaning: 'Môi trường', example: '環境問題について考える。' },
+            { id: 2406, lesson: 24, kanji: '資源', kana: 'しげん', meaning: 'Tài nguyên', example: '天然資源を大切にする。' },
+            { id: 2407, lesson: 24, kanji: '不足', kana: 'ふそく', meaning: 'Không đủ', example: '運動不足になる。' },
+            { id: 2408, lesson: 24, kanji: '割合', kana: 'わりあい', meaning: 'Tỷ lệ', example: '合格者の割合が高い。' },
+            { id: 2409, lesson: 24, kanji: '商売', kana: 'しょうばい', meaning: 'Kinh doanh', example: '商売がうまくいく。' },
+            { id: 2410, lesson: 24, kanji: '商品', kana: 'しょうひん', meaning: 'Sản phẩm', example: '新しい商品を開発する。' },
+            { id: 2411, lesson: 24, kanji: '方', kana: 'かた', meaning: 'Kiểu, cách, hướng', example: 'パソコンの使い方がわからない。' },
+            { id: 2412, lesson: 24, kanji: '生産', kana: 'せいさん', meaning: 'Sản xuất', example: '米を生産する。' },
+            { id: 2413, lesson: 24, kanji: '消費', kana: 'しょうひ', meaning: 'Tiêu dùng', example: 'エネルギーを消費する。' },
+            { id: 2414, lesson: 24, kanji: '平均', kana: 'へいきん', meaning: 'Trung bình', example: 'テストの平均点。' },
+            { id: 2415, lesson: 24, kanji: '質', kana: 'しつ', meaning: 'Chất', example: 'この服は質がいい。' },
+            { id: 2416, lesson: 24, kanji: '物価', kana: 'ぶっか', meaning: 'Vật giá', example: '最近、物価が上がった。' },
+            { id: 2417, lesson: 24, kanji: '倒産', kana: 'とうさん', meaning: 'Phá sản', example: '会社が倒産した。' },
+            { id: 2418, lesson: 24, kanji: '携帯', kana: 'けいたい', meaning: 'Mang theo, di động', example: '携帯電話を忘れた。' },
+            { id: 2419, lesson: 24, kanji: '現代', kana: 'げんだい', meaning: 'Hiện đại', example: '現代の若者。' },
+            { id: 2420, lesson: 24, kanji: '世紀', kana: 'せいき', meaning: 'Thế kỷ', example: '21世紀になった。' },
+            { id: 2421, lesson: 24, kanji: '文化', kana: 'ぶんか', meaning: 'Văn hoá', example: '日本の文化を学ぶ。' },
+            { id: 2422, lesson: 24, kanji: '戦争', kana: 'せんそう', meaning: 'Chiến tranh', example: '戦争が起きる。' },
+            { id: 2423, lesson: 24, kanji: '平和', kana: 'へいわ', meaning: 'Hoà bình', example: '平和な世界を望む。' },
+            { id: 2424, lesson: 24, kanji: '都市', kana: 'とし', meaning: 'Đô thị', example: '大都市の生活。' },
+            { id: 2425, lesson: 24, kanji: '地方', kana: 'ちほう', meaning: 'Địa phương', example: '地方に住む。' },
+            { id: 2426, lesson: 24, kanji: '上る', kana: 'のぼる', meaning: 'Leo lên, tăng lên', example: '階段を上る。' },
+            { id: 2427, lesson: 24, kanji: '下る', kana: 'くだる', meaning: 'Đi xuống', example: '坂を下る。' },
+            { id: 2428, lesson: 24, kanji: '進む', kana: 'すすむ', meaning: 'Tiến lên, tiến triển', example: '前に進む。' },
+            { id: 2429, lesson: 24, kanji: '進める', kana: 'すすめる', meaning: 'Thúc đẩy, xúc tiến', example: '計画を進める。' },
+            { id: 2430, lesson: 24, kanji: '通る', kana: 'とおる', meaning: 'Đi qua', example: '車が道を通る。' },
+
+            // --- BÀI 25 ---
+            { id: 2501, lesson: 25, kanji: '通す', kana: 'とおす', meaning: 'Cho đi qua', example: '針に糸を通す。' },
+            { id: 2502, lesson: 25, kanji: '越える', kana: 'こえる', meaning: 'Vượt qua', example: '山を越える。' },
+            { id: 2503, lesson: 25, kanji: '過ぎる', kana: 'すぎる', meaning: 'Quá, đi quá', example: '約束の時間が過ぎた。' },
+            { id: 2504, lesson: 25, kanji: '過ごす', kana: 'すごす', meaning: 'Trải qua', example: '週末は家族と過ごす。' },
+            { id: 2505, lesson: 25, kanji: '移る', kana: 'うつる', meaning: 'Di chuyển, lây', example: '風邪がうつる。' },
+            { id: 2506, lesson: 25, kanji: '移す', kana: 'うつす', meaning: 'Làm di chuyển, lây nhiễm', example: '机を窓のそばに移す。' },
+            { id: 2507, lesson: 25, kanji: '連れる', kana: 'つれる', meaning: 'Dẫn đi', example: '子供を公園に連れて行く。' },
+            { id: 2508, lesson: 25, kanji: '寄る', kana: 'よる', meaning: 'Ghé qua', example: '帰りにスーパーに寄る。' },
+            { id: 2509, lesson: 25, kanji: '寄せる', kana: 'よせる', meaning: 'Ghé vào, dồn lại', example: '車を道の端に寄せる。' },
+            { id: 2510, lesson: 25, kanji: '与える', kana: 'あたえる', meaning: 'Cho, tặng, gây ra', example: '子供におやつを与える。' },
+            { id: 2511, lesson: 25, kanji: '得る', kana: 'える', meaning: 'Đạt được', example: '新しい知識を得る。' },
+            { id: 2512, lesson: 25, kanji: '向く', kana: 'むく', meaning: 'Hướng', example: '東を向く。' },
+            { id: 2513, lesson: 25, kanji: '向ける', kana: 'むける', meaning: 'Hướng về', example: 'カメラを向ける。' },
+            { id: 2514, lesson: 25, kanji: '勧める', kana: 'すすめる', meaning: 'Gợi ý (khuyên)', example: '友達にこの本を勧める。' },
+            { id: 2515, lesson: 25, kanji: '薦める', kana: 'すすめる', meaning: 'Tiến cử (giới thiệu)', example: '優秀な人を社長に薦める。' },
+            { id: 2516, lesson: 25, kanji: '任せる', kana: 'まかせる', meaning: 'Giao phó', example: '仕事を部下に任せる。' },
+            { id: 2517, lesson: 25, kanji: '守る', kana: 'まもる', meaning: 'Tuân thủ', example: 'ルールを守る。' },
+            { id: 2518, lesson: 25, kanji: '争う', kana: 'あらそう', meaning: 'Tranh cãi', example: '優勝を争う。' },
+            { id: 2519, lesson: 25, kanji: '望む', kana: 'のぞむ', meaning: 'Mong ước', example: '平和な世界を望む。' },
+            { id: 2520, lesson: 25, kanji: '信じる', kana: 'しんじる', meaning: 'Tin tưởng', example: '彼の言葉を信じる。' },
+            { id: 2521, lesson: 25, kanji: '通じる', kana: 'つうじる', meaning: 'Thông qua, hiểu', example: '冗談が通じない。' },
+            { id: 2522, lesson: 25, kanji: '思いやる', kana: 'おもいやる', meaning: 'Quan tâm', example: '相手の気持ちを思いやる。' },
+            { id: 2523, lesson: 25, kanji: '飽きる', kana: 'あきる', meaning: 'Chán', example: '毎日同じ料理で飽きた。' },
+            { id: 2524, lesson: 25, kanji: '思いつく', kana: 'おもいつく', meaning: 'Nghĩ ra', example: 'いいアイデアを思いつく。' },
+            { id: 2525, lesson: 25, kanji: '熱中する', kana: 'ねっちゅうする', meaning: 'Mải mê', example: 'ゲームに熱中する。' },
+            { id: 2526, lesson: 25, kanji: '暮らす', kana: 'くらす', meaning: 'Sống', example: '都会で暮らす。' },
+            { id: 2527, lesson: 25, kanji: '巻く', kana: 'まく', meaning: 'Quấn, bọc', example: 'マフラーを巻く。' },
+            { id: 2528, lesson: 25, kanji: '結ぶ', kana: 'むすぶ', meaning: 'Buộc', example: '靴ひもを結ぶ。' },
+            { id: 2529, lesson: 25, kanji: '済む', kana: 'すむ', meaning: 'Kết thúc, xong', example: '仕事が済む。' },
+            { id: 2530, lesson: 25, kanji: '済ませる', kana: 'すませる', meaning: 'Kết thúc, làm cho xong', example: '宿題を早く済ませる。' },
+
+            // --- BÀI 26 ---
+            { id: 2601, lesson: 26, kanji: '出来る', kana: 'できる', meaning: 'Có thể', example: '新しい店が出来た。' },
+            { id: 2602, lesson: 26, kanji: '切れる', kana: 'きれる', meaning: 'Hết, sắc', example: 'ひもが切れる。' },
+            { id: 2603, lesson: 26, kanji: '切らす', kana: 'きらす', meaning: 'Dùng hết', example: '名刺を切らしております。' },
+            { id: 2604, lesson: 26, kanji: '伝える', kana: 'つたえる', meaning: 'Truyền đạt', example: 'メッセージを伝える。' },
+            { id: 2605, lesson: 26, kanji: '伝わる', kana: 'つたわる', meaning: 'Lan truyền', example: 'ニュースが世界に伝わる。' },
+            { id: 2606, lesson: 26, kanji: '続く', kana: 'つづく', meaning: 'Nối tiếp', example: '雨が続く。' },
+            { id: 2607, lesson: 26, kanji: '続ける', kana: 'つづける', meaning: 'Tiếp tục', example: '勉強を続ける。' },
+            { id: 2608, lesson: 26, kanji: 'つながる', kana: 'つながる', meaning: 'Được kết nối', example: 'インターネットにつながる。' },
+            { id: 2609, lesson: 26, kanji: 'つなぐ', kana: 'つなぐ', meaning: 'Kết nối, nắm chặt', example: '手と手をつなぐ。' },
+            { id: 2610, lesson: 26, kanji: 'つなげる', kana: 'つなげる', meaning: 'Kết nối, làm chặt', example: 'パソコンをネットにつなげる。' },
+            { id: 2611, lesson: 26, kanji: '伸びる', kana: 'のびる', meaning: 'Duỗi ra', example: '髪が伸びる。' },
+            { id: 2612, lesson: 26, kanji: '伸ばす', kana: 'のばす', meaning: 'Duỗi, kéo dài ra', example: '腕を伸ばす。' },
+            { id: 2613, lesson: 26, kanji: '延びる', kana: 'のびる', meaning: 'Dãn ra, tăng lên', example: '会議の時間が延びる。' },
+            { id: 2614, lesson: 26, kanji: '延ばす', kana: 'のばす', meaning: 'Làm hoãn, kéo dài', example: '締め切りを延ばす。' },
+            { id: 2615, lesson: 26, kanji: '重なる', kana: 'かさなる', meaning: 'Chồng chất', example: '悪いことが重なる。' },
+            { id: 2616, lesson: 26, kanji: '重ねる', kana: 'かさねる', meaning: 'Chồng lên', example: '皿を重ねる。' },
+            { id: 2617, lesson: 26, kanji: '広がる', kana: 'ひろがる', meaning: 'Lan rộng', example: 'うわさが広がる。' },
+            { id: 2618, lesson: 26, kanji: '広げる', kana: 'ひろげる', meaning: 'Mở rộng', example: '地図を広げる。' },
+            { id: 2619, lesson: 26, kanji: '載る', kana: 'のる', meaning: 'Được đăng', example: '新聞に記事が載る。' },
+            { id: 2620, lesson: 26, kanji: '載せる', kana: 'のせる', meaning: 'Đăng tải lên', example: 'ブログに写真を載せる。' },
+            { id: 2621, lesson: 26, kanji: '揃う', kana: 'そろう', meaning: 'Thu thập, đủ', example: '全員が揃った。' },
+            { id: 2622, lesson: 26, kanji: '揃える', kana: 'そろえる', meaning: 'Chuẩn bị, sắp xếp lại', example: '靴を揃える。' },
+            { id: 2623, lesson: 26, kanji: 'まとまる', kana: 'まとまる', meaning: 'Được tổng hợp', example: '意見がまとまる。' },
+            { id: 2624, lesson: 26, kanji: 'まとめる', kana: 'まとめる', meaning: 'Gom, tổng hợp', example: '荷物をまとめる。' },
+            { id: 2625, lesson: 26, kanji: '付く', kana: 'つく', meaning: 'Đính, gắn', example: '服に汚れが付く。' },
+            { id: 2626, lesson: 26, kanji: '付ける', kana: 'つける', meaning: 'Bôi, gắn', example: 'パンにジャムを付ける。' },
+            { id: 2627, lesson: 26, kanji: '溜まる', kana: 'たまる', meaning: 'Lưu trữ, tích tụ', example: 'ストレスが溜まる。' },
+            { id: 2628, lesson: 26, kanji: '混じる', kana: 'まじる', meaning: 'Giao nhau, lẫn', example: '白髪が混じる。' },
+            { id: 2629, lesson: 26, kanji: '混ざる', kana: 'まざる', meaning: 'Trộn lẫn, khuấy', example: '絵の具が混ざる。' },
+            { id: 2630, lesson: 26, kanji: '貯める', kana: 'ためる', meaning: 'Tích góp', example: 'お金を貯める。' },
+
+            // --- BÀI 27 ---
+            { id: 2701, lesson: 27, kanji: '混ぜる', kana: 'まぜる', meaning: 'Trộn lẫn', example: '砂糖と塩を混ぜる。' },
+            { id: 2702, lesson: 27, kanji: '溶ける', kana: 'とける', meaning: 'Tan', example: '氷が溶ける。' },
+            { id: 2703, lesson: 27, kanji: '解く', kana: 'とく', meaning: 'Giải quyết, làm tan', example: '数学の問題を解く。' },
+            { id: 2704, lesson: 27, kanji: '含む', kana: 'ふくむ', meaning: 'Chứa, gồm', example: 'レモンはビタミンCを含む。' },
+            { id: 2705, lesson: 27, kanji: '含める', kana: 'ふくめる', meaning: 'Bao gồm', example: '税金を含めた値段。' },
+            { id: 2706, lesson: 27, kanji: '抜ける', kana: 'ぬける', meaning: 'Rụng, tuột', example: '髪の毛が抜ける。' },
+            { id: 2707, lesson: 27, kanji: '抜く', kana: 'ぬく', meaning: 'Rút, nhổ', example: '虫歯を抜く。' },
+            { id: 2708, lesson: 27, kanji: '現れる', kana: 'あらわれる', meaning: 'Hiện ra', example: '空に虹が現れる。' },
+            { id: 2709, lesson: 27, kanji: '現す', kana: 'あらわす', meaning: 'Làm xuất hiện', example: '正体を現す。' },
+            { id: 2710, lesson: 27, kanji: '表れる', kana: 'あらわれる', meaning: 'Biểu hiện ra', example: '顔に喜びが表れる。' },
+            { id: 2711, lesson: 27, kanji: '表す', kana: 'あらわす', meaning: 'Biểu thị', example: '感謝の気持ちを表す。' },
+            { id: 2712, lesson: 27, kanji: '散る', kana: 'ちる', meaning: 'Rơi, tàn', example: '桜が散る。' },
+            { id: 2713, lesson: 27, kanji: '散らす', kana: 'ちらす', meaning: 'Vứt, rải', example: '風が花びらを散らす。' },
+            { id: 2714, lesson: 27, kanji: '明ける', kana: 'あける', meaning: 'Hết, đến', example: '年が明ける。' },
+            { id: 2715, lesson: 27, kanji: '差す', kana: 'さす', meaning: 'Mở ô', example: '傘を差す。' },
+            { id: 2716, lesson: 27, kanji: 'パートナー', kana: 'パートナー', meaning: 'Đối tác', example: 'ビジネスのパートナー。' },
+            { id: 2717, lesson: 27, kanji: 'リーダー', kana: 'リーダー', meaning: 'Lãnh đạo', example: 'グループのリーダー。' },
+            { id: 2718, lesson: 27, kanji: 'ボランティア', kana: 'ボランティア', meaning: 'Tình nguyện viên', example: 'ボランティアに参加する。' },
+            { id: 2719, lesson: 27, kanji: 'コミュニケーション', kana: 'コミュニケーション', meaning: 'Giao tiếp', example: 'コミュニケーションをとる。' },
+            { id: 2720, lesson: 27, kanji: 'ユーモア', kana: 'ユーモア', meaning: 'Hài hước', example: 'ユーモアがある人。' },
+            { id: 2721, lesson: 27, kanji: 'ショック', kana: 'ショック', meaning: 'Shock', example: 'ショックを受ける。' },
+            { id: 2722, lesson: 27, kanji: 'ストレス', kana: 'ストレス', meaning: 'Căng thẳng', example: 'ストレスがたまる。' },
+            { id: 2723, lesson: 27, kanji: 'バランス', kana: 'バランス', meaning: 'Cân bằng', example: 'バランスがいい食事。' },
+            { id: 2724, lesson: 27, kanji: 'レベル', kana: 'レベル', meaning: 'Trình độ', example: '日本語のレベル。' },
+            { id: 2725, lesson: 27, kanji: 'アップ', kana: 'アップ', meaning: 'Tăng lên', example: '給料がアップする。' },
+            { id: 2726, lesson: 27, kanji: 'ダウン', kana: 'ダウン', meaning: 'Hạ xuống', example: '業績がダウンする。' },
+            { id: 2727, lesson: 27, kanji: 'プラス', kana: 'プラス', meaning: 'Cộng, dư', example: 'プラス思考。' },
+            { id: 2728, lesson: 27, kanji: 'マイナス', kana: 'マイナス', meaning: 'Trừ, âm', example: '気温がマイナスになる。' },
+            { id: 2729, lesson: 27, kanji: 'イメージ', kana: 'イメージ', meaning: 'Hình ảnh', example: '良いイメージを持つ。' },
+            { id: 2730, lesson: 27, kanji: 'コンテスト', kana: 'コンテスト', meaning: 'Cuộc thi', example: 'コンテストに出る。' },
+
+            // --- BÀI 28 ---
+            { id: 2801, lesson: 28, kanji: 'マスコミ', kana: 'マスコミ', meaning: 'Truyền thông', example: 'マスコミで報道される。' },
+            { id: 2802, lesson: 28, kanji: 'プライバシー', kana: 'プライバシー', meaning: 'Sự riêng tư', example: 'プライバシーを守る。' },
+            { id: 2803, lesson: 28, kanji: 'オフィス', kana: 'オフィス', meaning: 'Văn phòng', example: '新しいオフィスに移る。' },
+            { id: 2804, lesson: 28, kanji: 'ルール', kana: 'ルール', meaning: 'Luật lệ', example: '交通ルールを守る。' },
+            { id: 2805, lesson: 28, kanji: 'マナー', kana: 'マナー', meaning: 'Quy tắc ứng xử', example: '食事のマナー。' },
+            { id: 2806, lesson: 28, kanji: 'ミス', kana: 'ミス', meaning: 'Lỗi', example: '計算でミスをする。' },
+            { id: 2807, lesson: 28, kanji: 'スケジュール', kana: 'スケジュール', meaning: 'Lịch làm việc', example: 'スケジュールを確認する。' },
+            { id: 2808, lesson: 28, kanji: 'タイトル', kana: 'タイトル', meaning: 'Tiêu đề', example: '映画のタイトル。' },
+            { id: 2809, lesson: 28, kanji: 'テーマ', kana: 'テーマ', meaning: 'Chủ đề', example: '会議のテーマ。' },
+            { id: 2810, lesson: 28, kanji: 'ストーリー', kana: 'ストーリー', meaning: 'Câu truyện', example: '面白いストーリー。' },
+            { id: 2811, lesson: 28, kanji: 'ヒット', kana: 'ヒット', meaning: 'Nổi tiếng', example: 'その曲は大ヒットした。' },
+            { id: 2812, lesson: 28, kanji: 'レンタル', kana: 'レンタル', meaning: 'Thuê', example: 'レンタカーを借りる。' },
+            { id: 2813, lesson: 28, kanji: 'リサイクル', kana: 'リサイクル', meaning: 'Tái chế', example: 'ゴミをリサイクルする。' },
+            { id: 2814, lesson: 28, kanji: 'ラベル', kana: 'ラベル', meaning: 'Nhãn dán', example: 'ビンにラベルを貼る。' },
+            { id: 2815, lesson: 28, kanji: 'ブランド', kana: 'ブランド', meaning: 'Thương hiệu', example: '有名なブランド。' },
+            { id: 2816, lesson: 28, kanji: 'タイプ', kana: 'タイプ', meaning: 'Loại', example: '好きなタイプ。' },
+            { id: 2817, lesson: 28, kanji: 'スタイル', kana: 'スタイル', meaning: 'Dáng, kiểu cách', example: '彼女はスタイルがいい。' },
+            { id: 2818, lesson: 28, kanji: 'セット', kana: 'セット', meaning: 'Cài đặt, bộ', example: '時計をセットする。' },
+            { id: 2819, lesson: 28, kanji: 'ウイルス', kana: 'ウイルス', meaning: 'Vi rút', example: 'ウイルスに感染する。' },
+            { id: 2820, lesson: 28, kanji: 'ロボット', kana: 'ロボット', meaning: 'Rô bốt', example: 'ロボットが働く。' },
+            { id: 2821, lesson: 28, kanji: 'エネルギー', kana: 'エネルギー', meaning: 'Năng lượng', example: 'エネルギーを節約する。' },
+            { id: 2822, lesson: 28, kanji: 'デジタル', kana: 'デジタル', meaning: 'Kỹ thuật số', example: 'デジタルカメラ。' },
+            { id: 2823, lesson: 28, kanji: 'マイク', kana: 'マイク', meaning: 'Mic', example: 'マイクで話す。' },
+            { id: 2824, lesson: 28, kanji: 'ブレーキ', kana: 'ブレーキ', meaning: 'Phanh', example: 'ブレーキをかける。' },
+            { id: 2825, lesson: 28, kanji: 'ペンキ', kana: 'ペンキ', meaning: 'Sơn', example: '壁にペンキを塗る。' },
+            { id: 2826, lesson: 28, kanji: '炊ける', kana: 'たける', meaning: 'Được nấu', example: 'ご飯が炊ける。' },
+            { id: 2827, lesson: 28, kanji: '炊く', kana: 'たく', meaning: 'Nấu, thổi cơm', example: 'ご飯を炊く。' },
+            { id: 2828, lesson: 28, kanji: '煮える', kana: 'にえる', meaning: 'Được nấu', example: 'スープが煮える。' },
+            { id: 2829, lesson: 28, kanji: '煮る', kana: 'にる', meaning: 'Nấu, ninh, kho', example: '肉を煮る。' },
+            { id: 2830, lesson: 28, kanji: '炒める', kana: 'いためる', meaning: 'Xào', example: '野菜を炒める。' },
+
+            // --- BÀI 29 ---
+            { id: 2901, lesson: 29, kanji: '焼ける', kana: 'やける', meaning: 'Được nướng', example: 'パンが焼ける。' },
+            { id: 2902, lesson: 29, kanji: '焼く', kana: 'やく', meaning: 'Nướng, rán', example: '肉を焼く。' },
+            { id: 2903, lesson: 29, kanji: '蒸す', kana: 'むす', meaning: 'Hấp', example: '野菜を蒸す。' },
+            { id: 2904, lesson: 29, kanji: 'ゆでる', kana: 'ゆでる', meaning: 'Luộc', example: '卵をゆでる。' },
+            { id: 2905, lesson: 29, kanji: '揚げる', kana: 'あげる', meaning: 'Chiên rán', example: '天ぷらを揚げる。' },
+            { id: 2906, lesson: 29, kanji: 'ぐっすり', kana: 'ぐっすり', meaning: 'Ngủ say', example: 'ぐっすり眠った。' },
+            { id: 2907, lesson: 29, kanji: 'きちんと', kana: 'きちんと', meaning: 'Nghiêm túc', example: '部屋をきちんと片付ける。' },
+            { id: 2908, lesson: 29, kanji: 'しっかり', kana: 'しっかり', meaning: 'Chắc chắn', example: 'しっかりドアを閉める。' },
+            { id: 2909, lesson: 29, kanji: 'はっきり', kana: 'はっきり', meaning: 'Rõ ràng', example: '富士山がはっきり見える。' },
+            { id: 2910, lesson: 29, kanji: 'じっと', kana: 'じっと', meaning: 'Kiên nhẫn', example: 'じっと待つ。' },
+            { id: 2911, lesson: 29, kanji: 'そっと', kana: 'そっと', meaning: 'Lặng lẽ', example: 'そっとドアを閉める。' },
+            { id: 2912, lesson: 29, kanji: '別々に', kana: 'べつべつに', meaning: 'Riêng biệt ra', example: '別々に会計する。' },
+            { id: 2913, lesson: 29, kanji: 'それぞれ', kana: 'それぞれ', meaning: 'Mỗi, riêng biệt', example: 'それぞれの意見。' },
+            { id: 2914, lesson: 29, kanji: '互いに', kana: 'たがいに', meaning: 'Lẫn nhau', example: '互いに助け合う。' },
+            { id: 2915, lesson: 29, kanji: '直接', kana: 'ちょくせつ', meaning: 'Trực tiếp', example: '直接会って話す。' },
+            { id: 2916, lesson: 29, kanji: '本当に', kana: 'ほんとうに', meaning: 'Thực sự là', example: '今日は本当に暑い。' },
+            { id: 2917, lesson: 29, kanji: '必ず', kana: 'かならず', meaning: 'Nhất định', example: '必ず来てください。' },
+            { id: 2918, lesson: 29, kanji: '絶対', kana: 'ぜったい', meaning: 'Tuyệt đối...không', example: '絶対に諦めない。' },
+            { id: 2919, lesson: 29, kanji: '特に', kana: 'とくに', meaning: 'Đặc biệt là', example: '果物、特にりんごが好き。' },
+            { id: 2920, lesson: 29, kanji: '無料', kana: 'むりょう', meaning: 'Miễn phí', example: 'このサービスは無料です。' },
+            { id: 2921, lesson: 29, kanji: 'ただ', kana: 'ただ', meaning: 'Đơn thuần là', example: 'ただの風邪だ。' },
+            { id: 2922, lesson: 29, kanji: '少なくとも', kana: 'すくなくとも', meaning: 'Tối thiểu', example: '少なくとも10人来る。' },
+            { id: 2923, lesson: 29, kanji: '決して', kana: 'けっして', meaning: 'Quyết không...', example: '決して忘れません。' },
+            { id: 2924, lesson: 29, kanji: '少しも', kana: 'すこしも', meaning: 'Một chút cũng không', example: '少しも寒くない。' },
+            { id: 2925, lesson: 29, kanji: 'ちっとも', kana: 'ちっとも', meaning: 'Một chút cũng không', example: 'ちっとも疲れていない。' },
+            { id: 2926, lesson: 29, kanji: '全く', kana: 'まったく', meaning: 'Hoàn toàn', example: '全く問題ない。' },
+            { id: 2927, lesson: 29, kanji: 'どんなに', kana: 'どんなに', meaning: 'Dù thế nào', example: 'どんなに大変でも頑張る。' },
+            { id: 2928, lesson: 29, kanji: 'どうしても', kana: 'どうしても', meaning: 'Dù sao đi nữa', example: 'どうしても日本に行きたい。' },
+            { id: 2929, lesson: 29, kanji: 'まるで', kana: 'まるで', meaning: 'Hoàn toàn, giống như', example: 'まるで夢のようだ。' },
+            { id: 2930, lesson: 29, kanji: '一体', kana: 'いったい', meaning: 'Tóm lại', example: '一体何があったんだ？' },
+
+            // --- BÀI 30 ---
+            { id: 3001, lesson: 30, kanji: 'たった', kana: 'たった', meaning: 'Chỉ, mỗi', example: 'たった100円しかない。' },
+            { id: 3002, lesson: 30, kanji: 'ほんの', kana: 'ほんの', meaning: 'Chỉ là', example: 'ほんの少しだけ食べました。' },
+            { id: 3003, lesson: 30, kanji: 'それで', kana: 'それで', meaning: 'Vì vậy', example: '事故があった。それで遅れた。' },
+            { id: 3004, lesson: 30, kanji: 'そこで', kana: 'そこで', meaning: 'Do đó', example: '雨が降った。そこで試合は中止になった。' },
+            { id: 3005, lesson: 30, kanji: 'その上', kana: 'そのうえ', meaning: 'Thêm nữa', example: '彼は頭がいい。その上、スポーツもできる。' },
+            { id: 3006, lesson: 30, kanji: 'また', kana: 'また', meaning: 'Lại, lại còn', example: '彼は歌手であり、また俳優でもある。' },
+            { id: 3007, lesson: 30, kanji: 'または', kana: 'または', meaning: 'Hoặc', example: '電話またはメールで連絡してください。' },
+            { id: 3008, lesson: 30, kanji: 'それとも', kana: 'それとも', meaning: 'Hay là', example: 'コーヒーにしますか、それとも紅茶にしますか。' },
+            { id: 3009, lesson: 30, kanji: 'つまり', kana: 'つまり', meaning: 'Nói cách khác', example: '母の兄、つまり伯父だ。' }
+        ];
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('learn');
+            const [wordStatus, setWordStatus] = useState(() => {
+                const saved = localStorage.getItem('sonkuro_n3_status');
+                return saved ? JSON.parse(saved) : {};
+            });
+
+            useEffect(() => {
+                localStorage.setItem('sonkuro_n3_status', JSON.stringify(wordStatus));
+            }, [wordStatus]);
+
+            const updateWordStatus = (id, status) => {
+                setWordStatus(prev => ({ ...prev, [id]: status }));
+            };
+
+            return (
+                <div className="flex flex-col md:flex-row h-screen bg-slate-50 font-sans text-slate-800">
+                    
+                    {/* Header cho Mobile (Ẩn trên Desktop) */}
+                    <header className="md:hidden bg-indigo-700 text-white p-4 shadow-md z-20 flex-shrink-0">
+                        <div className="max-w-md mx-auto flex items-center justify-between">
+                            <div>
+                                <h1 className="text-xl font-bold tracking-wide">Từ vựng N3</h1>
+                                <p className="text-sm text-indigo-200">Thầy Sonkuro</p>
+                            </div>
+                            <div className="w-10 h-10 bg-white text-indigo-700 rounded-full flex items-center justify-center font-bold text-lg shadow-inner">S.</div>
+                        </div>
+                    </header>
+
+                    {/* Sidebar cho Desktop (Ẩn trên Mobile) */}
+                    <nav className="hidden md:flex flex-col w-64 bg-indigo-700 text-white flex-shrink-0 h-screen z-20 shadow-xl">
+                        <div className="p-6 pb-8 border-b border-indigo-600/50">
+                            <h1 className="text-2xl font-bold tracking-wide mb-1">Từ vựng N3</h1>
+                            <p className="text-sm text-indigo-200">Thầy Sonkuro</p>
+                        </div>
+                        <div className="flex-1 px-4 py-6 space-y-2">
+                            <SidebarButton icon={<IconBookOpen size={20} />} label="Học từ vựng" isActive={activeTab === 'learn'} onClick={() => setActiveTab('learn')} />
+                            <SidebarButton icon={<IconCheckCircle size={20} />} label="Ôn tập (Quiz)" isActive={activeTab === 'review'} onClick={() => setActiveTab('review')} />
+                            <SidebarButton icon={<IconEdit3 size={20} />} label="Luyện đặt câu" isActive={activeTab === 'practice'} onClick={() => setActiveTab('practice')} />
+                            <SidebarButton icon={<IconList size={20} />} label="Danh sách từ" isActive={activeTab === 'list'} onClick={() => setActiveTab('list')} />
+                        </div>
+                        <div className="p-4 text-xs text-indigo-300 text-center border-t border-indigo-600/50">
+                            © 2026 Thầy Sonkuro
+                        </div>
+                    </nav>
+
+                    {/* Vùng Nội dung chính */}
+                    <main className="flex-1 overflow-y-auto relative pb-28 md:pb-0">
+                        <div className="max-w-5xl mx-auto min-h-full w-full">
+                            {activeTab === 'learn' && <LearnTab wordStatus={wordStatus} updateWordStatus={updateWordStatus} />}
+                            {activeTab === 'review' && <ReviewTab wordStatus={wordStatus} />}
+                            {activeTab === 'practice' && <PracticeTab />}
+                            {activeTab === 'list' && <ListTab wordStatus={wordStatus} />}
+                        </div>
+                    </main>
+
+                    {/* Bottom Nav cho Mobile (Ẩn trên Desktop) */}
+                    <nav className="md:hidden bg-white border-t border-slate-200 fixed bottom-0 w-full z-20 pb-[env(safe-area-inset-bottom)]">
+                        <div className="max-w-md mx-auto flex justify-around">
+                            <BottomNavButton icon={<IconBookOpen />} label="Học từ" isActive={activeTab === 'learn'} onClick={() => setActiveTab('learn')} />
+                            <BottomNavButton icon={<IconCheckCircle />} label="Ôn tập" isActive={activeTab === 'review'} onClick={() => setActiveTab('review')} />
+                            <BottomNavButton icon={<IconEdit3 />} label="Đặt câu" isActive={activeTab === 'practice'} onClick={() => setActiveTab('practice')} />
+                            <BottomNavButton icon={<IconList />} label="Danh sách" isActive={activeTab === 'list'} onClick={() => setActiveTab('list')} />
+                        </div>
+                    </nav>
+                </div>
+            );
+        };
+
+        /* Nút menu Desktop */
+        const SidebarButton = ({ icon, label, isActive, onClick }) => (
+            <button onClick={onClick} className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all ${isActive ? 'bg-white/10 text-white font-bold' : 'text-indigo-200 hover:bg-white/5 hover:text-white'}`}>
+                {icon}
+                <span className="text-sm tracking-wide">{label}</span>
+            </button>
+        );
+
+        /* Nút menu Mobile */
+        const BottomNavButton = ({ icon, label, isActive, onClick }) => (
+            <button onClick={onClick} className={`flex flex-col items-center justify-center w-full py-3 space-y-1 transition-colors ${isActive ? 'text-indigo-700' : 'text-slate-400 hover:text-slate-600'}`}>
+                {icon}
+                <span className="text-[10px] font-medium uppercase tracking-wider">{label}</span>
+            </button>
+        );
+
+        const LearnTab = ({ wordStatus, updateWordStatus }) => {
+            const [selectedLesson, setSelectedLesson] = useState(null);
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [isFlipped, setIsFlipped] = useState(false);
+
+            if (selectedLesson === null) {
+                return (
+                    <div className="p-4 md:p-8 space-y-6 animate-fade-in">
+                        <div>
+                            <h2 className="text-2xl font-bold text-slate-800">Chọn bài học</h2>
+                            <p className="text-slate-500 mt-1">Lộ trình 30 bài - N3</p>
+                        </div>
+                        {/* Lưới co giãn tự động: Mobile 2 cột, Tablet 4 cột, Desktop 5 cột */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                            {LESSONS.map(lesson => {
+                                const wordsInLesson = N3_VOCABULARY.filter(w => w.lesson === lesson);
+                                const total = wordsInLesson.length;
+                                const knownCount = wordsInLesson.filter(w => wordStatus[w.id] === 'known').length;
+                                const progress = total === 0 ? 0 : Math.round((knownCount / total) * 100);
+
+                                return (
+                                    <button 
+                                        key={lesson} 
+                                        onClick={() => { if (total === 0) return; setSelectedLesson(lesson); setCurrentIndex(0); setIsFlipped(false); }} 
+                                        className={`bg-white p-5 rounded-2xl border ${total === 0 ? 'border-slate-100 opacity-60' : 'border-slate-200 shadow-sm hover:border-indigo-400 hover:shadow-md'} transition-all text-left flex flex-col`}
+                                    >
+                                        <div className="flex justify-between items-center mb-3">
+                                            <span className="text-lg font-bold text-indigo-700">Bài {lesson}</span>
+                                        </div>
+                                        {total > 0 ? (
+                                            <>
+                                                <span className="text-xs text-slate-500 font-medium mb-2">{knownCount}/{total} Đã nhớ</span>
+                                                <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                                    <div className="bg-indigo-500 h-1.5 rounded-full transition-all" style={{ width: `${progress}%` }}></div>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <span className="text-xs text-slate-400 italic">Chưa có dữ liệu</span>
+                                        )}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            }
+
+            const words = N3_VOCABULARY.filter(w => w.lesson === selectedLesson);
+            
+            if (currentIndex >= words.length) {
+                return (
+                    <div className="flex flex-col items-center justify-center h-full space-y-6 p-4 text-center animate-fade-in">
+                        <div className="text-green-500"><IconCheckCircle size={80} /></div>
+                        <h2 className="text-3xl font-bold text-slate-800">Hoàn thành Bài {selectedLesson}!</h2>
+                        <button onClick={() => setSelectedLesson(null)} className="px-8 py-4 bg-indigo-600 text-white rounded-full font-bold shadow-lg hover:bg-indigo-700 hover:scale-105 active:scale-95 transition-all">
+                            Trở về danh sách bài
+                        </button>
+                    </div>
+                );
+            }
+
+            const currentWord = words[currentIndex];
+
+            const handleMark = (status) => { 
+                updateWordStatus(currentWord.id, status); 
+                setIsFlipped(false); 
+                setCurrentIndex(prev => prev + 1); 
+            };
+
+            const playAudio = (e, text) => { 
+                e.stopPropagation(); 
+                if ('speechSynthesis' in window) { 
+                    const utterance = new SpeechSynthesisUtterance(text); 
+                    utterance.lang = 'ja-JP'; 
+                    window.speechSynthesis.speak(utterance); 
+                } 
+            };
+
+            return (
+                <div className="flex flex-col min-h-[70vh] md:min-h-full items-center justify-center space-y-8 p-4 md:p-8">
+                    <div className="w-full max-w-lg flex items-center justify-between">
+                        <button onClick={() => setSelectedLesson(null)} className="p-3 text-slate-500 hover:bg-slate-200 rounded-full transition-colors"><IconArrowLeft /></button>
+                        <div className="text-slate-500 font-medium">Từ {currentIndex + 1} / {words.length}</div>
+                        <div className="w-12"></div>
+                    </div>
+
+                    <div className="w-full max-w-lg h-96 relative perspective-1000 cursor-pointer group" onClick={() => setIsFlipped(!isFlipped)}>
+                        <div className={`w-full h-full transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''} group-hover:shadow-2xl rounded-3xl`}>
+                            {/* Mặt trước thẻ */}
+                            <div className="absolute w-full h-full bg-white rounded-3xl shadow-lg border border-slate-100 p-8 flex flex-col items-center justify-center backface-hidden">
+                                <button onClick={(e) => playAudio(e, currentWord.kanji)} className="absolute top-6 right-6 p-3 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors"><IconVolume2 size={28} /></button>
+                                <span className="text-2xl text-slate-500 mb-4">{currentWord.kana}</span>
+                                <h2 className="text-7xl font-bold text-slate-800 text-center tracking-tight">{currentWord.kanji}</h2>
+                                <p className="text-sm text-slate-400 mt-12 bg-slate-50 px-4 py-2 rounded-full">Chạm để xem nghĩa</p>
+                            </div>
+                            {/* Mặt sau thẻ */}
+                            <div className="absolute w-full h-full bg-indigo-50 rounded-3xl shadow-lg border border-indigo-200 p-8 flex flex-col items-center justify-center backface-hidden rotate-y-180">
+                                <h3 className="text-4xl font-bold text-indigo-700 mb-6 text-center">{currentWord.meaning}</h3>
+                                <div className="w-full bg-white p-6 rounded-2xl shadow-sm text-center">
+                                    <p className="text-sm text-slate-400 mb-2 font-medium uppercase tracking-wide">Ví dụ</p>
+                                    <p className="text-xl text-slate-800">{currentWord.example}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center justify-between w-full max-w-lg pt-4 space-x-6">
+                        <button onClick={() => handleMark('learning')} className="flex-1 py-5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-2xl font-bold hover:shadow-md active:scale-95 transition-all flex flex-col items-center">
+                            <IconX size={28} className="mb-2" />Chưa nhớ
+                        </button>
+                        <button onClick={() => handleMark('known')} className="flex-1 py-5 bg-green-50 hover:bg-green-100 text-green-700 border border-green-200 rounded-2xl font-bold hover:shadow-md active:scale-95 transition-all flex flex-col items-center">
+                            <IconCheck size={28} className="mb-2" />Đã nhớ
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const ReviewTab = ({ wordStatus }) => {
+            const [quizWords, setQuizWords] = useState(null);
+            const [questionIndex, setQuestionIndex] = useState(0);
+            const [score, setScore] = useState(0);
+            const [options, setOptions] = useState([]);
+            const [selectedAnswer, setSelectedAnswer] = useState(null);
+
+            const startQuiz = (mode) => {
+                let words = mode === 'learning' ? N3_VOCABULARY.filter(w => wordStatus[w.id] === 'learning') : N3_VOCABULARY.filter(w => w.lesson === mode);
+                if (words.length === 0) return alert(mode === 'learning' ? "Bạn không có từ nào 'Chưa nhớ'." : "Bài này chưa có từ vựng.");
+                setQuizWords(words.sort(() => 0.5 - Math.random())); 
+                setQuestionIndex(0); 
+                setScore(0);
+            };
+
+            useEffect(() => {
+                if (quizWords && questionIndex < quizWords.length) {
+                    const current = quizWords[questionIndex];
+                    const wrongOptions = N3_VOCABULARY.filter(w => w.id !== current.id).sort(() => 0.5 - Math.random()).slice(0, 3);
+                    setOptions([...wrongOptions, current].sort(() => 0.5 - Math.random()));
+                    setSelectedAnswer(null);
+                }
+            }, [quizWords, questionIndex]);
+
+            const handleAnswer = (option) => {
+                if (selectedAnswer) return;
+                setSelectedAnswer(option);
+                if (option.id === quizWords[questionIndex].id) setScore(prev => prev + 1);
+                setTimeout(() => setQuestionIndex(prev => prev + 1), 1200);
+            };
+
+            if (!quizWords) {
+                return (
+                    <div className="p-4 md:p-8 space-y-6 animate-fade-in">
+                        <h2 className="text-2xl font-bold text-slate-800">Chọn bài ôn tập</h2>
+                        <button onClick={() => startQuiz('learning')} className="w-full max-w-2xl bg-red-50 p-6 rounded-3xl border border-red-200 shadow-sm flex items-center space-x-6 text-left hover:shadow-md hover:bg-red-100 active:scale-95 transition-all">
+                            <div className="bg-red-200 p-4 rounded-full text-red-700"><IconBrain size={32} /></div>
+                            <div>
+                                <h3 className="text-xl font-bold text-red-800">Ôn tập các từ "Chưa nhớ"</h3>
+                                <p className="text-red-600 mt-1">Hệ thống sẽ xoáy sâu vào lỗ hổng kiến thức của bạn</p>
+                            </div>
+                        </button>
+
+                        <h3 className="text-xl font-bold text-slate-800 pt-4">Ôn theo từng bài</h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                            {LESSONS.map(lesson => {
+                                const hasWords = N3_VOCABULARY.some(w => w.lesson === lesson);
+                                return (
+                                    <button 
+                                        key={lesson} 
+                                        onClick={() => startQuiz(lesson)} 
+                                        className={`bg-white p-5 rounded-2xl border ${hasWords ? 'border-slate-200 shadow-sm hover:border-indigo-400 hover:shadow-md hover:-translate-y-1' : 'border-slate-100 opacity-50'} text-center font-bold text-slate-700 active:scale-95 transition-all`}
+                                    >
+                                        Ôn Bài {lesson}
+                                    </button>
+                                )
+                            })}
+                        </div>
+                    </div>
+                );
+            }
+
+            if (questionIndex >= quizWords.length) {
+                return (
+                    <div className="flex flex-col items-center justify-center h-full space-y-6 text-center animate-fade-in p-4">
+                        <div className="text-yellow-400 drop-shadow-md"><IconTrophy size={100} /></div>
+                        <h2 className="text-4xl font-bold text-slate-800">Tuyệt vời!</h2>
+                        <p className="text-xl text-slate-600">Bạn đã làm đúng <span className="font-bold text-indigo-600 text-2xl">{score} / {quizWords.length}</span> câu</p>
+                        <button onClick={() => setQuizWords(null)} className="px-8 py-4 bg-indigo-600 text-white rounded-full font-bold mt-4 shadow-lg hover:bg-indigo-700 active:scale-95 transition-all">Hoàn tất</button>
+                    </div>
+                );
+            }
+
+            const currentWord = quizWords[questionIndex];
+            return (
+                <div className="flex flex-col py-4 space-y-6 p-4 md:p-8">
+                    <div className="w-full max-w-2xl flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <button onClick={() => setQuizWords(null)} className="p-2 text-slate-500 hover:bg-slate-100 rounded-full"><IconArrowLeft /></button>
+                        <div className="flex-1 px-6">
+                            <div className="w-full bg-slate-100 rounded-full h-2">
+                                <div className="bg-indigo-500 h-2 rounded-full transition-all" style={{width: `${(questionIndex / quizWords.length) * 100}%`}}></div>
+                            </div>
+                        </div>
+                        <span className="text-lg font-bold text-indigo-600">Điểm: {score}</span>
+                    </div>
+
+                    <div className="w-full max-w-2xl bg-white rounded-3xl shadow-md border border-slate-100 p-10 text-center mt-4">
+                        <p className="text-slate-400 mb-4 font-medium tracking-wide uppercase">Chọn nghĩa đúng nhất</p>
+                        <h2 className="text-6xl font-bold text-slate-800 mb-4">{currentWord?.kanji}</h2>
+                        <p className="text-xl text-slate-500">{currentWord?.kana}</p>
+                    </div>
+
+                    <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                        {options.map((option, index) => {
+                            let btnClass = "w-full p-6 rounded-2xl border-2 text-lg font-medium transition-all duration-200 text-center ";
+                            if (!selectedAnswer) btnClass += "border-slate-200 bg-white text-slate-700 hover:border-indigo-400 hover:bg-indigo-50 hover:shadow-md";
+                            else if (option.id === currentWord.id) btnClass += "border-green-500 bg-green-50 text-green-700";
+                            else if (selectedAnswer.id === option.id) btnClass += "border-red-500 bg-red-50 text-red-700";
+                            else btnClass += "border-slate-100 bg-slate-50 text-slate-400 opacity-50";
+
+                            return <button key={index} onClick={() => handleAnswer(option)} className={btnClass} disabled={selectedAnswer !== null}>{option.meaning}</button>;
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        const PracticeTab = () => {
+            const [currentWord, setCurrentWord] = useState(null);
+            const [inputText, setInputText] = useState('');
+            const [isLoading, setIsLoading] = useState(false);
+            const [result, setResult] = useState(null);
+
+            const pickRandomWord = () => {
+                const randomIdx = Math.floor(Math.random() * N3_VOCABULARY.length);
+                setCurrentWord(N3_VOCABULARY[randomIdx]);
+                setInputText('');
+                setResult(null);
+            };
+
+            useEffect(() => { pickRandomWord(); }, []);
+
+            const handleCheckSentence = async () => {
+                if (!inputText.trim()) return;
+                setIsLoading(true);
+                setResult(null);
+
+                const apiKey = "";
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                
+                const prompt = `Từ vựng yêu cầu: ${currentWord.kanji} (${currentWord.kana} - ${currentWord.meaning}).
+                Câu của học viên: "${inputText}"`;
+
+                const systemInstruction = `Bạn là Thầy Sonkuro, giáo viên tiếng Nhật N3 xuất sắc. Nhận xét câu học viên theo định dạng JSON. SCHEMA: {"isCorrect": boolean, "feedback": "nhận xét tiếng Việt ngắn gọn, dễ hiểu", "correctedSentence": "câu sửa lại cho tự nhiên"}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    systemInstruction: { parts: [{ text: systemInstruction }] },
+                    generationConfig: { responseMimeType: "application/json" }
+                };
+
+                try {
+                    if(!apiKey) throw new Error("Chưa có API Key"); 
+                    const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (!response.ok) throw new Error("Lỗi mạng");
+                    const data = await response.json();
+                    setResult(JSON.parse(data.candidates?.[0]?.content?.parts?.[0]?.text));
+                } catch (error) {
+                    setResult({ 
+                        isCorrect: false, 
+                        feedback: "Tính năng AI đang tạm bảo trì hoặc thiếu API Key. Khi có kết nối, hệ thống sẽ tự động phân tích và chỉ ra lỗi sai ngữ pháp cho bạn!", 
+                        correctedSentence: `${currentWord.example}` 
+                    });
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            if (!currentWord) return null;
+
+            return (
+                <div className="flex flex-col py-4 space-y-6 p-4 md:p-8">
+                    <div className="w-full max-w-2xl bg-indigo-50 border border-indigo-100 rounded-3xl p-8 text-center shadow-sm">
+                        <p className="text-indigo-500 font-bold tracking-wide uppercase mb-2">Thử thách đặt câu</p>
+                        <h2 className="text-5xl font-bold text-indigo-800 mb-3">{currentWord.kanji}</h2>
+                        <p className="text-lg text-slate-600 font-medium">{currentWord.kana} • {currentWord.meaning}</p>
+                    </div>
+
+                    <div className="w-full max-w-2xl">
+                        <textarea
+                            className="w-full h-40 p-6 bg-white border border-slate-200 rounded-3xl focus:outline-none focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 resize-none text-slate-800 text-lg shadow-sm transition-all"
+                            placeholder="Nhập câu tiếng Nhật của bạn vào đây..."
+                            value={inputText} onChange={(e) => setInputText(e.target.value)} disabled={isLoading || result !== null}
+                        ></textarea>
+
+                        {!result && (
+                            <button
+                                onClick={handleCheckSentence} disabled={isLoading || !inputText.trim()}
+                                className="mt-6 w-full bg-indigo-600 text-white font-bold text-lg py-5 rounded-2xl flex items-center justify-center disabled:opacity-50 hover:bg-indigo-700 hover:shadow-lg active:scale-95 transition-all"
+                            >
+                                {isLoading ? <IconLoader2 className="animate-spin mr-3" size={24} /> : <IconSparkles className="mr-3" size={24} />}
+                                {isLoading ? "Đang nhờ Thầy chấm bài..." : "Gửi Thầy Sonkuro chấm điểm"}
+                            </button>
+                        )}
+                    </div>
+
+                    {result && (
+                        <div className={`w-full max-w-2xl p-6 rounded-3xl border ${result.isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} animate-fade-in shadow-sm`}>
+                            <div className="flex items-center space-x-3 mb-4">
+                                {result.isCorrect ? <IconCheckCircle className="text-green-600" size={32} /> : <IconX className="text-red-600" size={32} />}
+                                <h3 className={`font-bold text-2xl ${result.isCorrect ? 'text-green-800' : 'text-red-800'}`}>
+                                    {result.isCorrect ? "Câu trả lời rất xuất sắc!" : "Cần chỉnh sửa một chút nhé"}
+                                </h3>
+                            </div>
+                            <p className="text-slate-700 text-lg mb-6 leading-relaxed">{result.feedback}</p>
+                            {result.correctedSentence && (
+                                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                                    <p className="text-sm text-slate-400 mb-2 font-medium uppercase">Câu mẫu tự nhiên hơn:</p>
+                                    <p className="text-indigo-800 text-xl font-bold">{result.correctedSentence}</p>
+                                </div>
+                            )}
+                            <button onClick={pickRandomWord} className="mt-6 w-full bg-white border-2 border-slate-200 text-slate-700 font-bold text-lg py-4 rounded-2xl hover:bg-slate-50 hover:border-slate-300 active:scale-95 transition-all">Luyện câu tiếp theo</button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const ListTab = ({ wordStatus }) => {
+            const [searchTerm, setSearchTerm] = useState('');
+            const [filter, setFilter] = useState('all');
+
+            const filteredWords = N3_VOCABULARY.filter(word => {
+                const matchSearch = word.kanji.includes(searchTerm) || word.kana.includes(searchTerm) || word.meaning.toLowerCase().includes(searchTerm.toLowerCase());
+                const status = wordStatus[word.id] || 'unseen';
+                if (filter === 'known') return matchSearch && status === 'known';
+                if (filter === 'learning') return matchSearch && status === 'learning';
+                return matchSearch;
+            });
+
+            return (
+                <div className="flex flex-col py-4 space-y-6 p-4 md:p-8">
+                    <div className="flex flex-col md:flex-row gap-4 items-center w-full">
+                        <div className="flex p-1 bg-slate-200 rounded-xl w-full md:w-1/3">
+                            {[{id:'all', label:'Tất cả'}, {id:'learning', label:'Chưa nhớ'}, {id:'known', label:'Đã nhớ'}].map(f => (
+                                <button key={f.id} onClick={() => setFilter(f.id)} className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${filter === f.id ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>{f.label}</button>
+                            ))}
+                        </div>
+                        <div className="relative w-full md:w-2/3">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><IconSearch className="text-slate-400" size={20} /></div>
+                            <input type="text" className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm text-slate-700" placeholder="Tìm theo Kanji, Kana hoặc Nghĩa tiếng Việt..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        </div>
+                    </div>
+                    
+                    <div className="pb-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            {filteredWords.length > 0 ? filteredWords.map((word) => (
+                                <div key={word.id} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm relative hover:shadow-md transition-shadow">
+                                    <div className="flex items-baseline space-x-3">
+                                        <h3 className="text-2xl font-bold text-slate-800">{word.kanji}</h3>
+                                        <span className="text-base text-slate-500">{word.kana}</span>
+                                    </div>
+                                    <p className="text-slate-700 font-medium mt-2 text-lg">{word.meaning}</p>
+                                    <p className="text-slate-400 text-sm mt-2 italic border-l-2 border-indigo-200 pl-2">{word.example}</p>
+                                    
+                                    <span className="absolute bottom-5 right-5 text-xs font-bold text-slate-300">Bài {word.lesson}</span>
+                                    
+                                    {wordStatus[word.id] === 'known' && <span className="absolute top-5 right-5 text-xs font-bold bg-green-100 text-green-700 px-3 py-1 rounded-full">Đã nhớ</span>}
+                                    {wordStatus[word.id] === 'learning' && <span className="absolute top-5 right-5 text-xs font-bold bg-red-100 text-red-700 px-3 py-1 rounded-full">Chưa nhớ</span>}
+                                </div>
+                            )) : (
+                                <div className="col-span-full text-center py-20 text-slate-500 text-lg">Không tìm thấy từ vựng nào phù hợp.</div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Render ứng dụng React vào thẻ DIV có ID là "root"
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
