@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>JLPT N4 2017 - Đề thi chính thức (đã chỉnh đáp án)</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        body { background: #f0f4f9; }
+        .kanji-bold {
+            font-weight: 800;
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 0 2px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .question-text u {
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            font-weight: 700;
+            color: #1e40af;
+            background: #eef2ff;
+            padding: 0 2px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const getDirectImageUrl = (url) => {
+        if (!url) return null;
+        const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) return `https://drive.google.com/thumbnail?export=view&id=${match[1]}&sz=w800`;
+        return url;
+    };
+
+    // ======================= DỮ LIỆU ĐỀ THI (ĐÃ CHỈNH ĐÁP ÁN THEO DANH SÁCH) =======================
+    // Phần Từ vựng (34 câu) – đáp án theo danh sách (0-indexed)
+    const vocabQuestions = [
+        { text: "① くつに石が入っていました。", opts: ['いし', 'すな', 'くさ', 'えだ'], ans: 0, boldWords: ["石"] },          // -1 -> 0
+        { text: "② にほんでいろいろな経験をしました。", opts: ['けいけん', 'けいげん', 'けけん', 'けげん'], ans: 0, boldWords: ["経験"] }, // -1 -> 0
+        { text: "③ 店員にトイレがどこにあるか聞きました。", opts: ['てにん', 'てんにん', 'ていん', 'てんいん'], ans: 3, boldWords: ["店員"] }, // -4 -> 3
+        { text: "④ きょうは食堂がこんでいました。", opts: ['しゅくど', 'しょくどう', 'しょくど', 'しゅくどう'], ans: 1, boldWords: ["食堂"] }, // -2 -> 1
+        { text: "⑤ このまどから港が見えます。", opts: ['うみ', 'みなと', 'みずうみ', 'いけ'], ans: 1, boldWords: ["港"] }, // -2 -> 1
+        { text: "⑥ この小説はおもしろかったです。", opts: ['しょせつ', 'しょぜつ', 'しょうせつ', 'しょうぜつ'], ans: 2, boldWords: ["小説"] }, // -3 -> 2
+        { text: "⑦ まいばん 日記を書いています。", opts: ['にっき', 'にちき', 'にっきい', 'にちきい'], ans: 0, boldWords: ["日記"] }, // -1 -> 0
+        { text: "⑧ 夕方、雨がふりました。", opts: ['ゆうほう', 'ゆうがた', 'ゆほう', 'ゆがた'], ans: 1, boldWords: ["夕方"] }, // -2 -> 1
+        { text: "⑨ もうすぐ秋ですね。", opts: ['ふゆ', 'なつ', 'はる', 'あき'], ans: 3, boldWords: ["秋"] }, // -4 -> 3
+        { text: "⑩ すずきさんは あおい シャツをきています。", opts: ['青い', '黒い', '赤い', '白い'], ans: 0, boldWords: ["あおい"] }, // -1 -> 0
+        { text: "⑪ かいぎのばしょをおしえてください。", opts: ['揚', '場', '揚所', '場所'], ans: 3, boldWords: ["ばしょ"] }, // -4 -> 3
+        { text: "⑫ わたしのいえは えきから あるいて 5分です。", opts: ['歩いて', '走いて', '歩いて', '歩いて'], ans: 2, boldWords: ["あるいて"] }, // -3 -> 2
+        { text: "⑬ ちかてつができてべんりになりました。", opts: ['便利イ', '便理', '便理', '便利'], ans: 3, boldWords: ["べんり"] }, // -4 -> 3
+        { text: "⑭ とても ねむかったので、コーヒーを飲みました。", opts: ['眠むかった', '眠かった', '眠むかった', '眠かった'], ans: 3, boldWords: ["ねむかった"] }, // -4 -> 3
+        { text: "⑮ きょうはゆきがふっています。", opts: ['雪', '電', '雲', '雨'], ans: 0, boldWords: ["ゆき"] }, // -1 -> 0
+        { text: "⑯ けさ せんたくしたふくがまだ ( ) いません。", opts: ['ひえて', 'なおって', 'ぬれて', 'かわいて'], ans: 3, boldWords: [] }, // -4 -> 3
+        { text: "⑰ スミスさんはいつも ( ) べんきょうしています。", opts: ['だいじに', 'たいせつに', 'ねっしんに', 'まっすぐに'], ans: 2, boldWords: [] }, // -3 -> 2
+        { text: "⑱ わたしはにほんのまんがに ( )があります。", opts: ['きぶん', 'きょうみ', 'こころ', 'しゅみ'], ans: 1, boldWords: [] }, // -2 -> 1
+        { text: "⑲ わたしは テニスの ( )をよくしりません。", opts: ['アイディア', 'ルール', 'あんない', 'せつめい'], ans: 1, boldWords: [] }, // -2 -> 1
+        { text: "⑳ りょこうのにもつはもう ( )できましたか。", opts: ['やくそく', 'りよう', 'せわ', 'ようい'], ans: 3, boldWords: [] }, // -4 -> 3
+        { text: "㉑ おとうとと ( ) して母にあげる プレゼントをえらびました。", opts: ['さんせい', 'あいさつ', 'そうだん', 'へんじ'], ans: 2, boldWords: [] }, // -3 -> 2
+        { text: "㉒ このにもつをあそこに ( ) ください。", opts: ['はこんで', 'つたえて', 'ひろって', 'むかえて'], ans: 0, boldWords: [] }, // -1 -> 0
+        { text: "㉓ このきかいはつかいかたをまちがえるととても( )です。", opts: ['けっこう', 'きけん', 'じゆう', 'あんぜん'], ans: 1, boldWords: [] }, // -2 -> 1
+        { text: "㉔ 入口の前には車を( ) ください。", opts: ['やめないで', 'しめないで', 'とめないで', 'きめないで'], ans: 2, boldWords: [] }, // -3 -> 2
+        { text: "㉕ バスが しゅっぱつしました。", opts: ['バスがとまりました。', 'バスがつきました。', 'バスがでました。', 'バスが まがりました。'], ans: 2, boldWords: [] }, // -3 -> 2
+        { text: "㉖ もっと ていねいにかいてください。", opts: ['もっと おおきく かいてください。', 'もっと きれいにかいてください。', 'もっとふとくかいてください。', 'もっと かんたんにかいてください。'], ans: 1, boldWords: [] }, // -2 -> 1
+        { text: "㉗ あにはえがうまいです。", opts: ['あにはえが じょうずです。', 'あにはえがきらいです。', 'あにはえがへたです。', 'あにはえがすきです。'], ans: 0, boldWords: [] }, // -1 -> 0
+        { text: "㉘ きのうはねぼうしました。", opts: ['きのうはねるのがおそくなってしまいました。', 'きのうははやくねてしまいました。', 'きのうはおきるのがおそくなってしまいました。', 'きのうははやくおきてしまいました。'], ans: 2, boldWords: [] }, // -3 -> 2
+        { text: "㉙ たなかさんは先生にほめられました。", opts: ['先生は たなかさんに「気をつけてね」と言いました。', '先生は たなかさんに「とてもよかったですよ」と言いました。', '先生は たなかさんに「ちょっと休みましょう」と言いました。', '先生は たなかさんに「たいへんですね」と言いました。'], ans: 1, boldWords: [] }, // -2 -> 1
+        { text: "㉚ るす", opts: ['さいきん いそがしくて、しごとがるすになりません。', 'あの デパートはきょうはるすです。', 'この ひこうきにはるすの せきがありません。', 'ともだちのいえに行ったらるすでした。'], ans: 3, boldWords: [] }, // -4 -> 3
+        { text: "㉛ しんせつ", opts: ['この りょうりは からだにとてもしんせつですよ。', 'コンビニは何でも買えるのでとても しんせつです。', 'この びょういんのおいしゃさんはとてもしんせつですよ。', 'わたしの母はにわの花にとてもしんせつです。'], ans: 2, boldWords: [] }, // -3 -> 2
+        { text: "㉜ にがい", opts: ['かぜをひいたので、こえがにがいです。', 'くらい みちを一人であるくのはにがいです。', 'にもつがおもかったので、うでがにがいです。', 'このくすりはとてもにがいです。'], ans: 3, boldWords: [] }, // -4 -> 3
+        { text: "㉝ わる", opts: ['おさらをおとして、わってしまいました。', 'しんぶんをわって、かばんに入れました。', 'ようふくをわって、母におこられました。', 'このジャムを三本のびんにわってください。'], ans: 0, boldWords: [] }, // -1 -> 0
+        { text: "㉞ ちこく", opts: ['あの とけいはちょっとちこくしています。', 'じゅぎょうにちこくしてすみません。', '10時の でんしゃにちこくしてしまいました。', 'れんらくがちこくしてすみません。'], ans: 1, boldWords: [] }  // -2 -> 1
+    ];
+
+    const vocab = vocabQuestions.map((item, idx) => ({ id: `v${idx+1}`, q: item.text, opts: item.opts, ans: item.ans, boldWords: item.boldWords }));
+
+    // Phần Ngữ pháp & Đọc hiểu (35 câu) – đáp án theo danh sách (0-indexed)
+    const grammar = [
+        { id: 'g1', q: '① わたしの父は中国語も英語( ) 話せます。', opts: ['を', 'で', 'と', 'が'], ans: 2 },          // -3 -> 2
+        { id: 'g2', q: '② これはわたしが米( ) 作ったパンです。', opts: ['に', 'の', 'や', 'で'], ans: 3 },          // -4 -> 3
+        { id: 'g3', q: '③ 男の子の顔は 父親より 母親( ) にると 話を聞いた。', opts: ['に', 'へ', 'と', 'を'], ans: 0 }, // -1 -> 0
+        { id: 'g4', q: '④ 妹はおしゃべりだ。静かなのは、食事のとき( )だ。', opts: ['しか', 'だけ', 'は', 'の'], ans: 1 }, // -2 -> 1
+        { id: 'g5', q: '⑤ A「誕生日に 田中さんから何をもらったんですか。」 B「田中さん ( ) 腕時計をもらいました。」', opts: ['からが', 'からに', 'からで', 'からは'], ans: 3 }, // -4 -> 3
+        { id: 'g6', q: '⑥ (会社で) A「すみません、山田さんはどこですか。」 B「山田さんは 会議中ですが、会議は11時半 ( ) 終わると 思いますよ。」', opts: ['までは', 'までには', 'までも', 'までにも'], ans: 1 }, // -2 -> 1
+        { id: 'g7', q: '⑦ 学生「先生、この ことば ( ) 意味ですか。」 先生「『やさしい』という意味です。」', opts: ['どうやって', 'どのぐらい', 'どういう', 'どう'], ans: 2 }, // -3 -> 2
+        { id: 'g8', q: '⑧ チャン「古川さん、このじゅぎょうの レポート、終わりましたか。」 古川「はい、一週間かかりましたが、きのうの夜、( ) 終わりました。」', opts: ['やっと', 'ずっと', 'もっと', 'きっと'], ans: 0 }, // -1 -> 0
+        { id: 'g9', q: '⑨ A「あした いっしょにドライブに行きませんか。」 B「( )、ごめんなさい、あしたはアルバイトがあるんです。」', opts: ['行きたいから', '行きたいけれど', '行きたいし', '行きたくて'], ans: 1 }, // -2 -> 1
+        { id: 'g10', q: '⑩ 子ども「ねえ、ゲームをしても いい?」 母親「しゅくだいを( ) あとでね。」', opts: ['していた', 'している', 'する', 'した'], ans: 3 }, // -4 -> 3
+        { id: 'g11', q: '⑪ このすいかは( ) すぎて、れいぞうこに入らない。', opts: ['大き', '大きい', '大きく', '大きくて'], ans: 0 }, // -1 -> 0
+        { id: 'g12', q: '⑫ A「誕生日 おめでとうございます。これ、プレゼントです。どうぞ。」 B「ありがとうございます。大切に( )。」', opts: ['します', 'います', 'なります', 'あります'], ans: 0 }, // -1 -> 0
+        { id: 'g13', q: '⑬ A「きのうはひっこしを( )、どうもありがとうございました。」 B「いいえ、どういたしまして。」', opts: ['手伝って', '手伝ったので', '手伝ってくれて', '手伝ったから'], ans: 2 }, // -3 -> 2
+        { id: 'g14', q: '⑭ 今日、わたしは えんぴつと 消しゴムを 忘れたので、となりの人に 貸して ( )。', opts: ['やりました', 'あげました', 'くれました', 'もらいました'], ans: 3 }, // -4 -> 3
+        { id: 'g15', q: '⑮ わたしの本だなには( ) 読んでいない まんががたくさん あります。', opts: ['買うあいだ', '買ったまま', '買いそうで', '買っている'], ans: 1 }, // -2 -> 1
+        { id: 'g16', q: '⑯ A「コンサートにはもう間に合わないですね。」 B「今すぐ _____ _____ ★ _____ 間に合うかもしれないから 」', opts: ['① タクシーに', '② タクシーで', '③ あ', '④ 乗れば'], ans: 2 }, // -3 -> 2 (chọn lựa chọn thứ 3)
+        { id: 'g17', q: '⑰ 山田「田中さん、これから 食事でも どうですか。」 田中「すみません。ちょうど _____ _____ ★ _____ です。」', opts: ['① 行こう', '② ところ', '③ 食べた', '④ 今'], ans: 1 }, // -2 -> 1
+        { id: 'g18', q: '⑱ A「あしたは大事なおきゃくさまに会うから、 _____ _____ ★ _____ いけませんよ。」 B「わかりました。あしたは新しい くつをはいて来ます。」', opts: ['① くつ', '② は', '③ そんな', '④ で'], ans: 3 }, // -4 -> 3
+        { id: 'g19', q: '⑲ 今日は、風が _____ _____ ★ _____ 出かけたくない。', opts: ['① し', '② だから', '③ 寒そう', '④ 強い'], ans: 2 }, // -3 -> 2
+        { id: 'g20', q: '⑳ 田中「山田さん。東京の大学に行く ことを、もうご両親に 話しましたか。」 山田「いいえ。でも、もし両親に _____ _____ ★ _____ つもりです。」', opts: ['① 反対', '② する', '③ 東京で勉強', '④ されても'], ans: 2 }, // -3 -> 2
+        { id: 'g21', context: '【ポチ】\nわたしの家には 「ポチ」という名前の犬がいます。一か月前に 父がもらってきました。わたしたちはポチを 家の中で [21]', q: '（21）に入る適当なものは？', opts: ['かうでしょう', 'かっています', 'かっていますか', 'かっていました'], ans: 1 }, // -2 -> 1
+        { id: 'g22', context: '※続き', q: '（22）に入る適当なものは？', opts: ['こわしたところだ', 'こわされている', 'こわして しまった', 'こわされた'], ans: 2 }, // -3 -> 2
+        { id: 'g23', context: '※続き', q: '（23）に入る適当なものは？', opts: ['さびしく なります', 'さびしくなくなりました', 'さびしくなるかもしれません', 'さびしくなくなったそうです'], ans: 1 }, // -2 -> 1
+        { id: 'g24', context: '※続き', q: '（24）に入る適当なものは？', opts: ['それに', 'たとえば', 'だから', 'それなら'], ans: 0 }, // -1 -> 0
+        { id: 'g25', context: '※続き', q: '（25）に入る適当なものは？', opts: ['が', 'で', 'と', 'は'], ans: 3 }, // -4 -> 3
+        { id: 'g26', context: '【メモ】\nアリさんの机の上に、このメモと本が置いてあります。\n「アリさん\nアリさんから借りた本を置いておきます。ありがとうございました。\nアリさんが借りたいと言っていた本も、一緒に置きます。重いので、今日は2冊しか持ってきませんでした。来週、ほかの3冊を持ってきます。\n石川」', q: '㉖ 石川さんは、来週、何をすると言っていますか。', opts: ['アリさんに本を2冊返します。', 'アリさんに本を3冊返します。', 'アリさんに本を2冊貸します。', 'アリさんに本を3冊貸します。'], ans: 3 }, // -4 -> 3
+        { id: 'g27', context: '【公園の注意】\n公園が開いている時間は、午前6時から午後9時です。これ以外の時間は入れません。\n自転車やオートバイは、公園の入り口にとめてください。中に入れてはいけません。\n◆ 公園の中で、次のことをしてはいけません。\n・ボールを使って遊ぶこと\n・たばこを吸うこと', q: '㉗ このお知らせから、公園についてわかることは何ですか。', opts: ['午後10時に公園に入ってもいいです。', '入り口にオートバイをとめてはいけません。', 'サッカーの練習をしてはいけません。', 'たばこを吸ってもいいです。'], ans: 2 }, // -3 -> 2
+        { id: 'g28', context: '【メール】\nこれは、山田先生からトムさんに届いたメールです。\n「トムさん\n明日(30日)の約束ですが、会議に出なければならなくなりました。\nそれで、すみませんが、約束を31日の午後3時に変えられませんか。\nトムさんの都合がよければ、オフィスで待っています。\nこのメールを読んだら、返事をください。\n山田」', q: '㉘ トムさんは、山田先生に何を知らせなければなりませんか。', opts: ['約束を明日に変えられるかどうか', '約束をあさってに変えられるかどうか', 'トムさんの明日の午後の都合', 'トムさんのあさっての午前の都合'], ans: 1 }, // -2 -> 1
+        { id: 'g29', context: '【図書館の仕事】\n石田さんは、川下図書館で働いています。本についての相談を受けたり、どこにどの本を置くのがいいか考えたりします。それから、図書館の新聞によい本の紹介文を書いたり、小さな子どもたちに絵本を読んだりします。', q: '㉙ 石田さんの仕事ではないものはどれですか。', opts: ['相談に来た人に本について紹介します。', '本を置く場所はどこがいいか、考えます。', '新聞にのっている、よい本の紹介文をさがします。', '小さな子どもたちに、いろいろな絵本を読みます。'], ans: 2 }, // -3 -> 2
+        { id: 'g30', context: '【旅行】\n今年の夏、わたしは家族で山の中にあるホテルに泊まりました。\n駅からホテルの近くのバス停まで、バスで2時間以上かかりました。バス停からホテルまでは、細い道を30分近く歩きました。ホテルは小さくて古かったですが、中はとてもきれいでした。ホテルに着くと、息子は「テレビが見たい。」「ゲームがしたい。」と言いました。しかし、このホテルにはどちらもありません。冷蔵庫もエアコンもありません。このホテルは便利ではありませんでしたが、山や湖でいろいろなことができました。\n部屋に荷物を置いて窓を開けると、湖から涼しい風が入ってきました。少し休んでから、まだ明るかったので、散歩に出かけました。空気がおいしくて、景色も美しかったです。夜は、星がとてもきれいでした。ホテルにいる間は毎日、みんなで散歩をしたり、湖で泳いだり、虫をとったり、昼寝をしたりしました。\nホテルには1週間いました。わたしたちは「楽しかったね。こんな生活もたまにはいいね。」と話しながら、家に帰りました。', q: '㉚ どんなホテルに泊まりましたか。', opts: ['山の中の大きなホテル', '古いが、中はきれいなホテル', 'テレビやゲームが楽しめるホテル', 'いろいろなものがあって、便利なホテル'], ans: 1 }, // -2 -> 1
+        { id: 'g31', context: '※続き', q: '㉛ 駅からホテルまでどうやって行きましたか。', opts: ['駅から30分バスに乗って、バス停から2時間以上歩きました。', '駅から30分バス停まで歩いて、バスに2時間以上乗りました。', '駅から2時間近くバスに乗って、バス停から30分以上歩きました。', '駅から2時間以上バスに乗って、バス停から30分近く歩きました。'], ans: 3 }, // -4 -> 3
+        { id: 'g32', context: '※続き', q: '㉜ ホテルに着いてから、何をしましたか。', opts: ['部屋に行かないで、すぐに湖に行きました。', '部屋に行って、夜までずっと休みました。', '部屋でテレビを見てから、星を見に外へ出ました。', '部屋で少し休んでから、散歩に行きました。'], ans: 3 }, // -4 -> 3
+        { id: 'g33', context: '※続き', q: '㉝ 「こんな生活」とありますが、どんな生活ですか。', opts: ['山で遊んだり、昼寝をしたりする生活', 'ゲームをしたり、虫をとったりする生活', '散歩をしたり、テレビを見たりする生活', 'おいしいものを食べて、何もしない生活'], ans: 0 }, // -1 -> 0
+        { id: 'g34', context: '【あおぞらー日スポーツ教室】\n5月29日(日) 10:00~17:00 場所 あおぞら運動場\n\n| スポーツ | 時間 | 場所 | お金 |\n| ジョギング | 10:00~12:00 | 第1運動場 | ただ |\n| 自転車 | 13:30~17:00 | 第1運動場 | ただ※ |\n| 水泳 | 10:00~17:00 | プール | 300円 |\n| サッカー | 10:00~17:00 | 第2運動場 | 100円 |\n| バスケットボール | 10:00~17:00 | 体育館 | 100円 |\n※注意 自転車を借りる人は200円かかります。\n①ジョギング、自転車、水泳 → 好きな時間に始めることができます。\n②サッカー、バスケットボール\n　午前:ルールや、やり方を先生が教えます。サッカーは第2運動場、バスケットボールは体育館に、10:00までに来てください。\n　午後:グループで試合をします。受付に13:00までに来てください。\n　初めてサッカーやバスケットボールをする人は、ぜひ午前の教室から来てください。', q: '㉞ 自転車を借りて乗りたい人は、いくら払わなければなりませんか。', opts: ['ただ', '100円', '200円', '300円'], ans: 2 }, // -3 -> 2
+        { id: 'g35', context: '※続き', q: '㉟ バスケットボールのルールや、やり方を習ってから試合に出たい人は、まずどうしなければなりませんか。', opts: ['10:00までに受付に行きます。', '10:00までに体育館に行きます。', '13:00までに受付に行きます。', '13:00までに体育館に行きます。'], ans: 1 }  // -2 -> 1
+    ];
+
+    // Phần Nghe hiểu (28 câu) – đáp án theo danh sách (0-indexed), kể cả câu có ảnh
+    const listening = [
+        // 問題1 (8 câu)
+        { id: 'l1', context: '問題１: 1番', image: 'https://drive.google.com/file/d/1c6WF8DrjxjJBFxBhzsSwRW1jtf2I_O8N/view?usp=drive_link', q: '（ảnh）', opts: ['1', '2', '3', '4'], ans: 0 }, // -1 -> 0
+        { id: 'l2', context: '問題１: 2番', image: 'https://drive.google.com/file/d/1cS2NdYOpT0SQ7DZ1JYd6kMnTOz9PjNzN/view?usp=drive_link', q: '（ảnh）', opts: ['1', '2', '3', '4'], ans: 3 }, // -4 -> 3
+        { id: 'l3', context: '問題１: 3ばん', q: 'チケットは何枚予約しますか。', opts: ['2枚', '4枚', '5枚', '6枚'], ans: 2 }, // -3 -> 2 (5枚)
+        { id: 'l4', context: '問題１: 4ばん', image: 'https://drive.google.com/file/d/1-sJuH7sO-h5R03ycz9vaXThHdVfHRZuP/view?usp=drive_link', q: '女の人はどの写真を送りますか。', opts: ['アイ', 'アエ', 'イウ', 'イエ'], ans: 3 }, // -4 -> 3
+        { id: 'l5', context: '問題１: 5番', image: 'https://drive.google.com/file/d/1GMQzx1cTqVqwpGhcs_RTqKiRg4DGE3xc/view?usp=drive_link', q: '（ảnh）', opts: ['1', '2', '3', '4'], ans: 2 }, // -3 -> 2
+        { id: 'l6', context: '問題１: 6番', image: 'https://drive.google.com/file/d/12474ZO_Bojxwoo8qF9YVr5C-jhJYVyzh/view?usp=drive_link', q: '（ảnh）', opts: ['1', '2', '3', '4'], ans: 1 }, // -2 -> 1
+        { id: 'l7', context: '問題１: 7ばん', q: '学生は明日、何時にどこに集まりますか。', opts: ['8時半に きょうしつ', '8時半に たいいくかんの前', '9時に きょうしつ', '9時に たいいくかんの前'], ans: 1 }, // -2 -> 1
+        { id: 'l8', context: '問題１: 8ばん', q: '男の人はこのあとどのボタンを押しますか。', opts: ['あかときいろ', 'あかと しろ', 'あおと きいろ', 'あおと しろ'], ans: 0 }, // -1 -> 0
+        // 問題2 (7 câu)
+        { id: 'l9', context: '問題２: 1ばん', q: '女の学生は、だれと住んでいますか。', opts: ['りょうしん', 'あね', 'いもうと', 'おとうと'], ans: 3 }, // -4 -> 3
+        { id: 'l10', context: '問題２: 2ばん', q: '女の学生は、いつ、男の学生に相談しますか。', opts: ['今すぐ', '今日の 4時', '今日の 6時', 'あしたのひる'], ans: 1 }, // -2 -> 1
+        { id: 'l11', context: '問題２: 3ばん', q: '女の留学生は、どうしてアルバイトがしたいですか。', opts: ['りょこうに行きたいから', 'デパートでかいものがしたいから', '日本人のはたらきかたがしりたいから', '日本語の べんきょうが したいから'], ans: 2 }, // -3 -> 2
+        { id: 'l12', context: '問題２: 4ばん', q: '何曜日に、一日中雨が降ると言っていますか。', opts: ['かようび', 'すいようび', 'もくようび', 'きんようび'], ans: 2 }, // -3 -> 2 (もくようび)
+        { id: 'l13', context: '問題２: 5ばん', q: '男の人は、最近、どのくらい本を読んでいますか。', opts: ['ぜんぜん 読まない', '月に 1さつ読む', '月に3さつ読む', '月に 10さついじょう読む'], ans: 0 }, // -1 -> 0
+        { id: 'l14', context: '問題２: 6ばん', q: '女の学生は、子供のとき、何になりたかったですか。', opts: ['小学校の先生', 'ピアニスト', 'けいさつかん', 'かんごし'], ans: 1 }, // -2 -> 1
+        { id: 'l15', context: '問題２: 7ばん', q: '次の船は、何時に出発しますか。', opts: ['10時', '10時10分', '10時20分', '10時30分'], ans: 2 }, // -3 -> 2
+        // 問題3 (5 câu)
+        { id: 'l16', context: '問題３: 1番', image: 'https://drive.google.com/file/d/1kEUDIRTzkZYCkG36On35c_i9LhhQQ_1f/view?usp=drive_link', q: 'お土産を買いました。先輩にあげます。何と言いますか。', opts: ['1', '2', '3'], ans: 0 }, // -1 -> 0
+        { id: 'l17', context: '問題３: 2番', image: 'https://drive.google.com/file/d/1sKMizJeNAkOIMVJ4cSR1jMcdee79Y_HV/view?usp=drive_link', q: '明日、二人で映画に行きたいです。何と言いますか。', opts: ['1', '2', '3'], ans: 1 }, // -2 -> 1
+        { id: 'l18', context: '問題３: 3番', image: 'https://drive.google.com/file/d/1dUmVOp7hOSrifyPRH6yBMb6aha5sD7o_/view?usp=drive_link', q: '黒板の字が小さくて、読めません。先生に何と言いますか。', opts: ['1', '2', '3'], ans: 0 }, // -1 -> 0
+        { id: 'l19', context: '問題３: 4番', image: 'https://drive.google.com/file/d/1vbgNFhH-5-Lies4PAODkwLlqo9-jndfN/view?usp=drive_link', q: '先生に今、相談したいです。何と言いますか。', opts: ['1', '2', '3'], ans: 1 }, // -2 -> 1
+        { id: 'l20', context: '問題３: 5番', image: 'https://drive.google.com/file/d/19T3vG8M4_qjdkOQraP01Lkb57whorSEa/view?usp=drive_link', q: '友達のペンを借りたいです。何と言いますか。', opts: ['1', '2', '3'], ans: 0 }, // -1 -> 0
+        // 問題4 (8 câu)
+        { id: 'l21', context: '問題４: 1番', q: '「ごちそうさまです。」に対する適切な返事は？', opts: ['1', '2', '3'], ans: 1 }, // -2 -> 1
+        { id: 'l22', context: '問題４: 2番', q: '「おれ、京都、行ったことある？」', opts: ['1', '2', '3'], ans: 2 }, // -3 -> 2
+        { id: 'l23', context: '問題４: 3番', q: '「どうして昨日、授業を休んだんですか。」', opts: ['1', '2', '3'], ans: 1 }, // -2 -> 1
+        { id: 'l24', context: '問題４: 4番', q: '「夏休みに国へ帰ったら、何をしますか。」', opts: ['1', '2', '3'], ans: 0 }, // -1 -> 0
+        { id: 'l25', context: '問題４: 5番', q: '「学校を休むときは電話してください。」', opts: ['1', '2', '3'], ans: 1 }, // -2 -> 1
+        { id: 'l26', context: '問題４: 6番', q: '「あの、その本を取ってください。」', opts: ['1', '2', '3'], ans: 2 }, // -3 -> 2
+        { id: 'l27', context: '問題４: 7番', q: '「ジョンさん、日本語が話せますか。」', opts: ['1', '2', '3'], ans: 2 }, // -3 -> 2
+        { id: 'l28', context: '問題４: 8番', q: '「あ、田中さん、黒板を消しておいてくれませんか。」', opts: ['1', '2', '3'], ans: 0 }  // -1 -> 0
+    ];
+
+    const examData = { vocab, grammar, listening };
+    const SECTIONS = [
+        { id: 'vocab', title: 'Từ vựng & Kanji', icon: 'fa-solid fa-book-open', time: 30 * 60 },
+        { id: 'grammar', title: 'Ngữ pháp & Đọc hiểu', icon: 'fa-solid fa-pen-nib', time: 60 * 60 },
+        { id: 'listening', title: 'Nghe hiểu', icon: 'fa-solid fa-headphones', time: 35 * 60 }
+    ];
+
+    const Modal = ({ isOpen, title, message, onConfirm, onCancel }) => {
+        if (!isOpen) return null;
+        return (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+                <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6">
+                    <h3 className="text-xl font-bold text-slate-800 mb-2">{title}</h3>
+                    <p className="text-slate-600 mb-6">{message}</p>
+                    <div className="flex justify-end gap-3">
+                        {onCancel && <button onClick={onCancel} className="px-4 py-2 rounded-lg font-bold text-slate-500 hover:bg-slate-100">Hủy</button>}
+                        <button onClick={onConfirm} className="px-4 py-2 rounded-lg font-bold bg-blue-600 text-white hover:bg-blue-700">Đồng ý</button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    function App() {
+        const [currentScreen, setCurrentScreen] = useState('home');
+        const [activeSection, setActiveSection] = useState('vocab');
+        const [answers, setAnswers] = useState({});
+        const [timeLeft, setTimeLeft] = useState(SECTIONS[0].time);
+        const [modalConfig, setModalConfig] = useState({ isOpen: false });
+
+        useEffect(() => {
+            let timer;
+            if (currentScreen === 'exam' && timeLeft > 0) {
+                timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
+            }
+            return () => clearInterval(timer);
+        }, [currentScreen, timeLeft]);
+
+        const changeSection = (sectionId) => {
+            setActiveSection(sectionId);
+            setTimeLeft(SECTIONS.find(s => s.id === sectionId).time);
+        };
+
+        const formatTime = (sec) => {
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        };
+
+        const handleSelectAnswer = (qid, idx) => {
+            setAnswers(prev => ({ ...prev, [qid]: idx }));
+        };
+
+        const calculateScore = () => {
+            let totalCorrect = 0, totalQuestions = 0, sections = {};
+            for (let [key, arr] of Object.entries(examData)) {
+                let correct = 0;
+                let count = 0;
+                arr.forEach(q => {
+                    if (q.ans !== null) {
+                        count++;
+                        if (answers[q.id] !== undefined && answers[q.id] === q.ans) correct++;
+                    }
+                });
+                sections[key] = { correct, total: count };
+                totalCorrect += correct;
+                totalQuestions += count;
+            }
+            return { totalCorrect, totalQuestions, percentage: totalQuestions ? Math.round(totalCorrect/totalQuestions*100) : 0, sections };
+        };
+
+        const showModal = (title, msg, onConfirm, onCancel=null) => setModalConfig({ isOpen: true, title, message: msg, onConfirm, onCancel });
+        const closeModal = () => setModalConfig({ isOpen: false });
+        const handleSubmit = () => showModal("Nộp bài thi", "Bạn chắc chắn muốn nộp bài?", () => { closeModal(); setCurrentScreen('results'); window.scrollTo(0,0); }, closeModal);
+
+        const applyBold = (text, boldWords) => {
+            if (!boldWords || boldWords.length === 0) return text;
+            let result = text;
+            for (let word of boldWords) {
+                const regex = new RegExp(`(${word})`, 'g');
+                result = result.replace(regex, `<b class="kanji-bold">$1</b>`);
+            }
+            return result;
+        };
+
+        const QuestionCard = ({ q, index, showResult }) => {
+            const selected = answers[q.id];
+            const isCorrect = (q.ans !== null && selected === q.ans);
+            const hasImage = q.image && q.image.startsWith('http');
+            const directImageUrl = hasImage ? getDirectImageUrl(q.image) : null;
+            
+            let processedText = q.q;
+            if (activeSection === 'vocab' && q.boldWords) {
+                processedText = applyBold(q.q, q.boldWords);
+            }
+            processedText = processedText.replace(/【(.*?)】/g, '<u>$1</u>').replace(/\(( )\)/g, '<u>( )</u>');
+            
+            return (
+                <div className={`bg-white p-4 md:p-6 rounded-xl border mb-5 transition-all ${showResult ? (isCorrect ? 'border-green-300 bg-green-50/30' : (selected!==undefined && q.ans!==null ? 'border-red-300 bg-red-50/30' : 'border-slate-200')) : (selected!==undefined ? 'border-blue-400 shadow-md' : 'border-slate-200 shadow-sm')}`}>
+                    {q.context && <div className="mb-4 bg-slate-50 p-3 rounded-lg text-slate-700 text-[15px] whitespace-pre-wrap leading-relaxed">{q.context}</div>}
+                    {hasImage && (
+                        <div className="mb-5 text-center">
+                            <img src={directImageUrl} alt="Hình minh họa" className="max-w-full md:max-w-md mx-auto border border-slate-200 shadow-sm rounded-lg" loading="lazy" referrerPolicy="no-referrer" onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/400x200?text=Không+thể+tải+ảnh'; }} />
+                        </div>
+                    )}
+                    <h3 className="text-[16px] md:text-lg font-medium text-slate-800 mb-4 flex gap-2 flex-wrap">
+                        <span className="text-blue-600 font-bold">Câu {index+1}:</span>
+                        <span className="question-text" dangerouslySetInnerHTML={{__html: processedText}} />
+                    </h3>
+
+                    <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2">
+                        {q.opts.map((opt, i) => {
+                            let btnClass = `px-4 py-3 rounded-xl border transition-all font-medium flex items-center gap-3 text-left `;
+                            if (showResult && q.ans !== null) {
+                                if (q.ans === i) btnClass += "border-green-500 bg-green-100 text-green-800 font-bold";
+                                else if (selected === i && selected !== q.ans) btnClass += "border-red-400 bg-red-50 text-red-700";
+                                else btnClass += "border-slate-100 text-slate-400 bg-slate-50";
+                            } else {
+                                btnClass += selected === i ? "border-blue-500 bg-blue-50 text-blue-800 ring-1 ring-blue-500" : "border-slate-200 text-slate-600 hover:border-blue-300";
+                            }
+                            return (
+                                <button key={i} disabled={showResult} onClick={() => handleSelectAnswer(q.id, i)} className={btnClass}>
+                                    <span className={`w-7 h-7 rounded-full border text-sm flex items-center justify-center flex-shrink-0 ${showResult && q.ans!==null && q.ans===i ? 'border-green-600 bg-green-500 text-white' : (showResult && selected===i && selected!==q.ans ? 'border-red-500 bg-red-400 text-white' : (selected===i ? 'border-blue-500 bg-blue-500 text-white' : 'border-slate-300'))}`}>{i+1}</span>
+                                    <span className="text-[15px]">{opt}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {showResult && q.ans !== null && (
+                        <div className={`mt-4 p-3 rounded-lg flex items-center gap-3 border ${isCorrect ? 'border-green-200 bg-green-50 text-green-700' : 'border-red-200 bg-red-50 text-red-700'}`}>
+                            <i className={`fa-solid ${isCorrect ? 'fa-circle-check text-green-500' : 'fa-circle-xmark text-red-500'} text-xl`}></i>
+                            <span className="text-sm">{isCorrect ? 'Đúng rồi!' : `Đáp án đúng: ${q.ans+1} (${q.opts[q.ans]})`}</span>
+                        </div>
+                    )}
+                    {showResult && q.ans === null && (
+                        <div className="mt-4 p-3 rounded-lg bg-slate-100 text-slate-500 text-sm">Câu này không có đáp án cố định.</div>
+                    )}
+                </div>
+            );
+        };
+
+        const HomeScreen = () => (
+            <div className="min-h-screen bg-sky-50 flex items-center justify-center p-4">
+                <div className="bg-white p-6 md:p-10 rounded-2xl shadow-xl max-w-md w-full text-center border-t-4 border-blue-500">
+                    <i className="fa-solid fa-book-open text-blue-500 text-5xl mb-4"></i>
+                    <h1 className="text-3xl font-extrabold text-slate-800">JLPT N4 2017</h1>
+                    <h2 className="text-xl font-bold text-blue-600 mb-8">Đề thi chính thức (đã chỉnh đáp án)</h2>
+                    <button onClick={() => { setCurrentScreen('exam'); changeSection('vocab'); window.scrollTo(0,0); }} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl w-full transition-all shadow-md text-lg">Bắt Đầu Thi</button>
+                </div>
+            </div>
+        );
+
+        const ExamScreen = () => (
+            <div className="bg-slate-50 min-h-screen pb-24">
+                <header className="sticky top-0 z-50 bg-blue-600 text-white shadow-md">
+                    <div className="flex justify-between items-center p-4 max-w-3xl mx-auto">
+                        <h1 className="font-bold text-lg">JLPT N4 2017</h1>
+                        <div className="flex items-center bg-blue-800/50 px-3 py-1.5 rounded-full text-sm font-bold"><i className="fa-solid fa-clock text-yellow-300 mr-2"></i>{formatTime(timeLeft)}</div>
+                    </div>
+                    <div className="bg-white text-slate-600 border-b overflow-x-auto whitespace-nowrap scrollbar-hide flex">
+                        {SECTIONS.map(sec => {
+                            const total = examData[sec.id].length;
+                            const answered = examData[sec.id].filter(q => answers[q.id]!==undefined).length;
+                            return (
+                                <button key={sec.id} onClick={() => { changeSection(sec.id); window.scrollTo(0,0); }} className={`px-5 py-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 ${activeSection===sec.id ? 'border-blue-600 text-blue-600 bg-blue-50/50' : 'border-transparent'}`}>
+                                    <i className={sec.icon}></i> {sec.title} <span className={`text-[11px] px-1.5 py-0.5 rounded-full ${answered===total ? 'bg-green-100 text-green-700' : 'bg-slate-100'}`}>{answered}/{total}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </header>
+                <main className="max-w-3xl mx-auto p-4 pt-6">
+                    {activeSection === 'listening' && (
+                        <div className="bg-slate-800 text-white p-3 rounded-xl mb-6 flex items-center justify-between">
+                            <span><i className="fa-solid fa-headphones text-sky-400 mr-2"></i>File nghe đề N4 2017</span>
+                            <a href="https://drive.google.com/file/d/1j0MuVDBaIcSvFL33wKBcethO5uQUnVym/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="bg-sky-500 hover:bg-sky-600 text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-2"><i className="fa-solid fa-play"></i> Mở file nghe</a>
+                        </div>
+                    )}
+                    {examData[activeSection].map((q, idx) => <QuestionCard key={q.id} q={q} index={idx} showResult={false} />)}
+                    <div className="mt-8 pt-4 border-t"><button onClick={handleSubmit} className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl shadow-lg flex justify-center items-center gap-2 text-lg"><i className="fa-solid fa-check-circle"></i> Nộp bài thi</button></div>
+                </main>
+            </div>
+        );
+
+        const ResultsScreen = () => {
+            const { totalCorrect, totalQuestions, percentage, sections } = calculateScore();
+            const passed = percentage >= 60;
+            return (
+                <div className="min-h-screen bg-slate-50 p-4 pb-20">
+                    <div className="max-w-3xl mx-auto">
+                        <div className="bg-white rounded-2xl shadow-md overflow-hidden mb-8 border">
+                            <div className={`p-6 text-center text-white ${passed ? 'bg-green-500' : 'bg-orange-500'}`}>
+                                <h1 className="text-2xl font-bold">{passed ? 'Chúc mừng bạn!' : 'Cố gắng hơn nữa nhé!'}</h1>
+                                <p>Kết quả thi JLPT N4 2017 (đã chỉnh đáp án)</p>
+                            </div>
+                            <div className="p-6 flex flex-col items-center">
+                                <div className="text-center mb-6"><span className="text-5xl font-black">{totalCorrect}</span><span className="text-2xl text-slate-400">/{totalQuestions}</span></div>
+                                {SECTIONS.map(sec => <div key={sec.id} className="w-full bg-slate-50 p-3 rounded-lg flex justify-between items-center mb-2"><span><i className={sec.icon}></i> {sec.title}</span><span>{sections[sec.id].correct}/{sections[sec.id].total}</span></div>)}
+                                <button onClick={() => { setAnswers({}); setCurrentScreen('home'); setActiveSection('vocab'); setTimeLeft(SECTIONS[0].time); }} className="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl mt-4">Làm lại đề</button>
+                            </div>
+                        </div>
+                        <h2 className="text-lg font-bold mb-4">Đáp án & giải thích</h2>
+                        {SECTIONS.map(sec => (
+                            <div key={sec.id}>
+                                <h3 className="text-md font-bold bg-slate-200 p-2 rounded text-center my-4">{sec.title}</h3>
+                                {examData[sec.id].map((q, idx) => <QuestionCard key={q.id} q={q} index={idx} showResult={true} />)}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        return (
+            <div>
+                {currentScreen === 'home' && <HomeScreen />}
+                {currentScreen === 'exam' && <ExamScreen />}
+                {currentScreen === 'results' && <ResultsScreen />}
+                <Modal isOpen={modalConfig.isOpen} title={modalConfig.title} message={modalConfig.message} onConfirm={modalConfig.onConfirm} onCancel={modalConfig.onCancel} />
+            </div>
+        );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+</script>
+</body>
+</html>
