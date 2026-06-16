@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Ngữ pháp N5 - SONKURO | Chuyên Sâu Toàn Tập</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', 'Noto Sans JP', sans-serif; transition: background-color 0.3s, color 0.3s; }
+    .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .dark .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
+    ruby { ruby-position: over; ruby-align: center; }
+    rt { font-size: 0.65em; color: #4f46e5; letter-spacing: 0.05em; padding-bottom: 0.1em; user-select: none; }
+    .dark rt { color: #818cf8; }
+    .flashcard-inner { perspective: 1000px; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; }
+    .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back { backface-visibility: hidden; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .flashcard-back { transform: rotateY(180deg); }
+    .lesson-sidebar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); gap: 0.4rem; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col relative">
+
+  <div id="customConfirmModal" class="fixed inset-0 bg-slate-900/60 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
+    <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl max-w-md w-full mx-4 shadow-xl border border-slate-100 dark:border-slate-700 transform scale-95 transition-transform duration-200" id="confirmBox">
+      <div class="flex items-center gap-3 text-indigo-600 dark:text-indigo-400 mb-4">
+        <div class="bg-indigo-50 dark:bg-indigo-950/50 p-2 rounded-2xl"><i class="fas fa-question-circle text-2xl"></i></div>
+        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100" id="confirmTitle">Xác nhận</h3>
+      </div>
+      <p class="text-slate-600 dark:text-slate-300 text-sm mb-6 font-medium" id="confirmMessage">Bạn có chắc chắn muốn thực hiện hành động này?</p>
+      <div class="flex justify-end gap-3">
+        <button id="confirmCancelBtn" class="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Hủy bỏ</button>
+        <button id="confirmOkBtn" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold hover:bg-indigo-700 shadow-md shadow-indigo-100 transition-colors">Đồng ý</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50 shadow-sm transition-colors">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="bg-indigo-600 text-white p-2.5 rounded-2xl shadow-md shadow-indigo-200 dark:shadow-none">
+          <i class="fas fa-language text-2xl"></i>
+        </div>
+        <div>
+          <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight bg-gradient-to-r bg-clip-text text-transparent from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400">Ngữ pháp N5 - SONKURO</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Bản nâng cấp chuyên sâu nâng cao Bài 1 - Bài 25</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+        <button id="darkToggle" class="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors shadow-sm" title="Chuyển đổi giao diện">
+          <i class="fas fa-moon dark:hidden"></i>
+          <i class="fas fa-sun hidden dark:block"></i>
+        </button>
+        <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-700/50 px-4 py-2 rounded-2xl border border-slate-100 dark:border-slate-700/80">
+          <div class="text-right">
+            <div class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Tiến độ khóa học</div>
+            <div class="text-sm font-black text-indigo-600 dark:text-indigo-400" id="globalProgressTxt">0%</div>
+          </div>
+          <div class="w-24 bg-slate-200 dark:bg-slate-600 h-2 rounded-full overflow-hidden">
+            <div class="bg-indigo-600 dark:bg-indigo-400 h-full rounded-full transition-all duration-500" id="globalProgressFill" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="max-w-7xl mx-auto px-4 mt-6 w-full">
+    <div class="bg-white dark:bg-slate-800 p-2 rounded-2xl border border-slate-200/80 dark:border-slate-700 flex flex-wrap gap-2 shadow-sm transition-colors">
+      <button class="tab-btn active flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-200 bg-indigo-600 text-white shadow-md shadow-indigo-100 dark:shadow-none" data-tab="theory">
+        <i class="fas fa-book-open"></i> Lý thuyết
+      </button>
+      <button class="tab-btn flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200" data-tab="dialogue">
+        <i class="fas fa-comments"></i> Hội thoại
+      </button>
+      <button class="tab-btn flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200" data-tab="quiz">
+        <i class="fas fa-tasks"></i> Trắc nghiệm <span class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-[10px] px-2 py-0.5 rounded-md font-bold border border-slate-200 dark:border-slate-600">30 CÂU</span>
+      </button>
+      <button class="tab-btn flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200" data-tab="flashcard">
+        <i class="fas fa-clone"></i> Flashcards
+      </button>
+      <button class="tab-btn flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200" data-tab="dashboard">
+        <i class="fas fa-chart-pie"></i> Tiến độ
+      </button>
+    </div>
+  </nav>
+
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6">
+    <section id="theoryPanel" class="tab-panel block">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="lg:col-span-1">
+          <div class="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm sticky top-28 transition-colors space-y-4">
+            <div>
+              <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-400 mb-2 px-2">Tìm kiếm</h3>
+              <div class="relative px-2">
+                <input type="text" id="grammarSearch" placeholder="Nhập ngữ pháp..." class="w-full pl-8 pr-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-indigo-500">
+                <i class="fas fa-search absolute left-5 top-3 text-slate-400 text-xs"></i>
+              </div>
+            </div>
+            <hr class="border-slate-100 dark:border-slate-700">
+            <div>
+              <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-400 mb-2 px-2">Bài học (1 - 25)</h3>
+              <div class="lesson-sidebar-grid max-h-[380px] overflow-y-auto pr-1 custom-scrollbar" id="theorySidebar"></div>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-3 space-y-6" id="theoryContent"></div>
+      </div>
+    </section>
+
+    <section id="dialoguePanel" class="tab-panel hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="lg:col-span-1">
+          <div class="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm sticky top-28 transition-colors">
+            <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-400 mb-3 px-2">Hội thoại mẫu</h3>
+            <div class="lesson-sidebar-grid max-h-[380px] overflow-y-auto pr-1 custom-scrollbar" id="dialogueSidebar"></div>
+          </div>
+        </div>
+        <div class="lg:col-span-3 space-y-6" id="dialogueContent"></div>
+      </div>
+    </section>
+
+    <section id="quizPanel" class="tab-panel hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="lg:col-span-1">
+          <div class="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm sticky top-28 transition-colors">
+            <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-400 mb-3 px-2">Đề trắc nghiệm</h3>
+            <div class="lesson-sidebar-grid max-h-[380px] overflow-y-auto pr-1 custom-scrollbar" id="quizSidebar"></div>
+          </div>
+        </div>
+        <div class="lg:col-span-3 bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm transition-colors">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 dark:border-slate-700 pb-4 mb-6 gap-3">
+            <div>
+              <h2 class="text-xl font-extrabold text-slate-800 dark:text-slate-100" id="quizTitle">Trắc nghiệm N5</h2>
+              <p class="text-xs text-slate-400 font-semibold mt-1">10 câu Chọn trợ từ - 10 câu Chọn từ vựng - 10 câu Chia thể & Ngữ pháp</p>
+            </div>
+            <span class="bg-indigo-50 dark:bg-indigo-950 border border-indigo-100 dark:border-indigo-900 text-indigo-700 dark:text-indigo-400 font-bold px-4 py-2 rounded-2xl text-sm" id="quizScoreSpan">
+              Chưa làm bài này
+            </span>
+          </div>
+          <div class="space-y-6" id="quizQuestions"></div>
+          <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700 flex flex-wrap gap-3">
+            <button id="submitQuizBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3.5 rounded-2xl transition-all duration-200 shadow-md shadow-indigo-100 dark:shadow-none text-sm flex items-center gap-2">
+              <i class="fas fa-paper-plane"></i> Nộp bài (30 câu)
+            </button>
+            <button id="resetQuizBtn" class="border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold px-6 py-3.5 rounded-2xl transition-all duration-200 text-sm flex items-center gap-2">
+              <i class="fas fa-undo"></i> Làm lại
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="flashcardPanel" class="tab-panel hidden">
+      <div class="flex flex-col items-center gap-6">
+        <div class="text-center">
+          <h2 class="text-2xl font-extrabold text-slate-800 dark:text-slate-100">Hệ Thống Flashcards N5</h2>
+          <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Lật thẻ để ghi nhớ cấu trúc và nghe phát âm trực quan</p>
+        </div>
+        <div class="flex items-center gap-3 bg-white dark:bg-slate-800 px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition-colors">
+          <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Xem bài:</span>
+          <select id="flashcardFilter" class="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-xs font-bold p-1.5 focus:outline-none text-indigo-600 dark:text-indigo-400">
+            <option value="all">Tất cả 25 bài</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full" id="flashcardGrid"></div>
+      </div>
+    </section>
+
+    <section id="dashboardPanel" class="tab-panel hidden">
+      <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-8 transition-colors">
+        <div class="border-b border-slate-100 dark:border-slate-700 pb-4">
+          <h2 class="text-2xl font-extrabold text-slate-800 dark:text-slate-100">Bảng Tổng Hợp Tiến Độ</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="dashboardStats"></div>
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <i class="fas fa-tasks text-indigo-600 dark:text-indigo-400"></i> Trạng thái trắc nghiệm
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar" id="dashboardQuizGrid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-6 text-center mt-12 text-xs text-slate-400 dark:text-slate-500 font-semibold tracking-wider transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      SONKURO - Hệ Thống Ôn Luyện Ngữ Pháp Tiếng Nhật Chuẩn N5
+    </div>
+  </footer>
+
+  <script>
+    // --- KHỞI TẠO CÁC ĐỐI TƯỢNG CHỨA DỮ LIỆU TOÀN CỤC ---
+    const lessonGrammar = {};
+    const lessonDialogues = {};
+    const qData = {};
+
+    // --- TỪ ĐIỂN PHIÊN ÂM FURIGANA CHUẨN HOÁ ---
+    const furiganaDict = {
+      "自動車": "じどうしゃ", "飛行機": "ひこうき", "新幹線": "しんかんせん", "自転車": "じてんしゃ", "地下鉄": "ちかてつ",
+      "美術館": "びじゅつかん", "郵便局": "ゆうびんきょく", "会社員": "かいしゃいん", "銀行員": "ぎんこういん", "韓国人": "かんこくじん", 
+      "中国人": "ちゅうごくじん", "日本人": "にほんじん", "留学生": "りゅうがくせい", "図書館": "としょかん", "富士山": "ふじさん",
+      "食べ物": "たべもの", "飲み物": "のみもの", "買い物": "かいもの", "誕生日": "たんじょうび", "お父さん": "おとうさん",
+      "お母さん": "おかあさん", "会議室": "かいぎしつ", "喫茶店": "きっさてん", "兄弟": "きょうだい", "先生": "せんせい",
+      "学生": "がくせい", "教師": "きょうし", "医者": "いしゃ", "辞書": "じしょ", "雑誌": "ざっし", "新聞": "しんぶん",
+      "手帳": "てちょう", "名刺": "めいし", "鉛筆": "えんぴつ", "時計": "とけい", "教室": "きょうしつ", "食堂": "しょくどう",
+      "階段": "かいだん", "電話": "でんわ", "今日": "きょう", "明日": "あした", "昨日": "きのう", "毎日": "まいにち",
+      "午前": "ごぜん", "午後": "ごご", "毎朝": "まいあさ", "毎晩": "まいばん", "休み": "やすみ", "勉強": "べんきょう",
+      "仕事": "しごと", "学校": "がっこう", "電車": "でんしゃ", "友達": "ともだち", "家族": "かぞく", "先週": "せんしゅう",
+      "今週": "こんしゅう", "来週": "らいしゅう", "先月": "せんげつ", "今月": "こんげつ", "来月": "らいげつ", "去年": "きょねん",
+      "今年": "ことし", "来年": "らいねん", "写真": "しゃしん", "手紙": "てがみ", "果物": "くだもの", "料理": "りょうり",
+      "音楽": "おんがく", "漢字": "かんじ", "お金": "おかね", "時間": "じかん", "用事": "ようじ", "約束": "やくそく",
+      "公園": "こうえん", "本屋": "ほんや", "映画": "えいが", "結婚": "けっこん", "趣味": "しゅみ", "病気": "びょうき",
+      "親切": "しんせつ", "元気": "げんき", "便利": "べんり", "息子": "むすこ", "旅行": "りょこう", "私": "わたし",
+      "本": "ほん", "傘": "かさ", "車": "くるま", "机": "つくえ", "国": "くに", "靴": "くつ", "鞄": "かばん", "朝": "あさ",
+      "昼": "ひる", "晩": "ばん", "夜": "よる", "駅": "えき", "船": "ふね", "彼": "かれ", "肉": "にく", "魚": "さかな",
+      "手": "て", "箸": "はし", "花": "はな", "父": "ちち", "母": "はは", "山": "やま", "町": "まち", "所": "ところ",
+      "男": "おとこ", "女": "おんな", "子": "こ", "犬": "いぬ", "猫": "ねこ", "木": "き", "物": "もの", "箱": "はこ",
+      "棚": "たな", "窓": "まど", "上": "うえ", "下": "した", "前": "まえ", "右": "みぎ", "左": "ひだり", "中": "なか",
+      "外": "そと", "隣": "となり", "兄": "あに", "姉": "あね", "弟": "おとうと", "妹": "いもうと", "娘": "むすめ",
+      "雨": "あめ", "雪": "ゆき", "風": "かぜ", "海": "うみ", "川": "かわ", "歌": "うた",
+      "行きます": "いきます", "来ます": "きます", "帰ります": "かえります", "食べます": "たべます", "飲みます": "のみます",
+      "吸います": "すいます", "見ます": "みます", "聞きます": "ききます", "読みます": "よみます", "書きます": "かきます",
+      "買います": "かいます", "撮ります": "とります", "会います": "あいます", "切ります": "きります", "送ります": "おくります",
+      "貸します": "かします", "借ります": "かります", "教えます": "おしえます", "習います": "ならいます", "分かります": "わかります",
+      "あります": "あります", "起きます": "おきます", "寝ます": "ねます", "働きます": "はたらきます", "休みます": "やすみます",
+      "終わります": "おわります", "歌います": "うたいます", "弾きます": "ひきます", "泳ぎます": "およぎます", "走ります": "はしります",
+      "歩きます": "あるきます", "待ちます": "まちます", "持ちます": "もちます", "呼びます": "よびます", "急ぎます": "いそぎます",
+      "開けます": "あけます", "閉めます": "しめます", "知ります": "しります", "住みます": "すみます", "作ります": "つくります",
+      "売ります": "うります", "降ります": "ふります", "乗ります": "のります", "入ります": "はいります", "出ます": "でます",
+      "押します": "おします", "高い": "たかい", "安い": "やすい", "新しい": "あたらしい", "古い": "ふるい", "良い": "よい",
+      "悪い": "わるい", "暑い": "あつい", "熱い": "あつい", "寒い": "さむい", "冷たい": "つめたい", "難しい": "むずかしい",
+      "易しい": "やさしい", "大きい": "おおきい", "小さい": "ちいさい", "面白い": "おもしろい", "美味しい": "おいしい",
+      "忙しい": "いそがしい", "楽しい": "たのしい", "白い": "しろい", "黒い": "くろい", "赤い": "あかい", "青い": "あおい",
+      // Bổ sung các từ còn thiếu để tránh đè hoặc sót Furigana
+      "初めまして": "はじめまして", "ベトナム人": "ベトナムじん", "アメリカ人": "アメリカじん", "フランス人": "フランスじん", 
+      "インド人": "インドじん", "タイ人": "タイじん", "言葉": "ことば", "意味": "いみ", "意見": "いけん", 
+      "準備": "じゅんび", "約束": "やくそく", "用事": "ようじ", "大使館": "たいしかん", "世界": "せかい", 
+      "歌舞伎": "かぶき", "絶対": "ぜったい", "全部": "ぜんぶ", "自分": "じぶん", "交差点": "こうさてん", 
+      "角": "かど", "橋": "はし", "道": "みち", "お腹": "おなか", "痛い": "いたい", "顔": "かお", "洗う": "あらう"
+    };
+
+    // Fix lỗi đè Furigana bằng cách gộp RegEx để quét 1 lần từ dài đến ngắn
+    function addFurigana(text) {
+      if (!text) return "";
+      const sortedKeys = Object.keys(furiganaDict).sort((a, b) => b.length - a.length);
+      const escapedKeys = sortedKeys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+      const regex = new RegExp("(" + escapedKeys.join("|") + ")", "g");
+      return text.replace(regex, match => `<ruby>${match}<rt>${furiganaDict[match]}</rt></ruby>`);
+    }
+
+    // --- TÍNH NĂNG PHÁT ÂM NÂNG CAO TTS ---
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        let cleanText = text.replace(/^[A-Za-z]:\s*/, '').replace(/<rt>.*?<\/rt>/g, '').replace(/<[^>]*>/g, '');
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'ja-JP';
+        utterance.rate = 0.85; 
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert("Trình duyệt của bạn không hỗ trợ phát âm tự động Speech Synthesis.");
+      }
+    }
+
+    // --- QUẢN LÝ GIAO DIỆN DARK MODE ---
+    document.getElementById('darkToggle').addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      const isDark = document.documentElement.classList.contains('dark');
+      localStorage.setItem('sonkuro_theme', isDark ? 'dark' : 'light');
+    });
+    if (localStorage.getItem('sonkuro_theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+
+    // --- TÌM KIẾM NGỮ PHÁP BIỂU DIỄN THỜI GIAN THỰC ---
+    document.getElementById('grammarSearch').addEventListener('input', () => {
+      renderTheoryContent();
+    });
+
+    let progress = { viewedLessons: {}, dialoguesRead: {}, quizResults: {}, flashcardsRemembered: [] };
+
+    function loadProgress() {
+      try {
+        const saved = localStorage.getItem('sonkuro_n5_deep_1_25_v2');
+        if (saved) progress = JSON.parse(saved);
+      } catch (e) { console.error(e); }
+    }
+
+    function saveProgress() {
+      try {
+        localStorage.setItem('sonkuro_n5_deep_1_25_v2', JSON.stringify(progress));
+        updateGlobalProgress();
+      } catch (e) { console.error(e); }
+    }
+
+    function updateGlobalProgress() {
+      const totalTasks = 25 * 3; 
+      let completed = 0;
+      for (let i = 1; i <= 25; i++) {
+        if (progress.viewedLessons[i]) completed++;
+        if (progress.dialoguesRead[i]) completed++;
+        if (progress.quizResults[i] && progress.quizResults[i].done) completed++;
+      }
+      const pct = Math.round((completed / totalTasks) * 100) || 0;
+      document.getElementById('globalProgressTxt').innerText = `${pct}%`;
+      document.getElementById('globalProgressFill').style.width = `${pct}%`;
+    }
+
+    let confirmCallback = null;
+    function showCustomConfirm(title, msg) {
+      return new Promise(resolve => {
+        const modal = document.getElementById('customConfirmModal');
+        document.getElementById('confirmTitle').innerText = title;
+        document.getElementById('confirmMessage').innerText = msg;
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+          modal.classList.add('opacity-100');
+          document.getElementById('confirmBox').classList.remove('scale-95');
+        }, 10);
+        confirmCallback = resolve;
+      });
+    }
+
+    function hideCustomConfirm(value) {
+      const modal = document.getElementById('customConfirmModal');
+      modal.classList.remove('opacity-100');
+      document.getElementById('confirmBox').classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        if (confirmCallback) { confirmCallback(value); confirmCallback = null; }
+      }, 200);
+    }
+    document.getElementById('confirmOkBtn').addEventListener('click', () => hideCustomConfirm(true));
+    document.getElementById('confirmCancelBtn').addEventListener('click', () => hideCustomConfirm(false));
+
+    let currentLesson = { theory: 1, dialogue: 1, quiz: 1 };
+    
+    function renderSidebar(type, containerId, renderContentFn) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      let html = '';
+      for (let i = 1; i <= 25; i++) {
+        const isActive = currentLesson[type] === i;
+        let isCompleted = false;
+        let statusHtml = '';
+        if (type === 'theory') {
+          isCompleted = progress.viewedLessons[i];
+          statusHtml = isCompleted ? '<span class="text-[9px] text-emerald-500 font-black">● Xong</span>' : '<span class="text-[9px] text-slate-300 dark:text-slate-600 font-black">○ Chưa</span>';
+        } else if (type === 'dialogue') {
+          isCompleted = progress.dialoguesRead[i];
+          statusHtml = isCompleted ? '<span class="text-[9px] text-emerald-500 font-black">● Đọc</span>' : '<span class="text-[9px] text-slate-300 dark:text-slate-600 font-black">○ Chưa</span>';
+        } else if (type === 'quiz') {
+          isCompleted = progress.quizResults[i]?.done;
+          statusHtml = isCompleted ? `<span class="text-[9px] text-emerald-500 font-black">${progress.quizResults[i].score}/30đ</span>` : '<span class="text-[9px] text-slate-300 dark:text-slate-600 font-black">Chưa thi</span>';
+        }
+
+        html += `
+          <button class="lesson-btn text-center py-2.5 rounded-xl font-bold text-xs transition-all duration-200 border ${
+            isActive ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700'
+          }" data-${type}-lesson="${i}">
+            <span class="block">Bài ${i}</span>
+            ${statusHtml}
+          </button>
+        `;
+      }
+      container.innerHTML = html;
+      container.querySelectorAll(`[data-${type}-lesson]`).forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentLesson[type] = parseInt(btn.getAttribute(`data-${type}-lesson`));
+          renderSidebar(type, containerId, renderContentFn);
+          renderContentFn();
+        });
+      });
+    }
+
+    function renderTheoryContent() {
+      const container = document.getElementById('theoryContent');
+      const searchKeyword = document.getElementById('grammarSearch').value.toLowerCase().trim();
+      const grammar = lessonGrammar[currentLesson.theory] || [];
+      
+      let html = `
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm transition-colors">
+          <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-4 mb-6">
+            <div>
+              <h2 class="text-2xl font-extrabold text-slate-800 dark:text-slate-100">Bài ${currentLesson.theory} - Lý thuyết</h2>
+            </div>
+            <span class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 px-3 py-1.5 rounded-full font-bold">${grammar.length} Cấu trúc</span>
+          </div>
+          <div class="space-y-6">
+      `;
+
+      let hasData = false;
+      grammar.forEach((g, idx) => {
+        if (searchKeyword && !g.pattern.toLowerCase().includes(searchKeyword) && !g.meaning.toLowerCase().includes(searchKeyword)) {
+          return;
+        }
+        hasData = true;
+        let exHtml = '';
+        g.examples.forEach(ex => {
+          exHtml += `
+            <div class="bg-indigo-50/40 dark:bg-indigo-950/20 p-4 rounded-2xl border-l-4 border-indigo-500 font-medium text-slate-700 dark:text-slate-300 text-sm md:text-base relative group">
+              <div class="flex justify-between items-start gap-4">
+                <div class="font-bold text-slate-800 dark:text-slate-200">${addFurigana(ex.jp)}</div>
+                <button onclick="speakText('${ex.jp.replace(/'/g, "\\'")}')" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 p-1 rounded-lg bg-indigo-50 dark:bg-slate-700 shrink-0" title="Nghe phát âm">
+                  <i class="fas fa-volume-up"></i>
+                </button>
+              </div>
+              <div class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-1">
+                <i class="fas fa-language text-indigo-400 text-xs"></i> ${ex.vn}
+              </div>
+            </div>
+          `;
+        });
+
+        html += `
+          <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 hover:border-indigo-200 dark:hover:border-indigo-800 transition-colors space-y-4">
+            <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-700 pb-3">
+              <span class="bg-indigo-600 text-white font-extrabold text-xs px-3 py-1.5 rounded-full">Mẫu ${idx + 1}</span>
+              <span class="font-extrabold text-slate-700 dark:text-slate-200 text-lg font-mono">${g.pattern}</span>
+            </div>
+            <div class="text-slate-600 dark:text-slate-300 font-bold text-sm bg-slate-50 dark:bg-slate-700/50 px-4 py-2.5 rounded-xl border border-slate-100 dark:border-slate-700">
+              Ý nghĩa: <span class="text-indigo-600 dark:text-indigo-400">${g.meaning}</span>
+            </div>
+            <div class="space-y-3">
+              <h4 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Ví dụ minh họa (Đủ 5 câu chuẩn)</h4>
+              <div class="grid grid-cols-1 gap-2">${exHtml}</div>
+            </div>
+            <div class="bg-violet-50 dark:bg-violet-950/30 text-violet-700 dark:text-violet-300 p-4 rounded-2xl text-xs font-semibold flex gap-2 border border-violet-100 dark:border-violet-900/50">
+              <i class="fas fa-info-circle mt-0.5"></i>
+              <div><strong class="block text-violet-500 dark:text-violet-400 mb-0.5">Lưu ý</strong>${g.note}</div>
+            </div>
+          </div>
+        `;
+      });
+
+      if(!hasData) {
+        html += `<div class="text-center py-12 text-slate-400">Không tìm thấy cấu trúc tương ứng với từ khóa.</div>`;
+      }
+
+      container.innerHTML = html + `</div></div>`;
+      if (!progress.viewedLessons[currentLesson.theory]) {
+        progress.viewedLessons[currentLesson.theory] = true;
+        saveProgress();
+        renderSidebar('theory', 'theorySidebar', renderTheoryContent);
+      }
+    }
+
+    function renderDialogueContent() {
+      const container = document.getElementById('dialogueContent');
+      let dialogues = lessonDialogues[currentLesson.dialogue] || [];
+      
+      let html = `
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-8 transition-colors">
+          <div class="border-b border-slate-100 dark:border-slate-700 pb-4">
+            <h2 class="text-2xl font-extrabold text-slate-800 dark:text-slate-100">Hội thoại mẫu: Bài ${currentLesson.dialogue} (3 Mẫu Chuẩn)</h2>
+          </div>
+      `;
+
+      dialogues.forEach((d, i) => {
+        html += `
+          <div class="space-y-4 border border-slate-100 dark:border-slate-700 rounded-3xl p-5 bg-slate-50/50 dark:bg-slate-900/30">
+            <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-2">
+              <h3 class="text-sm font-extrabold text-indigo-600 dark:text-indigo-400 uppercase flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-indigo-600 dark:bg-indigo-400"></span> Mẫu hội thoại ${i+1}
+              </h3>
+              <button onclick="speakText('${d.jp.replace(/'/g, "\\'")}')" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 px-3 py-1.5 rounded-xl flex items-center gap-1" title="Nghe toàn bộ hội thoại">
+                <i class="fas fa-volume-up"></i> Nghe hội thoại
+              </button>
+            </div>
+            <div class="space-y-4">
+              <div class="flex items-start gap-3 flex-row">
+                <div class="max-w-full bg-white dark:bg-slate-800 p-4 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm space-y-2 w-full">
+                  <div class="text-slate-800 dark:text-slate-200 font-medium text-base leading-relaxed">${addFurigana(d.jp)}</div>
+                  <div class="text-xs text-slate-400 dark:text-slate-500 font-bold border-t border-slate-50 dark:border-slate-700/50 pt-2 flex items-center gap-1.5">
+                    <i class="fas fa-language text-sm"></i> Dịch nghĩa: ${d.vn}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html + `</div>`;
+      if (!progress.dialoguesRead[currentLesson.dialogue]) {
+        progress.dialoguesRead[currentLesson.dialogue] = true;
+        saveProgress();
+        renderSidebar('dialogue', 'dialogueSidebar', renderDialogueContent);
+      }
+    }
+
+    // Fix lỗi trắc nghiệm nhảy lộn xộn bằng cách lưu vào cache
+    let cachedQuizData = {};
+    function parseQuizData(lesson) {
+        if (cachedQuizData[lesson]) return cachedQuizData[lesson];
+        if (!qData[lesson]) return [];
+        let questions = [];
+        const types = ['p', 'v', 'g'];
+        types.forEach((type) => {
+            if(qData[lesson][type]) {
+                qData[lesson][type].forEach((qStr) => {
+                    const [q, a, wrongStr] = qStr.split('|');
+                    let opts = wrongStr.split(',').concat([a]);
+                    opts.sort(() => Math.random() - 0.5);
+                    questions.push({ text: q, correct: a, opts: opts });
+                });
+            }
+        });
+        cachedQuizData[lesson] = questions;
+        return questions;
+    }
+
+    function renderQuizContent() {
+      const lesson = currentLesson.quiz;
+      document.getElementById('quizTitle').innerText = `Trắc nghiệm: Bài ${lesson}`;
+      const questions = parseQuizData(lesson);
+      
+      if (!quizUserAnswers[lesson]) quizUserAnswers[lesson] = new Array(30).fill(null);
+      const answers = quizUserAnswers[lesson];
+      
+      const result = progress.quizResults[lesson];
+      const isDone = result && result.done;
+
+      const scoreSpan = document.getElementById('quizScoreSpan');
+      if (isDone) {
+        scoreSpan.className = "bg-emerald-50 dark:bg-emerald-950 border border-emerald-100 dark:border-emerald-900 text-emerald-700 dark:text-emerald-400 font-extrabold px-4 py-2 rounded-2xl text-sm";
+        scoreSpan.innerHTML = `<i class="fas fa-trophy"></i> Điểm: ${result.score}/30 (${Math.round(result.score/30*100)}%)`;
+      } else {
+        scoreSpan.className = "bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-400 font-bold px-4 py-2 rounded-2xl text-sm";
+        scoreSpan.innerHTML = `<i class="far fa-star"></i> Chưa hoàn thành`;
+      }
+
+      let html = '';
+      questions.forEach((q, idx) => {
+        if (idx === 0) html += `<div class="bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900 p-4 rounded-2xl mb-4"><span class="text-xs font-black uppercase text-indigo-600 dark:text-indigo-400">Phần I: Chọn Trợ Từ (1-10)</span></div>`;
+        if (idx === 10) html += `<div class="bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900 p-4 rounded-2xl my-4"><span class="text-xs font-black uppercase text-indigo-600 dark:text-indigo-400">Phần II: Chọn Từ Vựng (11-20)</span></div>`;
+        if (idx === 20) html += `<div class="bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900 p-4 rounded-2xl my-4"><span class="text-xs font-black uppercase text-indigo-600 dark:text-indigo-400">Phần III: Ngữ Pháp & Chia Thể (21-30)</span></div>`;
+
+        html += `
+          <div class="p-5 rounded-2xl border ${isDone ? 'border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/20' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800'} space-y-3">
+            <div class="flex items-start gap-4">
+              <span class="w-7 h-7 shrink-0 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 font-bold text-xs flex items-center justify-center">${idx + 1}</span>
+              <p class="font-bold text-base text-slate-800 dark:text-slate-200 pt-0.5">${addFurigana(q.text)}</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pl-11">
+        `;
+
+        q.opts.forEach(opt => {
+          const isSel = answers[idx] === opt;
+          let cls = "";
+          if (isDone) {
+            if (opt === q.correct) cls = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300";
+            else if (isSel) cls = "border-red-400 bg-red-50 dark:bg-red-950/50 text-red-800 dark:text-red-300";
+            else cls = "border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-300 dark:text-slate-600 cursor-not-allowed";
+          } else {
+            cls = isSel ? "border-indigo-600 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-400 shadow-sm" : "border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500 text-slate-600 dark:text-slate-300 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700";
+          }
+          html += `
+            <label class="border-2 rounded-xl p-3 text-center text-sm font-extrabold transition-all flex items-center justify-center ${cls}">
+              <input type="radio" name="q_${lesson}_${idx}" value="${opt}" class="hidden" ${isSel ? 'checked' : ''} ${isDone ? 'disabled' : ''}>
+              <span>${opt}</span>
+            </label>
+          `;
+        });
+        html += `</div>`;
+
+        if (isDone) {
+          const isCor = answers[idx] === q.correct;
+          html += `
+            <div class="mt-3 ml-11 p-3 rounded-xl text-xs font-semibold flex gap-2 ${isCor ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border-emerald-100 dark:border-emerald-900' : 'bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 border-red-100 dark:border-red-900'} border">
+              <i class="fas ${isCor ? 'fa-check-circle' : 'fa-times-circle'} mt-0.5"></i>
+              <div><strong>${isCor ? 'ĐÚNG' : 'SAI'}</strong> - Đáp án chuẩn xác: ${q.correct}</div>
+            </div>
+          `;
+        }
+        html += `</div>`;
+      });
+
+      document.getElementById('quizQuestions').innerHTML = html;
+
+      if (!isDone) {
+        document.querySelectorAll('#quizQuestions input[type="radio"]').forEach(rad => {
+          rad.addEventListener('change', e => {
+            const parts = e.target.name.split('_');
+            const qIdx = parseInt(parts[2]);
+            quizUserAnswers[lesson][qIdx] = e.target.value;
+            renderQuizContent();
+          });
+        });
+      }
+    }
+
+    document.getElementById('submitQuizBtn').addEventListener('click', async () => {
+      const lesson = currentLesson.quiz;
+      if (progress.quizResults[lesson]?.done) return;
+      if (!quizUserAnswers[lesson]) quizUserAnswers[lesson] = new Array(30).fill(null);
+      const missed = quizUserAnswers[lesson].filter(a => a === null).length;
+      if (missed > 0) {
+        const ok = await showCustomConfirm("Chưa hoàn thành", `Còn ${missed} câu chưa chọn. Vẫn muốn nộp bài?`);
+        if (!ok) return;
+      }
+      let score = 0;
+      const questions = parseQuizData(lesson);
+      questions.forEach((q, i) => { if (quizUserAnswers[lesson][i] === q.correct) score++; });
+      progress.quizResults[lesson] = { done: true, score };
+      saveProgress();
+      renderSidebar('quiz', 'quizSidebar', renderQuizContent);
+      renderQuizContent();
+      document.getElementById('quizTitle').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('resetQuizBtn').addEventListener('click', async () => {
+      const ok = await showCustomConfirm("Làm lại", "Xóa đáp án và làm lại đề này?");
+      if (!ok) return;
+      const lesson = currentLesson.quiz;
+      quizUserAnswers[lesson] = new Array(30).fill(null);
+      delete progress.quizResults[lesson];
+      delete cachedQuizData[lesson]; // Xóa cache để tráo lại đề
+      saveProgress();
+      renderSidebar('quiz', 'quizSidebar', renderQuizContent);
+      renderQuizContent();
+    });
+
+    function getAllFlashcards() {
+      let cards = [];
+      for (let i = 1; i <= 25; i++) {
+        const gList = lessonGrammar[i] || [];
+        gList.forEach((g, idx) => {
+          cards.push({ lesson: i, idxInLesson: idx, pattern: g.pattern, meaning: g.meaning, examples: g.examples });
+        });
+      }
+      return cards;
+    }
+
+    function renderFlashcard() {
+      const filter = document.getElementById('flashcardFilter').value;
+      const cards = getAllFlashcards().filter(c => filter === 'all' || c.lesson === parseInt(filter));
+      let html = '';
+      
+      cards.forEach((c) => {
+        const globalIdx = `${c.lesson}_${c.idxInLesson}`;
+        const isMem = flashcardSet.has(globalIdx);
+        html += `
+          <div class="flashcard h-[320px] relative cursor-pointer" data-fcard-idx="${globalIdx}">
+            <div class="flashcard-inner w-full h-full duration-500 relative">
+              <div class="flashcard-front bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm flex flex-col justify-between hover:border-indigo-400 dark:hover:border-indigo-600 transition-colors">
+                <div class="flex justify-between">
+                  <span class="bg-indigo-50 dark:bg-indigo-950 border text-indigo-700 dark:text-indigo-400 font-extrabold text-[10px] px-3 py-1 rounded-full">Bài ${c.lesson}</span>
+                  ${isMem ? '<span class="text-xs bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full font-bold border border-emerald-100 dark:border-emerald-900"><i class="fas fa-check"></i> Thuộc</span>' : ''}
+                </div>
+                <div class="my-auto text-center space-y-3">
+                  <p class="text-xs font-bold text-slate-400 uppercase">Ý nghĩa mẫu câu</p>
+                  <p class="text-base font-black text-slate-800 dark:text-slate-100">${c.meaning}</p>
+                </div>
+                <div class="text-center text-xs text-slate-400 dark:text-slate-500 font-bold border-t border-slate-100 dark:border-slate-700 pt-3"><i class="fas fa-sync"></i> Bấm lật thẻ</div>
+              </div>
+              <div class="flashcard-back bg-slate-900 border-slate-800 text-white rounded-3xl p-6 shadow-md flex flex-col justify-between">
+                <div class="flex justify-between border-b border-slate-800 pb-3">
+                  <span class="text-xs text-indigo-400 font-bold">CẤU TRÚC</span>
+                  <span class="font-bold text-xs font-mono text-indigo-300">${c.pattern}</span>
+                </div>
+                <div class="my-auto space-y-2 text-center w-full">
+                  <p class="text-[10px] font-extrabold text-slate-500 uppercase">Ví dụ mẫu</p>
+                  <div class="text-slate-100 font-medium text-xs bg-slate-800/50 p-3 rounded-xl border border-slate-800 relative group">
+                    <div class="font-bold pr-6 text-left">${addFurigana(c.examples && c.examples[0] ? c.examples[0].jp : 'Ví dụ...')}</div>
+                    <div class="text-slate-400 mt-1 text-[11px] font-normal text-left">${c.examples && c.examples[0] ? c.examples[0].vn : 'Ý nghĩa...'}</div>
+                    <button onclick="event.stopPropagation(); speakText('${(c.examples && c.examples[0] ? c.examples[0].jp : '').replace(/'/g, "\\'")}')" class="absolute right-2 top-2 text-indigo-400 hover:text-indigo-300 bg-slate-700 p-1.5 rounded-lg text-xs">
+                      <i class="fas fa-volume-up"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                  <button class="mem-btn text-xs font-extrabold px-4 py-2 rounded-xl transition-all ${isMem ? 'bg-slate-800 text-slate-400' : 'bg-emerald-600 text-white'}" data-mem="${globalIdx}">
+                    ${isMem ? 'Bỏ nhớ' : '<i class="fas fa-check"></i> Đã thuộc'}
+                  </button>
+                  <span class="text-xs text-slate-500 font-bold"><i class="fas fa-redo"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      document.getElementById('flashcardGrid').innerHTML = html;
+      
+      document.querySelectorAll('.flashcard').forEach(c => c.addEventListener('click', e => {
+        if (!e.target.closest('.mem-btn') && !e.target.closest('button')) c.classList.toggle('flipped');
+      }));
+      document.querySelectorAll('.mem-btn').forEach(btn => btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const id = btn.getAttribute('data-mem');
+        if (flashcardSet.has(id)) flashcardSet.delete(id); else flashcardSet.add(id);
+        progress.flashcardsRemembered = Array.from(flashcardSet);
+        saveProgress();
+        renderFlashcard();
+      }));
+    }
+
+    document.getElementById('flashcardFilter').addEventListener('change', renderFlashcard);
+
+    function renderDashboard() {
+      const v = Object.keys(progress.viewedLessons).length;
+      const d = Object.keys(progress.dialoguesRead).length;
+      const q = Object.keys(progress.quizResults).filter(k => progress.quizResults[k].done).length;
+      const f = flashcardSet.size;
+      const tf = getAllFlashcards().length;
+
+      document.getElementById('dashboardStats').innerHTML = `
+        <div class="bg-indigo-50/50 dark:bg-indigo-950/20 p-5 rounded-2xl border border-indigo-100 dark:border-indigo-900 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xl"><i class="fas fa-book-open"></i></div>
+          <div><div class="text-xs font-bold text-slate-400 dark:text-slate-500">Lý thuyết</div><div class="text-lg font-extrabold">${v}/25 bài</div></div>
+        </div>
+        <div class="bg-violet-50/50 dark:bg-violet-950/20 p-5 rounded-2xl border border-violet-100 dark:border-violet-900 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-violet-600 text-white flex items-center justify-center text-xl"><i class="fas fa-comments"></i></div>
+          <div><div class="text-xs font-bold text-slate-400 dark:text-slate-500">Hội thoại</div><div class="text-lg font-extrabold">${d}/25 bài</div></div>
+        </div>
+        <div class="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-2xl border border-emerald-100 dark:border-emerald-900 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xl"><i class="fas fa-tasks"></i></div>
+          <div><div class="text-xs font-bold text-slate-400 dark:text-slate-500">Trắc nghiệm</div><div class="text-lg font-extrabold">${q}/25 đề</div></div>
+        </div>
+        <div class="bg-pink-50/50 dark:bg-pink-950/20 p-5 rounded-2xl border border-pink-100 dark:border-pink-900 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-pink-600 text-white flex items-center justify-center text-xl"><i class="fas fa-clone"></i></div>
+          <div><div class="text-xs font-bold text-slate-400 dark:text-slate-500">Flashcards</div><div class="text-lg font-extrabold">${f}/${tf}</div></div>
+        </div>
+      `;
+
+      let qHtml = '';
+      for (let i = 1; i <= 25; i++) {
+        const res = progress.quizResults[i];
+        const done = res && res.done;
+        qHtml += `
+          <div class="p-4 rounded-2xl border ${done ? 'border-emerald-100 dark:border-emerald-900 bg-emerald-50/30 dark:bg-emerald-950/10' : 'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800'} flex justify-between items-center transition-colors">
+            <div>
+              <div class="font-extrabold text-sm">Bài ${i}</div>
+              <div class="text-xs text-slate-400 dark:text-slate-500 font-bold">${done ? `Điểm: ${res.score}/30 (${Math.round(res.score/30*100)}%)` : 'Chưa làm bài'}</div>
+            </div>
+            <button class="bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 font-extrabold text-xs px-3 py-1.5 rounded-xl transition-colors hover:bg-indigo-100 dark:hover:bg-indigo-900" data-goto-quiz="${i}">Làm đề</button>
+          </div>
+        `;
+      }
+      const grid = document.getElementById('dashboardQuizGrid');
+      grid.innerHTML = qHtml;
+      grid.querySelectorAll('[data-goto-quiz]').forEach(btn => btn.addEventListener('click', () => {
+        currentLesson.quiz = parseInt(btn.getAttribute('data-goto-quiz'));
+        document.querySelector('[data-tab="quiz"]').click();
+      }));
+    }
+
+    function initApp() {
+      loadProgress();
+      flashcardSet = new Set(progress.flashcardsRemembered || []);
+      
+      const select = document.getElementById('flashcardFilter');
+      for (let i = 1; i <= 25; i++) select.innerHTML += `<option value="${i}">Bài ${i}</option>`;
+
+      const panels = { theory: 'theoryPanel', dialogue: 'dialoguePanel', quiz: 'quizPanel', flashcard: 'flashcardPanel', dashboard: 'dashboardPanel' };
+      
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+        const t = btn.getAttribute('data-tab');
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'dark:shadow-none');
+          b.classList.add('text-slate-600', 'dark:text-slate-300', 'hover:bg-slate-50', 'dark:hover:bg-slate-700');
+        });
+        btn.classList.add('bg-indigo-600', 'text-white', 'shadow-md', 'dark:shadow-none');
+        btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'hover:bg-slate-50', 'dark:hover:bg-slate-700');
+        
+        Object.values(panels).forEach(p => document.getElementById(p).classList.add('hidden'));
+        document.getElementById(panels[t]).classList.remove('hidden');
+
+        if (t === 'theory') { renderSidebar('theory', 'theorySidebar', renderTheoryContent); renderTheoryContent(); }
+        if (t === 'dialogue') { renderSidebar('dialogue', 'dialogueSidebar', renderDialogueContent); renderDialogueContent(); }
+        if (t === 'quiz') { renderSidebar('quiz', 'quizSidebar', renderQuizContent); renderQuizContent(); }
+        if (t === 'flashcard') renderFlashcard();
+        if (t === 'dashboard') renderDashboard();
+      }));
+
+      renderSidebar('theory', 'theorySidebar', renderTheoryContent);
+      renderTheoryContent();
+      updateGlobalProgress();
+    }
+
+    let quizUserAnswers = {};
+
+    // =================================================================
+    // KHO DỮ LIỆU CHUYÊN SÂU BÀI 1 ĐẾN BÀI 6 (PHẦN 1)
+    // =================================================================
+
+    // --- BÀI 1 ---
+    lessonGrammar[1] = [
+      { pattern: "S は N です", meaning: "S là N", note: "Khẳng định danh tính, nghề nghiệp, quốc tịch của chủ ngữ.", examples: [
+        { jp: "私はマイクです。", vn: "Tôi là Mike." },
+        { jp: "私は学生です。", vn: "Tôi là học sinh." },
+        { jp: "山田さんは先生です。", vn: "Anh Yamada là giáo viên." },
+        { jp: "私はベトナム人です。", vn: "Tôi là người Việt Nam." },
+        { jp: "私は19歳です。", vn: "Tôi 19 tuổi." }
+      ]},
+      { pattern: "S は N じゃありません", meaning: "S không phải là N", note: "Phủ định của danh từ trong câu lịch sự.", examples: [
+        { jp: "私は医者じゃありません。", vn: "Tôi không phải là bác sĩ." },
+        { jp: "あの人は学生じゃありません。", vn: "Người kia không phải là học sinh." },
+        { jp: "リーさんは29歳じゃありません。", vn: "Chị Lee không phải 29 tuổi." },
+        { jp: "私は中国人じゃありません。", vn: "Tôi không phải người Trung Quốc." },
+        { jp: "山田さんは教師じゃありません。", vn: "Anh Yamada không phải giáo viên." }
+      ]},
+      { pattern: "S は N ですか", meaning: "S là N phải không?", note: "Mẫu câu hỏi xác nhận thông tin đúng hoặc sai.", examples: [
+        { jp: "A: あなたは学生ですか。B: はい、私は学生です。", vn: "Hỏi: Bạn là học sinh phải không? Đáp: Vâng, tôi là học sinh." },
+        { jp: "A: あの人は先生ですか。B: いいえ、先生じゃありません。", vn: "Hỏi: Người kia là giáo viên phải không? Đáp: Không, không phải giáo viên." },
+        { jp: "A: リーさんは中国人ですか。B: はい、そうです。", vn: "Hỏi: Chị Lee là người Trung Quốc phải không? Đáp: Vâng, đúng vậy." },
+        { jp: "A: 山田さんは33歳ですか。B: いいえ、35歳です。", vn: "Hỏi: Anh Yamada 33 tuổi phải không? Đáp: Không, anh ấy 35 tuổi." },
+        { jp: "A: あの人は医者ですか。B: はい、医者です。", vn: "Hỏi: Người kia là bác sĩ phải không? Đáp: Vâng, là bác sĩ." }
+      ]},
+      { pattern: "N1 の N2", meaning: "N2 của N1 / N2 thuộc N1", note: "Nối hai danh từ, chỉ sự sở hữu hoặc cơ quan trực thuộc.", examples: [
+        { jp: "私はIMCの社員です。", vn: "Tôi là nhân viên của IMC." },
+        { jp: "ミーさんはABSセンターの学生です。", vn: "My là học sinh trung tâm ABS." },
+        { jp: "山田さんはYamahaの社員です。", vn: "Anh Yamada là nhân viên của Yamaha." },
+        { jp: "キムさんはSamsungの社員です。", vn: "Anh Kim là nhân viên công ty Samsung." },
+        { jp: "私は桜大学の学生です。", vn: "Tôi là sinh viên đại học Sakura." }
+      ]},
+      { pattern: "S も N です", meaning: "S cũng là N", note: "Trợ từ も thay thế cho は khi thông tin đồng nhất với vế trước.", examples: [
+        { jp: "私も学生です。", vn: "Tôi cũng là học sinh." },
+        { jp: "山田さんも会社員です。", vn: "Anh Yamada cũng là nhân viên công ty." },
+        { jp: "あの人も日本人です。", vn: "Người kia cũng là người Nhật." },
+        { jp: "リーさんも28歳です。", vn: "Chị Lee cũng 28 tuổi." },
+        { jp: "私もベトナム人です。", vn: "Tôi cũng là người Việt Nam." }
+      ]}
+    ];
+
+    lessonDialogues[1] = [
+      { jp: "A: 初めまして。私はマイクです。ベトナム人です。どうぞよろしく。", vn: "A: Rất hân hạnh được gặp bạn. Tôi là Mike. Tôi là người Việt Nam. Rất mong được giúp đỡ." },
+      { jp: "B: 初めまして。山田です。マイクさんは学生ですか。", vn: "B: Rất hân hạnh. Tôi là Yamada. Anh Mike là học sinh phải không?" },
+      { jp: "A: いいえ、私は学生じゃありません。IMCの会社員です。", vn: "A: Không, tôi không phải là học sinh. Tôi là nhân viên công ty IMC." }
+    ];
+
+    qData[1] = {
+      p: ["私___マイクです。|は|が,を,に", "私___学生です。|も|を,が,の", "山田さん___先生です。|は|で,を,に", "IMC___社員です。|の|が,は,と", "あなた___学生ですか。|は|が,の,も", "私___ベトナム人です。|は|に,で,を", "桜大学___学生です。|の|が,に,へ", "あの人___木村さんです。|は|が,の,も", "リーさん___28歳です。|は|が,で,を", "あの人___先生ですか。|も|の,を,に"],
+      v: ["私はベトナム___です。|人|語,歳,さん", "あの人は___ですか。|誰|何,どこ,いつ", "山田さんは33___です。|歳|人,年,番", "私は___です。IMCで働きます。|会社員|医者,学生,先生", "病院にいます。私は___です。|医者|教師,学生,銀行員", "あの人は佐藤___です。|さん|人,歳,先生", "初めまして。___はマイクです。|私|あなた,あの人,誰", "学校で勉強します。私は___です。|学生|医者,銀行員,会社員", "教えます。私は___です。|教師|学生,医者,銀行員", "お金を数えます。私は___です。|銀行員|教師,医者,学生"],
+      g: ["私は医者___。|じゃありません|です,でした,じゃありませんでした", "あの人は先生___。|ですか|です,じゃありませんか,でしたか", "私は学生___。大学で勉強します。|です|じゃありません,でした,じゃありませんでした", "サントスさんはブラジル人___。|です|じゃありません,でした,じゃありませんでした", "いいえ、学生___。|じゃありません|です,ですか,でした", "はい、会社員___。|です|じゃありません,でした,じゃありませんでした", "リーさんは中国人___。|ですか|です,じゃありませんか,でしたか", "私も学生___。|です|じゃありません,でした,じゃありませんでした", "IMCの社員___。|です|じゃありません,でした,じゃありませんでした", "あの人は誰___。|ですか|です,じゃありませんか,でしたか"]
+    };
+
+    // --- BÀI 2 ---
+    lessonGrammar[2] = [
+      { pattern: "これ/それ/あれ は N です", meaning: "Cái này/đó/kia là N", note: "Đại từ chỉ định đồ vật. これ gần người nói, それ gần người nghe, あれ xa cả hai.", examples: [
+        { jp: "これは本です。", vn: "Đây là quyển sách." },
+        { jp: "それは時計です。", vn: "Đó là cái đồng hồ." },
+        { jp: "あれは車です。", vn: "Kia là chiếc xe hơi." },
+        { jp: "これは辞書です。", vn: "Đây là quyển từ điển." },
+        { jp: "それは手帳です。", vn: "Đó là cuốn sổ tay." }
+      ]},
+      { pattern: "これ は なん ですか", meaning: "Cái này là cái gì?", note: "Dùng để hỏi nội dung hoặc tên đồ vật.", examples: [
+        { jp: "A: これは何ですか。B: それは本です。", vn: "Hỏi: Đây là cái gì? Đáp: Đó là quyển sách." },
+        { jp: "A: それは何ですか。B: これは名刺です。", vn: "Hỏi: Đó là cái gì? Đáp: Đây là danh thiếp." },
+        { jp: "A: あれは何ですか。B: あれは車です。", vn: "Hỏi: Kia là cái gì? Đáp: Kia là xe hơi." },
+        { jp: "A: これは何の雑誌ですか。B: 自動車の雑誌です。", vn: "Hỏi: Đây là tạp chí về cái gì? Đáp: Tạp chí về ô tô." },
+        { jp: "A: それは何の本ですか。B: 日本語の本です。", vn: "Hỏi: Đó là sách gì? Đáp: Sách tiếng Nhật." }
+      ]},
+      { pattern: "N1 ですか、N2 ですか", meaning: "Là N1 hay là N2?", note: "Câu hỏi chọn lựa, người nghe chọn một trong hai phương án.", examples: [
+        { jp: "A: これは本ですか、ノートですか。B: ノートです。", vn: "Hỏi: Đây là sách hay vở? Đáp: Là vở." },
+        { jp: "A: それは辞書ですか、雑誌ですか。B: 辞書です。", vn: "Hỏi: Đó là từ điển hay tạp chí? Đáp: Là từ điển." },
+        { jp: "A: あれはボールペンですか、鉛筆ですか。B: 鉛筆です。", vn: "Hỏi: Kia là bút bi hay bút chì? Đáp: Là bút chì." },
+        { jp: "A: これは『9』ですか、『7』ですか。B: 『9』です。", vn: "Hỏi: Đây là số 9 hay số 7? Đáp: Số 9." },
+        { jp: "A: それは時計ですか、カメラですか。B: 時計です。", vn: "Hỏi: Đó là đồng hồ hay máy ảnh? Đáp: Là đồng hồ." }
+      ]},
+      { pattern: "N1 の N2 (Sở hữu)", meaning: "N2 của N1", note: "Chỉ quyền sở hữu. N2 có thể lược bỏ nếu đã rõ nghĩa ở trước.", examples: [
+        { jp: "これは私の本です。", vn: "Đây là quyển sách của tôi." },
+        { jp: "それは佐藤さんの傘です。", vn: "Đó là cái ô của chị Sato." },
+        { jp: "あれは会社の手帳です。", vn: "Kia là cuốn sổ tay của công ty." },
+        { jp: "この本は私のです。", vn: "Quyển sách này là của tôi." },
+        { jp: "その時計は山田さんのです。", vn: "Chiếc đồng hồ đó là của anh Yamada." }
+      ]},
+      { pattern: "この/その/あの N", meaning: "N này/đó/kia", note: "Từ chỉ định bổ nghĩa trực tiếp cho danh từ đi kèm ngay sau.", examples: [
+        { jp: "この時計は高いです。", vn: "Chiếc đồng hồ này đắt." },
+        { jp: "そのカメラは新しいです。", vn: "Chiếc máy ảnh đó mới." },
+        { jp: "あの車は会社のです。", vn: "Chiếc xe kia là của công ty." },
+        { jp: "この人は誰ですか。", vn: "Người này là ai?" },
+        { jp: "その傘は佐藤さんのです。", vn: "Chiếc ô đó là của chị Sato." }
+      ]}
+    ];
+
+    lessonDialogues[2] = [
+      { jp: "A: それは何ですか。時計ですか、カメラですか。", vn: "A: Đó là cái gì vậy? Đồng hồ hay là máy ảnh?" },
+      { jp: "B: これは佐藤さんのカメラです。新しいですよ。", vn: "B: Đây là máy ảnh của chị Sato. Mới tinh luôn đấy." },
+      { jp: "A: このカメラは佐藤さんのですか。いいですね。", vn: "A: Chiếc máy ảnh này là của chị Sato à? Thích thế nhỉ." }
+    ];
+
+    qData[2] = {
+      p: ["これ___本です。|は|が,を,に", "時計___雑誌です。|か|は,が,を", "私___傘です。|の|は,が,に", "誰___かばんですか。|の|が,は,を", "この本___私のです。|は|が,を,に", "それ___何ですか。|は|が,を,の", "これ___ボールペンです。|は|が,を,の", "あそこ___トイレです。|は|が,を,に", "あの車___会社のです。|は|が,を,の", "山田さん___辞書です。|の|は,が,を"],
+      v: ["これは___ですか。|何|誰,どこ,いつ", "これは___ですか。|辞書|食べる,飲む,行く", "それは___です。|手帳|寝る,起きる,買う", "___の傘ですか。|誰|何,どこ,いつ", "これは何の___ですか。|本|誰,どこ,いつ", "あれは___です。|車|食べる,寝る,起きる", "これは___です。|時計|誰,何,どこ", "それは___です。|鉛筆|行く,来る,帰る", "これは何の___ですか。|雑誌|誰,どこ,いつ", "あれは___です。|カメラ|読む,書く,聞く"],
+      g: ["これは私の___。|です|ます,でした,じゃありませんか", "あれは車___。|じゃありません|です,ですか,でしたか", "その時計は私___。|のです|です,じゃありません,でした", "これは本ですか、ノート___。|ですか|です,じゃありませんか,でしたか", "それは誰の___。|ですか|です,じゃありません,でした", "この本は私___。|のです|です,じゃありません,でした", "あれはカメラ___。|ですか|です,じゃありませんか,でしたか", "これは辞書___。|じゃありません|です,ですか,でした", "それは時計___。|です|じゃありません,でした,じゃありませんでした", "あの車は会社___。|のです|です,じゃありません,でした"]
+    };
+
+    // --- BÀI 3 ---
+    lessonGrammar[3] = [
+      { pattern: "ここ/そこ/あそこ は N です", meaning: "Chỗ này/đó/kia là N", note: "Đại từ chỉ địa điểm, vị trí không gian.", examples: [
+        { jp: "ここは教室です。", vn: "Chỗ này là lớp học." },
+        { jp: "そこは食堂です。", vn: "Chỗ đó là nhà ăn." },
+        { jp: "あそこは会議室です。", vn: "Chỗ kia là phòng họp." },
+        { jp: "ここは事務所です。", vn: "Chỗ này là văn phòng." },
+        { jp: "あそこはトイレです。", vn: "Chỗ kia là nhà vệ sinh." }
+      ]},
+      { pattern: "N は どこ/どちら ですか", meaning: "N ở đâu/hướng nào?", note: "Hỏi vị trí địa điểm. どちら mang sắc thái lịch sự hơn.", examples: [
+        { jp: "A: 教室はどこですか。B: あそこです。", vn: "Hỏi: Lớp học ở đâu? Đáp: Ở đằng kia." },
+        { jp: "A: 受付はどこですか。B: 1階です。", vn: "Hỏi: Quầy lễ tân ở đâu? Đáp: Ở tầng 1." },
+        { jp: "A: エレベーターはどちらですか。B: あちらです。", vn: "Hỏi: Thang máy ở hướng nào? Đáp: Hướng đằng kia." },
+        { jp: "A: お国はどちらですか。B: ベトナムです。", vn: "Hỏi: Đất nước của bạn là nước nào? Đáp: Là Việt Nam." },
+        { jp: "A: 会社はどちらですか。B: IMCです。", vn: "Hỏi: Công ty của bạn ở đâu? Đáp: Là công ty IMC." }
+      ]},
+      { pattern: "N1 の N2 (Xuất xứ)", meaning: "N2 của N1 / N2 sản xuất tại N1", note: "N1 chỉ quốc gia hoặc công ty sản xuất ra vật dụng N2.", examples: [
+        { jp: "これは日本の車です。", vn: "Đây là xe hơi Nhật Bản." },
+        { jp: "それは中国の靴です。", vn: "Đó là giày Trung Quốc." },
+        { jp: "あれはアメリカの時計です。", vn: "Kia là đồng hồ Mỹ." },
+        { jp: "これはどこのカメラですか。", vn: "Đây là máy ảnh của nước nào?" },
+        { jp: "それはイタリアのワインです。", vn: "Đó là rượu vang Ý." }
+      ]},
+      { pattern: "N は いくら ですか", meaning: "N giá bao nhiêu tiền?", note: "Dùng để hỏi giá tiền của sản phẩm hàng hóa.", examples: [
+        { jp: "A: この時計はいくらですか。B: 3000円です。", vn: "Hỏi: Chiếc đồng hồ này giá bao nhiêu? Đáp: 3000 Yên." },
+        { jp: "A: そのカメラはいくらですか。B: 25000円です。", vn: "Hỏi: Cái máy ảnh đó giá bao nhiêu? Đáp: 25000 Yên." },
+        { jp: "A: この靴はいくらですか。B: 5000円です。", vn: "Hỏi: Đôi giày này giá bao nhiêu? Đáp: 5000 Yên." },
+        { jp: "A: これはいくらですか。B: 800円です。", vn: "Hỏi: Cái này bao nhiêu tiền? Đáp: 800 Yên." },
+        { jp: "A: あれはいくらですか。B: 100万円です。", vn: "Hỏi: Kia giá bao nhiêu? Đáp: 1 triệu Yên." }
+      ]},
+      { pattern: "N は 何階 ですか", meaning: "N ở tầng mấy?", note: "Dùng hỏi số tầng vị trí cụ thể trong tòa nhà.", examples: [
+        { jp: "食堂は何階ですか。", vn: "Nhà ăn ở tầng mấy?" },
+        { jp: "事務所は何階ですか。", vn: "Văn phòng ở tầng mấy?" },
+        { jp: "会議室は3階です。", vn: "Phòng họp ở tầng 3." },
+        { jp: "トイレは1階です。", vn: "Nhà vệ sinh ở tầng 1." },
+        { jp: "時計売り場は何階ですか。", vn: "Quầy bán đồng hồ ở tầng mấy?" }
+      ]}
+    ];
+
+    lessonDialogues[3] = [
+      { jp: "A: すみません、受付はどこですか。どちらですか。", vn: "A: Xin lỗi, quầy lễ tân ở đâu vậy ạ? Hướng nào ạ?" },
+      { jp: "B: 受付はあそこです。エスカレーターの隣ですよ。", vn: "B: Quầy lễ tân ở đằng kia. Cạnh thang cuốn đấy ạ." },
+      { jp: "A: このネクタイはいくらですか。フランスのですか。B: はい、フランスのです。5000円です。", vn: "A: Cà vạt này bao nhiêu tiền vậy? Xuất xứ Pháp à? B: Vâng, đồ Pháp ạ. Giá 5000 Yên." }
+    ];
+
+    qData[3] = {
+      p: ["ここ___教室です。|は|が,を,に", "トイレ___どこですか。|は|が,を,に", "ワイン___売り場はどこですか。|の|は,が,に", "イタリア___ワインです。|の|は,が,を", "あそこ___食堂です。|は|が,を,に", "エレベーター___どちらですか。|は|が,を,に", "事務所___3階です。|は|が,を,に", "これ___どこのカメラですか。|は|が,を,の", "日本___車です。|の|は,が,に", "お国___どちらですか。|は|が,を,に"],
+      v: ["事務所は___ですか。|どこ|何,誰,いつ", "トイレは___です。|あそこ|誰,何,いつ", "エレベーターは___ですか。|どちら|誰,何,いつ", "これは___のワインですか。|どこ|誰,何,いつ", "___は3階です。|食堂|誰,何,いつ", "受付は___ですか。|どこ|何,誰,いつ", "ここは___です。|教室|誰,何,いつ", "階段は___です。|あちら|誰,何,いつ", "これは___のカメラですか。|どこ|誰,何,いつ", "___は1階です。|トイレ|誰,何,いつ"],
+      g: ["ここは食堂___。|です|じゃありません,でした,じゃありませんでした", "トイレはどこ___。|ですか|です,じゃありませんか,でしたか", "エレベーターはあちら___。|です|じゃありません,でした,じゃありませんでした", "会社はどちら___。|ですか|です,じゃありませんか,でしたか", "あれは日本の車___。|です|じゃありません,でした,じゃありませんでした", "ここは事務所___。|じゃありません|です,ですか,でした", "受付はどこ___。|ですか|です,じゃありませんか,でしたか", "階段はあちら___。|です|じゃありません,でした,じゃありませんでした", "お国はどちら___。|ですか|です,じゃありませんか,でしたか", "これはどこのカメラ___。|ですか|です,じゃありませんか,でしたか"]
+    };
+
+    // --- BÀI 4 ---
+    lessonGrammar[4] = [
+      { pattern: "今、～時～分です", meaning: "Bây giờ là ~ giờ ~ phút", note: "Cách diễn đạt mốc thời gian hiện tại trong tiếng Nhật.", examples: [
+        { jp: "今、7時半です。", vn: "Bây giờ là 7 rưỡi." },
+        { jp: "今、12時です。", vn: "Bây giờ là 12 giờ." },
+        { jp: "今、午後3時です。", vn: "Bây giờ là 3 giờ chiều." },
+        { jp: "今、何時ですか。", vn: "Bây giờ là mấy giờ?" },
+        { jp: "今、午前9時です。", vn: "Bây giờ là 9 giờ sáng." }
+      ]},
+      { pattern: "Vます / Vません / Vました / Vませんでした", meaning: "Hành động khẳng định/phủ định (Hiện tại/Quá khứ)", note: "Đuôi động từ lịch sự thể hiện thời gian hành động.", examples: [
+        { jp: "毎日勉強します。", vn: "Mỗi ngày tôi học bài." },
+        { jp: "日曜日は働きません。", vn: "Chủ nhật tôi không làm việc." },
+        { jp: "昨日休みました。", vn: "Hôm qua tôi đã nghỉ làm." },
+        { jp: "一昨日勉強しませんでした。", vn: "Hôm kia tôi đã không học bài." },
+        { jp: "明日働きます。", vn: "Ngày mai tôi sẽ làm việc." }
+      ]},
+      { pattern: "S に Vます", meaning: "Làm hành động V vào lúc mốc thời gian S", note: "Trợ từ に đứng sau danh từ thời gian chứa số cụ thể.", examples: [
+        { jp: "私は7時に起きます。", vn: "Tôi thức dậy lúc 7 giờ." },
+        { jp: "毎晩11時に寝ます。", vn: "Mỗi tối tôi đi ngủ lúc 11 giờ." },
+        { jp: "5時に終わります。", vn: "Kết thúc lúc 5 giờ." },
+        { jp: "何時に起きますか。", vn: "Bạn thức dậy lúc mấy giờ?" },
+        { jp: "日曜日、9時に起きました。", vn: "Chủ nhật tôi đã dậy lúc 9 giờ." }
+      ]},
+      { pattern: "N1 から N2 まで", meaning: "Từ N1 đến N2", note: "Biểu thị điểm bắt đầu và kết thúc của thời gian hoặc không gian.", examples: [
+        { jp: "銀行は9時から3時までです。", vn: "Ngân hàng mở cửa từ 9 giờ đến 3 giờ." },
+        { jp: "昼休みは12時から1時までです。", vn: "Giờ nghỉ trưa từ 12 giờ đến 1 giờ." },
+        { jp: "私は8時から5時まで働きます。", vn: "Tôi làm việc từ 8 giờ đến 5 giờ." },
+        { jp: "昨日、9時から10時半まで勉強しました。", vn: "Hôm qua tôi đã học từ 9 giờ đến 10 rưỡi." },
+        { jp: "何時から何時まで働きますか。", vn: "Bạn làm việc từ mấy giờ đến mấy giờ?" }
+      ]},
+      { pattern: "N1 と N2", meaning: "N1 và N2", note: "Nối hai danh từ cùng loại, mang tính liệt kê toàn bộ.", examples: [
+        { jp: "休みは土曜日と日曜日です。", vn: "Ngày nghỉ là Thứ bảy và Chủ nhật." },
+        { jp: "銀行の休みは土曜日と日曜日です。", vn: "Ngày nghỉ của ngân hàng là thứ bảy và chủ nhật." },
+        { jp: "私と友達は勉強します。", vn: "Tôi và bạn cùng học bài." },
+        { jp: "鉛筆と時計を買います。", vn: "Tôi mua bút chì và đồng hồ." },
+        { jp: "休みは木曜日と日曜日です。", vn: "Ngày nghỉ là Thứ năm và Chủ nhật." }
+      ]}
+    ];
+
+    lessonDialogues[4] = [
+      { jp: "A: 今、何時ですか。B: 午後3時半です。A: 郵便局は何時から何時までですか。B: 9時から5時までです。", vn: "A: Bây giờ mấy giờ? B: 3 rưỡi chiều. A: Bưu điện từ mấy giờ đến mấy giờ? B: Từ 9 giờ đến 5 giờ." },
+      { jp: "A: 毎日何時に起きますか。B: 朝6時半に起きます。それから学校へ行きます。", vn: "A: Hàng ngày thức dậy lúc mấy giờ? B: Sáng 6 rưỡi dậy. Sau đó đến trường." },
+      { jp: "A: 昨日の晩、勉強しましたか。B: いいえ、勉強しませんでした。休みました。", vn: "A: Tối qua có học bài không? B: Không, tôi không học. Tôi đã nghỉ ngơi." }
+    ];
+
+    qData[4] = {
+      p: ["7時___起きます。|に|で,を,へ", "9時___5時まで。|から|に,で,を", "銀行___休み。|の|は,が,に", "月曜日___日曜日。|と|は,が,を", "3時___終わります。|に|で,を,へ", "昼休みは12時___1時まで。|から|に,で,を", "明日___働きます。|は|が,を,に", "昨日___休みました。|は|が,を,に", "毎日___勉強します。|は|が,を,に", "今___何時ですか。|は|が,を,に"],
+      v: ["今___時ですか。|何|誰,どこ,いつ", "___休みましたか。|昨日|明日,毎日,来週", "___働きます。|明日|昨日,一昨日,先週", "毎日___時に起きます。|何|誰,どこ,いつ", "今は___9時です。|午前|明日,昨日,毎日", "銀行は___からですか。|何時|何曜日,何人,何枚", "___は何時からですか。|昼休み|誰,どこ,いつ", "毎晩11時に___。|寝ます|起きます,働きます,終わります", "5時に___。|終わります|起きます,寝ます,始まります", "今日は___ですか。|何曜日|何時,何人,何枚"],
+      g: ["毎日___。|勉強します|勉強しました,勉強しませんでした,勉強して", "昨日___。|勉強しました|勉強します,勉強しません,勉強して", "日曜日___。|働きません|働きます,働きました,働いて", "一昨日___。|働きませんでした|働きます,働きません,働いて", "明日___。|働きます|働きました,働きませんでした,働いて", "昨日___。|休みました|休みます,休みません,休んで", "毎晩___。|寝ます|寝ました,寝ません,寝て", "5時に___。|終わります|終わりました,終わりません,終わって", "今、何時___。|ですか|です,でしたか,じゃありませんか", "明日は___。|休みます|休みました,休みませんでした,休んで"]
+    };
+
+    // --- BÀI 5 ---
+    lessonGrammar[5] = [
+      { pattern: "Nへ いきます/きます/かえります", meaning: "Đi / Đến / Về địa điểm N", note: "Trợ từ へ chỉ phương hướng di chuyển di động hành động.", examples: [
+        { jp: "私は学校へ行きます。", vn: "Tôi đi đến trường." },
+        { jp: "昨日デパートへ行きました。", vn: "Hôm qua tôi đã đi bách hóa." },
+        { jp: "明日うちへ帰ります。", vn: "Ngày mai tôi sẽ về nhà." },
+        { jp: "どこへ行きますか。", vn: "Bạn đi đâu thế?" },
+        { jp: "日本へ来ました。", vn: "Tôi đã đến Nhật Bản." }
+      ]},
+      { pattern: "どこ[へ]も いきません/いきませんでした", meaning: "Không đi đâu cả", note: "Phủ định hoàn toàn điểm đến di chuyển.", examples: [
+        { jp: "私はどこへも行きません。", vn: "Tôi không đi đâu cả." },
+        { jp: "昨日、どこも行きませんでした。", vn: "Hôm qua tôi đã không đi đâu cả." },
+        { jp: "日曜日、どこも行きませんでした。", vn: "Chủ nhật tôi đã không đi đâu." },
+        { jp: "休みの日、どこも行きません。", vn: "Ngày nghỉ tôi không đi đâu." },
+        { jp: "一昨日どこも行きませんでした。", vn: "Hôm kia tôi đã không đi đâu cả." }
+      ]},
+      { pattern: "N(phương tiện) で V", meaning: "Đi bằng phương tiện N", note: "Trợ từ で chỉ công cụ phương tiện giao thông. Đi bộ là 歩いて không dùng で.", examples: [
+        { jp: "電車で学校へ行きます。", vn: "Tôi đi học bằng tàu điện." },
+        { jp: "バスで会社へ行きます。", vn: "Tôi đi làm bằng xe buýt." },
+        { jp: "飛行機で日本へ行きます。", vn: "Tôi đi Nhật bằng máy bay." },
+        { jp: "毎日歩いて学校へ行きます。", vn: "Mỗi ngày tôi đi bộ đến trường." },
+        { jp: "何でスーパーへ行きますか。", vn: "Bạn đi siêu thị bằng gì?" }
+      ]},
+      { pattern: "N(người) と V", meaning: "Làm hành động V cùng người N", note: "Trợ từ と chỉ đối tượng cùng thực hiện hành vi. Một mình dùng 一人で.", examples: [
+        { jp: "友達と京都へ行きます。", vn: "Tôi đi Kyoto cùng bạn bè." },
+        { jp: "家族と日本へ来ました。", vn: "Tôi đã đến Nhật cùng gia đình." },
+        { jp: "一人でスーパーへ行きます。", vn: "Tôi đi siêu thị một mình." },
+        { jp: "誰と会社へ行きますか。", vn: "Bạn đi làm cùng với ai?" },
+        { jp: "彼女と映画を見に行きます。", vn: "Tôi đi xem phim cùng bạn gái." }
+      ]},
+      { pattern: "いつ Vますか", meaning: "Khi nào thực hiện V?", note: "Từ để hỏi thời gian, tuyệt đối không dùng trợ từ に phía sau.", examples: [
+        { jp: "いつ日本へ行きますか。", vn: "Khi nào bạn đi Nhật Bản?" },
+        { jp: "いつうちへ帰りますか。", vn: "Khi nào bạn về nhà?" },
+        { jp: "いつ病院へ行きますか。", vn: "Khi nào đi bệnh viện?" },
+        { jp: "いつ大学へ行きましたか。", vn: "Bạn đã đi học đại học khi nào?" },
+        { jp: "誕生日はいつですか。", vn: "Sinh nhật của bạn là bao giờ?" }
+      ]}
+    ];
+
+    lessonDialogues[5] = [
+      { jp: "A: 明後日、どこへ行きますか。B: 友達と京都へ行きます。A: 何で行きますか。B: 新幹線で行きます。", vn: "A: Ngày kia đi đâu? B: Đi Kyoto với bạn. A: Đi bằng gì? B: Đi bằng tàu siêu tốc Shinkansen." },
+      { jp: "A: いつ日本へ来ましたか。B: 去年の10月に家族と来ました。", vn: "A: Đến Nhật khi nào thế? B: Đến cùng gia đình vào tháng 10 năm ngoái." },
+      { jp: "A: 日曜日どこへ行きましたか。B: どこへも行きませんでした。一人で勉強しました。", vn: "A: Chủ nhật đi đâu không? B: Chẳng đi đâu cả. Tôi học bài một mình ở nhà." }
+    ];
+
+    qData[5] = {
+      p: ["学校___行きます。|へ|に,で,を", "電車___行きます。|で|に,へ,を", "友達___行きます。|と|に,で,を", "どこ___行きません。|も|が,を,に", "日本___来ました。|へ|に,で,を", "バス___会社へ行きます。|で|に,へ,を", "家族___日本へ来ました。|と|に,で,を", "一人___スーパーへ行きます。|で|に,へ,を", "明日うち___帰ります。|へ|に,で,を", "飛行機___日本へ行きます。|で|に,へ,を"],
+      v: ["___行きますか。|どこへ|誰,何,いつ", "___帰りますか。|いつ|誰,何,どこ", "___で行きますか。|何|誰,どこ,いつ", "私は___で来ました。|飛行機|誰,何,いつ", "毎日___学校へ行きます。|歩いて|飛行機,電車,バス", "___と会社へ行きますか。|誰|何,どこ,いつ", "彼女と___を見に行きます。|映画|誰,どこ,いつ", "昨日___へ行きました。|デパート|誰,何,いつ", "___日本へ来ました。|家族と|一人で,電車で,バスで", "___スーパーへ行きます。|一人で|家族と,友達と,電車で"],
+      g: ["どこへも___。|行きません|行きます,行きました,行って", "昨日デパートへ___。|行きました|行きます,行きません,行って", "日曜日どこへも___。|行きませんでした|行きます,行きません,行って", "明日うちへ___。|帰ります|帰りました,帰りません,帰って", "日本へ___。|来ました|来ます,来ません,来て", "毎日歩いて学校へ___。|行きます|行きました,行きません,行って", "誰と会社へ___。|行きますか|行きましたか,行きません,行って", "彼女と映画を見に___。|行きます|行きました,行きません,行って", "いつうちへ___。|帰りますか|帰りましたか,帰りません,帰って", "誕生日はいつ___。|ですか|です,でしたか,じゃありませんか"]
+    };
+
+    // --- BÀI 6 ---
+    lessonGrammar[6] = [
+      { pattern: "N を Vます", meaning: "Làm hành động V đối với danh từ N", note: "Trợ từ を chỉ đối tượng trực tiếp nhận tác động của ngoại động từ.", examples: [
+        { jp: "パンを食べます。", vn: "Tôi ăn bánh mì." },
+        { jp: "お茶を飲みます。", vn: "Tôi uống trà." },
+        { jp: "新聞を読みます。", vn: "Tôi đọc báo." },
+        { jp: "テレビを見ます。", vn: "Tôi xem tivi." },
+        { jp: "手紙を書きます。", vn: "Tôi viết thư." }
+      ]},
+      { pattern: "なに を Vますか", meaning: "Làm cái gì?", note: "Dùng để hỏi về đối tượng chịu tác động của hành động.", examples: [
+        { jp: "A: 明日何をしますか。B: 友達に会います。", vn: "Hỏi: Ngày mai bạn làm gì? Đáp: Tôi đi gặp bạn bè." },
+        { jp: "A: 昨日の晩、何をしましたか。B: テレビを見ました。", vn: "Hỏi: Tối qua bạn đã làm gì? Đáp: Tôi đã xem tivi." },
+        { jp: "A: 毎朝何を飲みますか。B: 牛乳を飲みます。", vn: "Hỏi: Mỗi sáng uống gì? Đáp: Uống sữa bò." },
+        { jp: "A: 日曜日、何か買いましたか。B: 何も買いませんでした。", vn: "Hỏi: Chủ nhật có mua gì không? Đáp: Không mua gì cả." },
+        { jp: "A: 昨日、何か食べましたか。B: 何も食べませんでした。", vn: "Hỏi: Hôm qua có ăn gì không? Đáp: Chẳng ăn gì cả." }
+      ]},
+      { pattern: "N(địa điểm) で Vます", meaning: "Làm hành động V tại vị trí không gian N", note: "Trợ từ で chỉ nơi xảy ra hành động, hành vi (khác với に tồn tại).", examples: [
+        { jp: "教室で日本語を勉強します。", vn: "Học tiếng Nhật ở trong lớp học." },
+        { jp: "図書館で本を読みます。", vn: "Đọc sách ở thư viện." },
+        { jp: "うちで手紙を書きます。", vn: "Viết thư ở nhà." },
+        { jp: "食堂でご飯を食べます。", vn: "Ăn cơm ở nhà ăn." },
+        { jp: "どこでその靴を買いましたか。", vn: "Bạn đã mua đôi giày đó ở đâu thế?" }
+      ]},
+      { pattern: "Vませんか / Vましょう", meaning: "Cùng làm V nhé? / Cùng làm V nào!", note: "Vませんか đưa ra lời mời tinh tế, Vましょう thể hiện ý chí đồng tình hô hào kéo theo hành động.", examples: [
+        { jp: "A: 一緒にコーヒーを飲みませんか。B: ええ、いいですね。飲みましょう。", vn: "Hỏi: Cùng uống cà phê nhé? Đáp: Vâng, được đấy, cùng uống nào." },
+        { jp: "A: 一緒にご飯を食べませんか。B: ええ、食べましょう。", vn: "Hỏi: Cùng ăn cơm nhé? Đáp: Vâng, cùng ăn nào." },
+        { jp: "A: 一緒に映画を見に行きませんか。B: すみません、ちょっと...", vn: "Hỏi: Cùng đi xem phim nhé? Đáp: Xin lỗi, tôi bận mất rồi..." },
+        { jp: "A: ロビーで少し休みませんか。B: ええ、休みましょう。", vn: "Hỏi: Nghỉ một chút ở sảnh nhé? Đáp: Vâng, cùng nghỉ thôi." },
+        { jp: "A: テニスをしませんか。B: いいですね、しましょう。", vn: "Hỏi: Chơi tennis không? Đáp: Hay quá, chơi thôi." }
+      ]},
+      { pattern: "いつも / ときどき", meaning: "Luôn luôn / Thỉnh thoảng", note: "Các phó từ chỉ tần suất tần số đứng trước động từ hành động.", examples: [
+        { jp: "私はいつもスーパーで肉を買います。", vn: "Tôi luôn luôn mua thịt ở siêu thị." },
+        { jp: "時々デパートで服を買います。", vn: "Thỉnh thoảng tôi mua quần áo ở bách hóa." },
+        { jp: "毎晩テレビを見ます。それから、本を読みます。", vn: "Mỗi tối tôi xem tivi. Sau đó, đọc sách." },
+        { jp: "学校で勉強します。それから、うちで宿題をします。", vn: "Học ở trường. Sau đó làm bài tập ở nhà." },
+        { jp: "いつも一人で勉強します。", vn: "Tôi luôn luôn tự học bài một mình." }
+      ]}
+    ];
+
+    lessonDialogues[6] = [
+      { jp: "A: 日曜日、何をしましたか。B: 朝デパートで買い物しました。それから友達と映画を見ました。", vn: "A: Chủ nhật làm gì thế? B: Sáng mua sắm ở bách hóa. Sau đó đi xem phim với bạn." },
+      { jp: "A: どこで映画を見ましたか。B: 新宿の映画館で見ました。とても面白かったですよ。", vn: "A: Xem phim ở đâu vậy? B: Xem ở rạp chiếu phim Shinjuku. Hay lắm đấy." },
+      { jp: "A: 一緒にお茶を飲みませんか。B: ええ、いいですね。駅の前の喫茶店へ行きましょう。", vn: "A: Cùng đi uống trà chút không? B: Ôi hay quá. Cùng ra quán cà phê trước ga đi." }
+    ];
+
+    qData[6] = {
+      p: ["パン___食べます。|を|が,に,で", "教室___勉強します。|で|に,を,へ", "友達___会います。|に|で,を,へ", "コーヒー___飲みませんか。|を|が,に,で", "手紙___書きます。|を|が,に,で", "食堂___ご飯を食べます。|で|に,を,へ", "デパート___肉を買います。|で|に,を,へ", "テレビ___見ます。|を|が,に,で", "新聞___読みます。|を|が,に,で", "靴___買いましたか。|を|が,に,で"],
+      v: ["___を読みます。|新聞|映画,音楽,デパート", "___を見ます。|映画|新聞,音楽,デパート", "___を聞きます。|音楽|新聞,映画,デパート", "___で買います。|デパート|新聞,映画,音楽", "___を書きます。|手紙|新聞,映画,音楽", "___を飲みます。|お茶|パン,新聞,映画", "___を食べます。|パン|お茶,新聞,映画", "___をします。|宿題|パン,お茶,新聞", "___に会います。|友達|パン,お茶,新聞", "___を撮ります。|写真|パン,お茶,新聞"],
+      g: ["一緒に___。|行きませんか|行きましょう,行きます,行きました", "ええ、___。|行きましょう|行きませんか,行きます,行きました", "何も___。|食べませんでした|食べます,食べません,食べて", "明日何を___。|しますか|しましたか,しませんか,して", "少し___。|休みましょう|休みませんか,休みます,休みました", "一緒にご飯を___。|食べませんか|食べましょう,食べます,食べました", "テレビを___。|見ます|見ました,見ません,見て", "手紙を___。|書きます|書きました,書きません,書いて", "靴を___。|買いましたか|買いますか,買いませんか,買って", "友達に___。|会います|会いました,会いません,会って"]
+    };
+
+    // =================================================================
+    // KHO DỮ LIỆU CHUYÊN SÂU BÀI 7 ĐẾN BÀI 13 (PHẦN 2)
+    // =================================================================
+
+    // --- BÀI 7 ---
+    lessonGrammar[7] = [
+      { pattern: "N(công cụ) で V", meaning: "Làm V bằng N", note: "Trợ từ で chỉ công cụ, phương tiện, phương thức hoặc ngôn ngữ thực hiện.", examples: [
+        { jp: "箸でご飯を食べます。", vn: "Ăn cơm bằng đũa." },
+        { jp: "スプーンでカレーを食べます。", vn: "Ăn cà-ri bằng thìa." },
+        { jp: "手でおにぎりを食べます。", vn: "Ăn cơm nắm bằng tay." },
+        { jp: "鋏で紙を切ります。", vn: "Cắt giấy bằng kéo." },
+        { jp: "A: 日本語でレポートを書きますか。B: いいえ、英語で書きます。", vn: "A: Bạn viết báo cáo bằng tiếng Nhật à? B: Không, tôi viết bằng tiếng Anh." }
+      ]},
+      { pattern: "「Từ/Câu」は ～語で ～です", meaning: "Từ/Câu ~ trong tiếng ~ là ~", note: "Dùng để dịch hoặc giải thích ý nghĩa từ ngữ qua một ngôn ngữ khác.", examples: [
+        { jp: "『ありがとう』はベトナム語で『Cảm ơn』です。", vn: "Arigatou tiếng Việt là Cảm ơn." },
+        { jp: "『すみません』はベトナム語で『Xin lỗi』です。", vn: "Sumimasen tiếng Việt là Xin lỗi." },
+        { jp: "A: これは日本語で何ですか。B: 『パソコン』です。", vn: "A: Cái này tiếng Nhật là gì? B: Là 'Pasokon'." },
+        { jp: "A: 『本』は英語で何ですか。B: 『Book』です。", vn: "A: 'Sách' tiếng Anh là gì? B: Là 'Book'." },
+        { jp: "『Goodbye』は日本語で『さようなら』です。", vn: "Goodbye tiếng Nhật là Sayounara." }
+      ]},
+      { pattern: "N1 に N2 を あげます", meaning: "Cho/Tặng N1 cái N2", note: "Hành động xuất phát từ phía chủ ngữ hướng tới người nhận N1 (đi với に).", examples: [
+        { jp: "私は友達に本をあげます。", vn: "Tôi tặng sách cho bạn." },
+        { jp: "私は母に時計をあげます。", vn: "Tôi tặng đồng hồ cho mẹ." },
+        { jp: "私は友達にお金を貸します。", vn: "Tôi cho bạn mượn tiền." },
+        { jp: "私は妹に英語を教えます。", vn: "Tôi dạy tiếng Anh cho em gái." },
+        { jp: "A: 誰に手紙を送りますか。B: 彼女に送ります。", vn: "A: Bạn gửi thư cho ai thế? B: Tôi gửi cho bạn gái." }
+      ]},
+      { pattern: "N1 に N2 を もらいます", meaning: "Nhận N2 từ N1", note: "Chủ ngữ nhận đồ vật từ N1. Có thể thay に bằng から khi đối tượng là cơ quan, tổ chức.", examples: [
+        { jp: "私は友達に本をもらいました。", vn: "Tôi đã nhận sách từ bạn." },
+        { jp: "私はサントスさんに靴をもらいます。", vn: "Tôi nhận giày từ anh Santos." },
+        { jp: "私は父にネクタイをもらいました。", vn: "Tôi đã nhận cà vạt từ bố." },
+        { jp: "図書館に本を借ります。", vn: "Tôi mượn sách từ thư viện." },
+        { jp: "A: 誰に日本語を習いますか。B: ラン先生に習います。", vn: "A: Bạn học tiếng Nhật từ cô Lan." }
+      ]},
+      { pattern: "もう Vましたか / まだです", meaning: "Đã làm V chưa? / Chưa làm.", note: "もう kết hợp động từ quá khứ hỏi sự hoàn thành. Trả lời chưa xong bắt buộc dùng まだです.", examples: [
+        { jp: "A: もうご飯を食べましたか。B: はい、もう食べました。", vn: "A: Bạn đã ăn cơm chưa? B: Vâng, tôi ăn rồi." },
+        { jp: "A: もうご飯を食べましたか。 B: いいえ、まだです。", vn: "A: Bạn đã ăn cơm chưa? B: Chưa, tôi vẫn chưa ăn." },
+        { jp: "A: もう手紙を送りましたか。B: はい、さっき送りました。", vn: "A: Bạn đã gửi thư chưa? B: Vâng, tôi gửi lúc nãy rồi." },
+        { jp: "A: もう荷物を送りましたか。B: いいえ、まだです。これから送ります。", vn: "A: Bạn đã gửi hành lý chưa? B: Chưa, vẫn chưa. Bây giờ tôi sẽ gửi." },
+        { jp: "A: もう日本語のテストをしましたか。B: はい、もうしました。", vn: "A: Bạn đã làm bài kiểm tra tiếng Nhật chưa? B: Vâng, tôi làm rồi." }
+      ]}
+    ];
+
+    lessonDialogues[7] = [
+      { jp: "A: 『ありがとう』は英語で何ですか。B: 『Thank you』です。A: じゃ、これはベトナム語で何ですか。B: それは『Hoa』です。", vn: "A: 'Arigatou' tiếng Anh là gì? B: Là 'Thank you'. A: Vậy cái này tiếng Việt là gì? B: Cái đó là 'Hoa'." },
+      { jp: "A: もう山田さんに誕生日のプレゼントをあげましたか。B: はい、昨日時計をあげました。とても喜びましたよ。", vn: "A: Bạn đã tặng quà sinh nhật cho anh Yamada chưa? B: Rồi, hôm qua tôi tặng cái đồng hồ. Anh ấy đã rất vui đấy." },
+      { jp: "A: すみません、その本は誰にもらいましたか。B: これは木村さんにもらいました。A: もう読みましたか。B: いいえ、まだです。", vn: "A: Xin lỗi, cuốn sách đó bạn nhận từ ai thế? B: Tôi nhận từ chị Kimura. A: Đã đọc chưa? B: Chưa, tôi vẫn chưa đọc." }
+    ];
+
+    qData[7] = {
+      p: ["箸___ご飯を食べます。|で|に,を,へ", "友達___プレゼントをあげます。|に|で,を,へ", "父___時計をもらいました。|に|で,を,へ", "「ありがとう」___英語で？|は|が,を,に", "鋏___紙を切ります。|で|に,を,へ", "日本語___レポートを書きます。|で|に,を,へ", "誰___手紙を送りますか。|に|で,を,へ", "サントスさん___靴をもらいます。|に|で,を,へ", "図書館___本を借ります。|に|で,を,へ", "先生___日本語を習います。|に|で,を,へ"],
+      v: ["紙を___で切ります。|鋏|パソコン,先生,お金", "手紙を___で送ります。|パソコン|鋏,先生,お金", "___を貸します。|お金|鋏,パソコン,先生", "___に習います。|先生|鋏,パソコン,お金", "___でご飯を食べます。|箸|鋏,パソコン,先生", "___でカレーを食べます。|スプーン|鋏,パソコン,先生", "___でおにぎりを食べます。|手|鋏,パソコン,先生", "「ありがとう」は___で『Cảm ơn』です。|ベトナム語|鋏,パソコン,先生", "___に英語を教えます。|妹|鋏,パソコン,先生", "___に時計をあげます。|母|鋏,パソコン,先生"],
+      g: ["もう___。|食べました|食べます,食べません,食べて", "いいえ、___。|まだです|食べました,食べません,食べて", "これから___。|食べます|食べました,食べません,食べて", "手紙を___。|送りましたか|送りますか,送りませんか,送って", "日本語のテストを___。|しましたか|しますか,しませんか,して", "友達に本を___。|あげます|あげました,あげません,あげて", "母に時計を___。|あげます|あげました,あげません,あげて", "友達にお金を___。|貸します|貸しました,貸しません,貸して", "妹に英語を___。|教えます|教えました,教えません,教えて", "先生に日本語を___。|習います|習いました,習いません,習って"]
+    };
+
+    // --- BÀI 8 ---
+    lessonGrammar[8] = [
+      { pattern: "N は Aい / Aな です", meaning: "N thì tính chất A", note: "Mô tả tính chất, trạng thái của danh từ ở hiện tại khẳng định. Tính từ đuôi な bỏ な thêm です.", examples: [
+        { jp: "この時計は高いです。", vn: "Cái đồng hồ này đắt." },
+        { jp: "あの靴は新しいです。", vn: "Đôi giày kia mới." },
+        { jp: "桜はきれいです。", vn: "Hoa anh đào đẹp." },
+        { jp: "この部屋は静かです。", vn: "Căn phòng này yên tĩnh." },
+        { jp: "あの人は親切です。", vn: "Người kia tốt bụng." }
+      ]},
+      { pattern: "N は Aくない / Aじゃありません", meaning: "N không tính chất A", note: "Phủ định tính từ hiện tại. Tính từ đuôi い bỏ い thêm くない. Tính từ đuôi な thêm じゃありません.", examples: [
+        { jp: "この時計は高くないです。", vn: "Cái đồng hồ này không đắt." },
+        { jp: "このカメラは新しくないです。", vn: "Máy ảnh này không mới." },
+        { jp: "この部屋はきれいじゃありません。", vn: "Căn phòng này không sạch đẹp." },
+        { jp: "昨日のテストは簡単じゃありませんでした。", vn: "Bài kiểm tra hôm qua không dễ." },
+        { jp: "あの人は親切じゃありません。", vn: "Người kia không tốt bụng." }
+      ]},
+      { pattern: "Aい N / Aな な N", meaning: "Danh từ N mang tính chất A", note: "Tính từ đứng trước danh từ bổ nghĩa trực tiếp. Tính từ đuôi な giữ nguyên な.", examples: [
+        { jp: "高い時計です。", vn: "Là chiếc đồng hồ đắt tiền." },
+        { jp: "良い人です。", vn: "Là người tốt." },
+        { jp: "親切な人です。", vn: "Là người tốt bụng." },
+        { jp: "静かな所です。", vn: "Là một nơi yên tĩnh." },
+        { jp: "有名な町です。", vn: "Là thị trấn nổi tiếng." }
+      ]},
+      { pattern: "N は どう / どんなN ですか", meaning: "N thế nào? / Là loại N thế nào?", note: "どう hỏi cảm tưởng chung. どんな hỏi tính chất chi tiết và phải đi kèm danh từ ngay sau.", examples: [
+        { jp: "A: この時計はどうですか。B: とても良いです。", vn: "Hỏi: Cái đồng hồ này thế nào? Đáp: Rất tốt." },
+        { jp: "A: 日本の生活はどうですか。B: 忙しいですが, 楽しいです。", vn: "Hỏi: Cuộc sống ở Nhật thế nào? Đáp: Bận rộn nhưng vui." },
+        { jp: "A: トゥンさんはどんな人ですか。 B: 親切な人です。", vn: "Hỏi: Tùng là người như thế nào? Đáp: Là người tốt bụng." },
+        { jp: "A: あなたの部屋はどんな所ですか. B: 静かな所です。", vn: "Hỏi: Phòng bạn là nơi thế nào? Đáp: Là nơi yên tĩnh." },
+        { jp: "A: ハノイはどんな町ですか. B: 賑やかな町です。", vn: "Hỏi: Hà Nội là thành phố thế nào? Đáp: Là thành phố náo nhiệt." }
+      ]},
+      { pattern: "とても / あまり / ～が", meaning: "Rất / Không... lắm / Nhưng...", note: "とても bổ nghĩa câu khẳng định. あまり đi với câu phủ định. が nối hai vế tương phản.", examples: [
+        { jp: "この時計はとても高いです。", vn: "Đồng hồ này rất đắt." },
+        { jp: "この部屋はあまり静かじゃありません。", vn: "Phòng này không yên tĩnh lắm." },
+        { jp: "この時計はきれいですが、高いです。", vn: "Đồng hồ này đẹp nhưng đắt." },
+        { jp: "日本の食べ物はおいしいですが、高いです。", vn: "Đồ ăn Nhật ngon nhưng đắt." },
+        { jp: "この漢字は難しいですが、面白いです。", vn: "Chữ Hán này khó nhưng thú vị." }
+      ]}
+    ];
+
+    lessonDialogues[8] = [
+      { jp: "A: 日本の生活はどうですか。楽しいですか。B: はい、とても楽しいです。でも, 少し物価が高いです。", vn: "A: Cuộc sống ở Nhật thế nào? Vui không? B: Vâng, vui lắm. Nhưng giá cả hơi đắt một chút." },
+      { jp: "A: 山田先生はどんな人ですか。厳しいですか。B: いいえ、厳しくないです。とても親切な先生ですよ。", vn: "A: Thầy Yamada là người thế nào? Nghiêm khắc không? B: Không, không nghiêm khắc đâu. Là một giáo viên rất tốt bụng đấy." },
+      { jp: "A: ハノイは静かな町ですか。B: いいえ、静かじゃありません。とても賑やかな町ですが, 面白くて好きです。", vn: "A: Hà Nội là thành phố yên tĩnh phải không? B: Không, không yên tĩnh đâu. Là thành phố rất náo nhiệt nhưng thú vị nên tôi thích." }
+    ];
+
+    qData[8] = {
+      p: ["桜___きれいです。|は|が,を,に", "日本の生活___どうですか。|は|が,を,に", "コーヒー___紅茶。|と|は,が,を", "ハノイ___どんな町ですか。|は|が,を,に", "この時計___高いです。|は|が,を,に", "あの靴___新しいです。|は|が,を,に", "この部屋___静かです。|は|が,を,に", "あの人___親切です。|は|が,を,に", "この時計はきれい___、高いです。|ですが|から,と,で", "日本の食べ物はおいしい___、高いです。|ですが|から,と,で"],
+      v: ["この時計は___です。|高い|有名,親切,静かな", "富士山は___です。|有名|高い,親切,静かな", "先生は___です。|親切|高い,有名,静かな", "___町です。|静かな|高い,有名,親切", "この靴は___です。|新しい|有名,親切,静かな", "この部屋は___です。|きれい|高い,有名,親切", "日本の生活は___ですか。|どう|どんな,何,誰", "トゥンさんは___人ですか。|どんな|どう,何,誰", "ハノイはどんな___ですか. |町|どう,何,誰", "この時計は___高いです。|とても|あまり,どんな,どう"],
+      g: ["高い___。|です|じゃありません,でした,じゃありませんでした", "寒く___。|ないです|じゃありません,でした,じゃありませんでした", "きれい___。|じゃありません|ないです,でした,じゃありませんでした", "元気___。|でした|じゃありません,ないです,じゃありませんでした", "この時計は高く___。|ないです|じゃありません,でした,じゃありませんでした", "このカメラは新しく___。|ないです|じゃありません,でした,じゃありませんでした", "この部屋はきれい___。|じゃありません|ないです,でした,じゃありませんでした", "昨日のテストは簡単___。|じゃありませんでした|ないです,でした,じゃありません", "あの人は親切___。|じゃありません|ないです,でした,じゃありませんでした", "この部屋はあまり静か___。|じゃありません|ないです,でした,じゃありませんでした"]
+    };
+
+    // --- BÀI 9 ---
+    lessonGrammar[9] = [
+      { pattern: "N が あります / わかります", meaning: "Có N / Hiểu N", note: "Đi với đối tượng sở hữu hoặc năng lực, trạng thái. Bắt buộc dùng trợ từ が thay cho を.", examples: [
+        { jp: "私は車があります。", vn: "Tôi có xe hơi." },
+        { jp: "私はお金があります。", vn: "Tôi có tiền." },
+        { jp: "私は日本語が分かります。", vn: "Tôi hiểu tiếng Nhật." },
+        { jp: "A: 英語が分かりますか。B: いいえ、分かりません。", vn: "A: Bạn hiểu tiếng Anh không? B: Không, tôi không hiểu." },
+        { jp: "私は時間がありませんから, TVを見ません。", vn: "Tôi không có thời gian nên không xem tivi." }
+      ]},
+      { pattern: "N が 好き / 嫌い / 上手 / 下手です", meaning: "Thích / Ghét / Giỏi / Kém N", note: "Tính từ biểu thị tâm lý, cảm xúc hoặc năng lực luôn đi kèm trợ từ が đối với tân ngữ.", examples: [
+        { jp: "私は車が好きです。", vn: "Tôi thích xe hơi." },
+        { jp: "私はタバコが嫌いです。", vn: "Tôi ghét thuốc lá." },
+        { jp: "山田さんは料理が上手です。", vn: "Anh Yamada nấu ăn giỏi." },
+        { jp: "私はスポーツが下手です。", vn: "Tôi chơi thể thao kém." },
+        { jp: "A: 日本語が上手ですね。B: いいえ、まだまだです。", vn: "A: Bạn giỏi tiếng Nhật nhỉ. B: Không, tôi còn kém lắm." }
+      ]},
+      { pattern: "どんな N が 好きですか", meaning: "Thích loại N nào?", note: "Dùng để hỏi sở thích chi tiết trong một phạm vi cụ thể rộng lớn.", examples: [
+        { jp: "A: どんなスポーツが好きですか。B: サッカーが好きです。", vn: "Hỏi: Bạn thích môn thể thao nào? Đáp: Tôi thích bóng đá." },
+        { jp: "A: どんな食べ物が好きですか。B: 日本料理が好きです。", vn: "Hỏi: Bạn thích đồ ăn nào? Đáp: Tôi thích món ăn Nhật." },
+        { jp: "A: どんな音楽が好きですか。 B: ポップスが好きです。", vn: "Hỏi: Bạn thích loại nhạc nào? Đáp: Tôi thích nhạc Pop." },
+        { jp: "A: どんな映画が好きですか. B: アクション映画が好きです。", vn: "Hỏi: Bạn thích phim gì? Đáp: Tôi thích phim hành động." },
+        { jp: "A: どんな飲み物が好きですか. B: ビールが好きです。", vn: "Hỏi: Bạn thích đồ uống gì? Đáp: Tôi thích bia." }
+      ]},
+      { pattern: "よく / だいたい / たくさん / 少し / 全然", meaning: "Các phó từ mức độ và số lượng", note: "よく, だいたい, 全然 đi với động từ chỉ năng lực. たくさん, 少し đi với danh từ số lượng.", examples: [
+        { jp: "日本語がよく分かります。", vn: "Tôi hiểu rõ tiếng Nhật." },
+        { jp: "英語がだいたい分かります。", vn: "Tôi hiểu đại khái tiếng Anh." },
+        { jp: "お金がたくさんあります。", vn: "Tôi có nhiều tiền." },
+        { jp: "日本語が少し分かります。", vn: "Tôi hiểu chút ít tiếng Nhật." },
+        { jp: "英語が全然分かりません。", vn: "Tôi hoàn toàn không hiểu tiếng Anh." }
+      ]},
+      { pattern: "Mệnh đề 1 から、Mệnh đề 2", meaning: "Vì Mệnh đề 1, nên Mệnh đề 2", note: "から đứng sau mệnh đề nguyên nhân để dẫn giải kết quả ở mệnh đề sau.", examples: [
+        { jp: "お金がありませんから、買いません。", vn: "Vì không có tiền nên không mua." },
+        { jp: "野菜が嫌いですから、食べません。", vn: "Vì ghét rau nên tôi không ăn." },
+        { jp: "日本語が好きですから、毎日勉強します。", vn: "Vì thích tiếng Nhật nên ngày nào tôi cũng học." },
+        { jp: "時間がありませんから、映画を見ません。", vn: "Vì không có thời gian nên tôi không xem phim." },
+        { jp: "用事がありますから、早く帰ります。", vn: "Vì có việc bận nên tôi đi về sớm." }
+      ]}
+    ];
+
+    lessonDialogues[9] = [
+      { jp: "A: どんなスポーツが好きですか。よくしますか。B: サッカーが好きです。でも, するのは下手ですからよく見ます。", vn: "A: Bạn thích môn thể thao nào? Có hay chơi không? B: Tôi thích bóng đá. Nhưng chơi kém nên tôi hay xem hơn." },
+      { jp: "A: 今日は一緒に飲みに行きませんか。B: すみません。今日は用事がありますから, 早く帰ります。", vn: "A: Hôm nay cùng đi uống chút gì không? B: Xin lỗi. Hôm nay tôi có việc bận nên phải về sớm mất rồi." },
+      { jp: "A: 英語がよく分かりますか。B: いいえ、だいたい分かりますが, 難しい言葉は全然分かりません。", vn: "A: Bạn có hiểu rõ tiếng Anh không? B: Không, tôi hiểu đại khái thôi, còn từ khó thì hoàn toàn chịu chết." }
+    ];
+
+    qData[9] = {
+      p: ["車___好きです。|が|を,に,で", "料理___上手です。|が|を,に,で", "時間___ありません。|が|を,に,で", "忙しい___、行きません。|から|まで,と,で", "日本語___分かります。|が|を,に,で", "タバコ___嫌いです。|が|を,に,で", "スポーツ___下手です。|が|を,に,で", "どんなスポーツ___好きですか。|が|を,に,で", "お金___ありませんから、買いません。|が|を,に,で", "野菜___嫌いですから、食べません。|が|を,に,で"],
+      v: ["___がわかります。|日本語|約束,だいたい,全然", "___があります。|約束|日本語,だいたい,全然", "___わかります。|だいたい|日本語,約束,全然", "___ありません。|全然|日本語,約束,だいたい", "___が好きですか。|どんな|どう,何,誰", "___が上手です。|料理|約束,だいたい,全然", "___が下手です。|スポーツ|約束,だいたい,全然", "___がよく分かります。|日本語|約束,だいたい,全然", "お金が___あります。|たくさん|だいたい,全然,約束", "日本語が___分かります。|少し|だいたい,全然,約束"],
+      g: ["好き___。|です|じゃありません,でした,じゃありませんでした", "上手___。|じゃありません|ないです,でした,じゃありませんでした", "わかり___。|ます|です,でした,じゃありません", "日本語が好きですから、毎日___。|勉強します|勉強しました,勉強しませんでした,勉強して", "時間がありませんから、映画を___。|見ません|見ます,見ました,見て", "用事がありますから、早く___。|帰ります|帰りました,帰りません,帰って", "英語が分かり___。|ますか|です,でしたか,じゃありませんか", "お金が___。|あります|です,でした,じゃありません", "タバコが___。|嫌いです|じゃありません,でした,じゃありませんでした", "料理が上手___。|ですね|です,でした,じゃありません"]
+    };
+
+    // --- BÀI 10 ---
+    lessonGrammar[10] = [
+      { pattern: "N(địa điểm) に N(vật/người) が あります/います", meaning: "Ở địa điểm N có vật/người", note: "あります dùng cho vật, cây cối, sự kiện đứng yên. います dùng cho thực thể cử động như người và động vật.", examples: [
+        { jp: "教室に学生がいます。", vn: "Trong lớp học có học sinh." },
+        { jp: "公園に犬がいます。", vn: "Trong công viên có con chó." },
+        { jp: "教室に机があります。", vn: "Trong lớp học có cái bàn." },
+        { jp: "部屋にテレビがあります。", vn: "Trong phòng có cái tivi." },
+        { jp: "冷蔵庫の中にビールがあります。", vn: "Trong tủ lạnh có bia." }
+      ]},
+      { pattern: "N は どこ に ありますか / いますか", meaning: "N ở đâu vậy?", note: "Dùng để hỏi vị trí tồn tại hiện hữu của một chủ thể xác định.", examples: [
+        { jp: "A: 山田さんはどこにいますか。B: 事務所にいます。", vn: "Hỏi: Anh Yamada ở đâu vậy? Đáp: Ở văn phòng." },
+        { jp: "A: 犬はどこにいますか。B: 庭にいます。", vn: "Hỏi: Con chó ở đâu vậy? Đáp: Ở ngoài sân." },
+        { jp: "A: 電話はどこにありますか。 B: 受付にあります。", vn: "Hỏi: Điện thoại ở đâu vậy? Đáp: Ở quầy lễ tân." },
+        { jp: "A: 私の傘はどこにありますか. B: ドアのところにあります。", vn: "Hỏi: Ô của tôi ở đâu vậy? Đáp: Ở chỗ cửa ra vào." },
+        { jp: "A: 佐藤さんはどこにいますか. B: 会議室にいます。", vn: "Hỏi: Chị Sato ở đâu vậy? Đáp: Ở phòng họp." }
+      ]},
+      { pattern: "N1 は N2(địa điểm) に あります / います", meaning: "N1 ở tại địa điểm N2", note: "Đưa danh từ cần miêu tả vị trí lên làm chủ ngữ đứng trước trợ từ は.", examples: [
+        { jp: "山田さんは事務所にいます。", vn: "Anh Yamada ở văn phòng." },
+        { jp: "佐藤さんは部屋にいます。", vn: "Chị Sato ở trong phòng." },
+        { jp: "電話は教室にあります。", vn: "Điện thoại ở trong lớp học." },
+        { jp: "本は机の上にあります。", vn: "Quyển sách ở trên bàn." },
+        { jp: "犬は庭にいます。", vn: "Con chó ở ngoài sân." }
+      ]},
+      { pattern: "N1 の N2(vị trí)", meaning: "N2 (vị trí tương đối) của N1", note: "N2 là các danh từ không gian: 上 (trên), 下 (dưới), 前 (trước), 後ろ (sau), 中 (trong), 外 (ngoài).", examples: [
+        { jp: "机の上に本があります。", vn: "Trên bàn có quyển sách." },
+        { jp: "箱の中に時計があります。", vn: "Trong hộp có đồng hồ." },
+        { jp: "駅の近くに銀行があります。", vn: "Gần nhà ga có ngân hàng." },
+        { jp: "私の隣に山田さんがいます。", vn: "Bên cạnh tôi có anh Yamada." },
+        { jp: "家の後ろに公園があります。", vn: "Phía sau nhà có công viên." }
+      ]},
+      { pattern: "N1 や N2 [など]", meaning: "N1 và N2 [chẳng hạn, vân vân]", note: "Dùng để liệt kê không đại diện hoàn toàn, chỉ đưa ra một vài đối tượng tiêu biểu.", examples: [
+        { jp: "箱の中に手紙や写真があります。", vn: "Trong hộp có thư và ảnh (vân vân)." },
+        { jp: "机の上に本や辞書があります。", vn: "Trên bàn có sách và từ điển." },
+        { jp: "部屋にベッドや机などがあります。", vn: "Trong phòng có giường, bàn, v.v..." },
+        { jp: "カバンの中に鉛筆やノートがあります。", vn: "Trong cặp có bút chì và vở." },
+        { jp: "冷蔵庫の中に肉や野菜などがあります。", vn: "Trong tủ lạnh có thịt, rau, v.v..." }
+      ]}
+    ];
+
+    lessonDialogues[10] = [
+      { jp: "A: すみません、山田さんはどこにいますか。B: 山田さんは今会議室にいますよ。A: そうですか。ありがとうございます。", vn: "A: Xin lỗi, anh Yamada ở đâu thế ạ? B: Anh Yamada bây giờ đang ở phòng họp đấy. A: Vậy ạ. Tôi xin cảm ơn." },
+      { jp: "A: カバンの中に何がありますか。B: 手紙や写真などがあります。本もありますよ。", vn: "A: Trong cặp có những cái gì thế? B: Có thư và ảnh chẳng hạn. Ngoài ra cũng có sách nữa đấy." },
+      { jp: "A: この近くに郵便局がありますか。B: ええ、駅の前に大きな郵便局があります。銀行の隣ですよ。", vn: "A: Gần đây có bưu điện nào không? B: Có, trước nhà ga có cái bưu điện lớn lắm. Ngay cạnh ngân hàng đấy." }
+    ];
+
+    qData[10] = {
+      p: ["部屋___机があります。|に|で,を,へ", "公園に犬___います。|が|を,に,で", "机___上に。|の|は,が,に", "箱の中___あります。|に|で,を,へ", "教室___学生がいます。|に|で,を,へ", "教室___机があります。|に|で,を,へ", "冷蔵庫の中___ビールがあります。|に|で,を,へ", "駅の近く___銀行があります。|に|で,を,へ", "私の隣___山田さんがいます。|に|で,を,へ", "家の後ろ___公園があります。|に|で,を,へ"],
+      v: ["事務所に___。|います|あります,机,外", "机の___に。|上|事務所,銀行,外", "近くに___があります。|銀行|事務所,机,外", "___に犬がいます。|外|事務所,机,銀行", "___はどこにいますか。|山田さん|机,銀行,外", "___はどこにいますか。|犬|机,銀行,外", "___はどこにありますか。|電話|机,銀行,外", "私の___はどこにありますか。|傘|机,銀行,外", "___は事務所にいます。|山田さん|机,銀行,外", "電話は___にあります。|教室|机,銀行,外"],
+      g: ["あそこに男の人が___。|います|あります,です,でした", "ポストが___。|あります|います,です,でした", "誰も___。|いません|ありません,です,でした", "何も___。|ありません|いません,です,でした", "教室に学生が___。|います|あります,です,でした", "公園に犬が___。|います|あります,です,でした", "教室に机が___。|あります|います,です,でした", "部屋にテレビが___。|あります|います,です,でした", "冷蔵庫の中にビールが___。|あります|います,です,でした", "山田さんは事務所に___。|います|あります,です,でした"]
+    };
+
+    // --- BÀI 11 ---
+    lessonGrammar[11] = [
+      { pattern: "Lượng từ (つ、枚、台、人)", meaning: "Các loại lượng từ đếm số lượng", note: "つ đếm vật chung, 枚 đếm vật mỏng, 台 đếm máy móc, xe cộ, 人 đếm người. Đứng trước động từ.", examples: [
+        { jp: "みかんが一つあります。", vn: "Có một quả quýt." },
+        { jp: "紙が一枚あります。", vn: "Có một tờ giấy." },
+        { jp: "テレビが一台あります。", vn: "Có một cái tivi." },
+        { jp: "学生が三人います。", vn: "Có ba học sinh." },
+        { jp: "自転車が四台あります。", vn: "Có bốn chiếc xe đạp." }
+      ]},
+      { pattern: "いくつ / 何枚 / 何台 / 何人", meaning: "Bao nhiêu cái/tờ/máy/người?", note: "Từ để hỏi số lượng tương ứng với từng nhóm loại danh từ đồ vật.", examples: [
+        { jp: "A: 教室にいすがいくつありますか。B: 15あります。", vn: "Hỏi: Lớp học có bao nhiêu cái ghế? Đáp: Có 15 cái." },
+        { jp: "A: シャツが何枚ありますか。B: 3枚あります。", vn: "Hỏi: Có bao nhiêu chiếc áo sơ mi? Đáp: Có 3 chiếc." },
+        { jp: "A: うちに自転車が何台ありますか。B: 2台あります。", vn: "Hỏi: Ở nhà có bao nhiêu chiếc xe đạp? Đáp: Có 2 chiếc." },
+        { jp: "A: 教室に学生が何人いますか. B: 20人います。", vn: "Hỏi: Trong lớp có bao nhiêu học sinh? Đáp: Có 20 người." },
+        { jp: "A: りんごがいくつありますか. B: 5つあります。", vn: "Hỏi: Có bao nhiêu quả táo? Đáp: Có 5 quả." }
+      ]},
+      { pattern: "N を [Số lượng] Vます", meaning: "Làm hành động V với số lượng đồ vật N", note: "Số lượng từ chỉ lượng đặt ngay trước hành động bổ nghĩa trực tiếp cho động từ, đứng sau trợ từ を.", examples: [
+        { jp: "パンを二つ食べます。", vn: "Tôi ăn hai cái bánh mì." },
+        { jp: "写真を二枚撮ります。", vn: "Tôi chụp hai tấm ảnh." },
+        { jp: "テレビを一台買います。", vn: "Tôi mua một cái tivi." },
+        { jp: "りんごを五つ買います。", vn: "Tôi mua năm quả táo." },
+        { jp: "自転車を四台買います。", vn: "Tôi mua bốn chiếc xe đạp." }
+      ]},
+      { pattern: "どのくらい Vますか", meaning: "Làm V mất khoảng bao lâu?", note: "Hỏi thời lượng kéo dài của hành động (không đi kèm trợ từ に).", examples: [
+        { jp: "A: 毎日どのくらい日本語を勉強しますか。B: 2時間勉強します。", vn: "Hỏi: Mỗi ngày học tiếng Nhật bao lâu? Đáp: Tôi học 2 tiếng." },
+        { jp: "A: 毎日どのくらい寝ますか. B: 7時間寝ます。", vn: "Hỏi: Mỗi ngày bạn ngủ bao lâu? Đáp: Tôi ngủ 7 tiếng." },
+        { jp: "旅行に三日行きます。", vn: "Tôi đi du lịch khoảng ba ngày." },
+        { jp: "一週間休みます。", vn: "Tôi nghỉ ngơi một tuần." },
+        { jp: "日本語を三か月勉強しました。", vn: "Tôi đã học tiếng Nhật được ba tháng." }
+      ]},
+      { pattern: "～かかります / [Thời gian] に ～回", meaning: "Mất phí/thời gian / Làm mấy lần trong khoảng thời gian", note: "かかります chỉ sự tiêu tốn. Trợ từ に chỉ hạn định tần suất chu kỳ.", examples: [
+        { jp: "東京から大阪まで3000円かかります。", vn: "Từ Tokyo đến Osaka tốn 3000 Yên." },
+        { jp: "バスで7時間かかります。", vn: "Tốn mất 7 tiếng bằng xe buýt." },
+        { jp: "一日に三回ご飯を食べます。", vn: "Một ngày tôi ăn cơm ba lần." },
+        { jp: "一週間に一回映画を見ます。", vn: "Một tuần tôi xem phim một lần." },
+        { jp: "一年に二回お金をもらいます。", vn: "Một năm tôi nhận tiền hai lần." }
+      ]}
+    ];
+
+    lessonDialogues[11] = [
+      { jp: "A: すみません、りんごを五つください。B: はい、五つですね。500円です。A: あと, 切手を何枚かありますか。B: はい, 何枚ですか。A: 2枚ください。", vn: "A: Xin lỗi cho tôi 5 quả táo. B: Vâng, 5 quả giá 500 Yên. A: Có tem thư không? B: Có, bạn cần mấy tờ? A: Cho tôi 2 tờ." },
+      { jp: "A: 東京から京都まで新幹線でどのくらいかかりますか。B: 2時間半ぐらいかかります。A: いくらですか。B: 13000円です。", vn: "A: Từ Tokyo đến Kyoto đi tàu Shinkansen mất bao lâu? B: Mất khoảng 2 tiếng rưỡi. A: Giá bao nhiêu tiền? B: Khoảng 13000 Yên." },
+      { jp: "A: どのくらい日本語を勉強しましたか。B: 6か月勉強しました。A: そうですか。ベトナムのどこから来ましたか。B: ハノイから来ました。", vn: "A: Bạn đã học tiếng Nhật được bao lâu rồi? B: Tôi học được 6 tháng rồi. A: Vậy à. Bạn đến từ nơi nào của Việt Nam? B: Tôi đến từ Hà Nội." }
+    ];
+
+    qData[11] = {
+      p: ["りんご___3つ買います。|を|が,に,で", "会議室___学生がいます。|に|で,を,へ", "日本___1年います。|に|で,を,へ", "1週間___2回。|に|で,を,へ", "みかん___一つあります。|が|を,に,で", "紙___一枚あります。|が|を,に,で", "テレビ___一台あります。|が|を,に,で", "学生___三人います。|が|を,に,で", "自転車___四台あります。|が|を,に,で", "教室にいす___いくつありますか。|が|を,に,で"],
+      v: ["みかんを___買います。|いくつ|何人,何台,何枚", "学生が___います。|何人|いくつ,何台,何枚", "車が___あります。|何台|いくつ,何人,何枚", "切手を___買います。|何枚|いくつ,何人,何台", "旅行に___行きます。|三日|いくつ,何人,何台", "___休みます。|一週間|いくつ,何人,何台", "日本語を___勉強しました。|三か月|いくつ,何人,何台", "東京から大阪まで3000円___。|かかります|いくつ,何人,何台", "バスで7時間___。|かかります|いくつ,何人,何台", "新幹線で2時間___。|かかります|いくつ,何人,何台"],
+      g: ["1時間___。|かかります|あります,います,です", "3つ___。|あります|います,です,でした", "1か月___。|休みます|あります,います,です", "パンを二つ___。|食べます|あります,います,です", "写真を二枚___。|撮ります|あります,います,です", "テレビを一台___。|買います|あります,います,です", "りんごを五つ___。|買います|あります,います,です", "自転車を四台___。|買います|あります,います,です", "一日に三回ご飯を___。|食べます|あります,います,です", "一週間に一回映画を___。|見ます|あります,います,です"]
+    };
+
+    // --- BÀI 12 ---
+    lessonGrammar[12] = [
+      { pattern: "N は N/Aな でした / じゃありませんでした", meaning: "Đã là / Đã không là", note: "Thể quá khứ của câu danh từ và tính từ đuôi な.", examples: [
+        { jp: "昨日は雨でした。", vn: "Hôm qua trời đã mưa." },
+        { jp: "昨日は休みじゃありませんでした。", vn: "Hôm qua đã không phải là ngày nghỉ." },
+        { jp: "昨日は暇でした。", vn: "Hôm qua tôi đã rảnh rỗi." },
+        { jp: "昨日のテストは簡単でした。", vn: "Bài kiểm tra hôm qua đã rất dễ." },
+        { jp: "公園は静かじゃありませんでした。", vn: "Công viên đã không yên tĩnh." }
+      ]},
+      { pattern: "N は Aかった / Aくなかった です", meaning: "Đã mang/không mang tính chất A", note: "Thể quá khứ của tính từ đuôi い: bỏ い thêm かった hoặc くなかった.", examples: [
+        { jp: "先週、寒かったです。", vn: "Tuần trước đã rất lạnh." },
+        { jp: "先月、忙しかったです。", vn: "Tháng trước đã bận rộn." },
+        { jp: "昨日の試験は優しかったです。", vn: "Bài kiểm tra hôm qua dễ." },
+        { jp: "お祭りは人が多くなかったです。", vn: "Lễ hội đã không có nhiều người." },
+        { jp: "昨日の天気は良くなかったです。", vn: "Thời tiết hôm qua đã không tốt lắm." }
+      ]},
+      { pattern: "N1 は N2 より A です", meaning: "N1 thì mang tính chất A hơn N2", note: "Cấu trúc câu so sánh hơn giữa hai chủ thể đối tượng.", examples: [
+        { jp: "北海道は九州より大きいです。", vn: "Hokkaido lớn hơn Kyushu." },
+        { jp: "今月は先月より忙しいです。", vn: "Tháng này bận rộn hơn tháng trước." },
+        { jp: "ひらがなは漢字より簡単です。", vn: "Chữ Hiragana dễ hơn chữ Kanji." },
+        { jp: "電車はバスより速いです。", vn: "Tàu điện nhanh hơn xe buýt." },
+        { jp: "牛肉は鶏肉より高いです。", vn: "Thịt bò đắt hơn thịt gà." }
+      ]},
+      { pattern: "N1 は N2 ほど Aくない / じゃありません", meaning: "N1 không mang tính chất A bằng N2", note: "Câu so sánh kém phương thức phủ định hoàn toàn vế so sánh.", examples: [
+        { jp: "九州は北海道ほど大きくないです。", vn: "Kyushu không lớn bằng Hokkaido." },
+        { jp: "先月は今月ほど忙しくないです。", vn: "Tháng trước không bận bằng tháng này." },
+        { jp: "ひらがなは漢字ほど難しくないです。", vn: "Chữ Hiragana không khó bằng chữ Kanji." },
+        { jp: "バスは電車ほど速くないです。", vn: "Xe buýt không nhanh bằng tàu điện." },
+        { jp: "牛肉は鶏肉ほど安くないです。", vn: "Thịt bò không rẻ bằng thịt gà." }
+      ]},
+      { pattern: "N1 と N2 と どちらが Aですか / [Phạm vi] で何が一番 Aですか", meaning: "So sánh lựa chọn và so sánh nhất", note: "Chọn giữa 2 vật dùng どちら, chọn nhất trong phạm vi dùng 一番.", examples: [
+        { jp: "A: 犬と猫とどちらが好きですか。B: 犬の方が好きです。", vn: "Hỏi: Chó và mèo thích con nào hơn? Đáp: Tôi thích chó hơn." },
+        { jp: "A: ワープロとパソコンとどちらが便利ですか。B: どちらも便利です。", vn: "Hỏi: Máy đánh chữ và máy tính cái nào tiện hơn? Đáp: Cả hai đều tiện." },
+        { jp: "A: 日本料理の中で何が一番好きですか。B: 寿司が一番好きです。", vn: "Hỏi: Trong món ăn Nhật thích món nào nhất? Đáp: Thích sushi nhất." },
+        { jp: "A: 一年の中でいつが一番寒いですか。B: 2月が一番寒いです。", vn: "Hỏi: Trong một năm khi nào lạnh nhất? Đáp: Tháng 2 lạnh nhất." },
+        { jp: "A: スポーツで何が一番面白いですか。B: サッカーが一番面白いです。", vn: "Hỏi: Trong các môn thể thao môn nào thú vị nhất? Đáp: Bóng đá thú vị nhất." }
+      ]}
+    ];
+
+    lessonDialogues[12] = [
+      { jp: "A: 昨日の京都のお祭りはどうでしたか。B: とても賑やかでした。天気が良かったですから, 人が多かったですよ。A: 寒くなかったですか。B: いいえ、全然寒くなかったです。", vn: "A: Lễ hội ở Kyoto hôm qua thế nào? B: Rất náo nhiệt. Vì thời tiết đẹp nên người đông lắm. A: Có lạnh không? B: Không, hoàn toàn không lạnh." },
+      { jp: "A: ホンさんとランさんとどちらが背が高いですか。B: ホンさんの方が高いです。でも, テニスはランさんの方が上手ですよ。", vn: "A: Hương và Lan ai cao hơn? B: Hương cao hơn. Nhưng tennis thì Lan giỏi hơn đấy." },
+      { jp: "A: ベトナムの料理で何が一番おいしいですか。B: フォーが一番おいしいです。毎日食べたいですよ。A: そうですか。私もフォーが好きです。", vn: "A: Trong món ăn Việt Nam món nào ngon nhất? B: Phở ngon nhất. Ngày nào tôi cũng muốn ăn. A: Vậy à. Tôi cũng thích phở." }
+    ];
+
+    qData[12] = {
+      p: ["昨日___雨でした。|は|が,を,に", "北海道___九州より。|は|が,を,に", "車___電車とどちらが。|と|は,が,を", "季節___中で。|の|は,が,に", "昨日___休みじゃありませんでした。|は|が,を,に", "昨日___暇でした。|は|が,を,に", "昨日___暇じゃありませんでした。|は|が,を,に", "お祭り___賑やかでした。|は|が,を,に", "昨日のテスト___簡単でした。|は|が,を,に", "公園___静かじゃありませんでした。|は|が,を,に"],
+      v: ["昨日の天気は___ですか。|どう|何,誰,いつ", "何が___好きですか。|一番|どう,誰,いつ", "___の方が好きです。|海|どう,一番,いつ", "___より大きいです。|東京|どう,一番,いつ", "チュエンさんはリンさんより___です。|高い|どう,一番,いつ", "北海道は九州より___です。|大きい|どう,一番,いつ", "今月は先月より___です。|忙しい|どう,一番,いつ", "ひらがなは漢字より___です。|簡単|どう,一番,いつ", "電車はバスより___です。|速い|どう,一番,いつ", "ジエムさんはロアンさんより高く___です。|ない|どう,一番,いつ"],
+      g: ["昨日は___。|暇でした|暇です,暇じゃありません,暇じゃありませんでした", "寒く___。|なかったです|ないです,じゃありません,でした", "きれい___。|じゃありませんでした|じゃありません,ないです,でした", "雨___。|でした|です,じゃありません,じゃありませんでした", "九州は北海道ほど大きく___。|ないです|じゃありません,でした,じゃありませんでした", "先月は今月ほど忙しく___。|ないです|じゃありません,でした,じゃありませんでした", "ひらがなは漢字ほど難しく___。|ないです|じゃありません,でした,じゃありませんでした", "バスは電車ほど速く___。|ないです|じゃありません,でした,じゃありませんでした", "犬と猫とどちらが___。|好きですか|好きです,好きじゃありません,好きでした", "犬の方が___。|好きです|好きですか,好きじゃありません,好きでした"]
+    };
+
+    // --- BÀI 13 ---
+    lessonGrammar[13] = [
+      { pattern: "N が ほしいです", meaning: "Muốn có danh từ N", note: "Bày tỏ ước muốn sở hữu một vật gì đó. Không dùng cho người thứ ba hành động.", examples: [
+        { jp: "私はパソコンがほしいです。", vn: "Tôi muốn có máy tính." },
+        { jp: "うちがほしいです。", vn: "Tôi muốn có nhà riêng." },
+        { jp: "お金が欲しいです。", vn: "Tôi muốn có tiền." },
+        { jp: "カメラが欲しくないです。", vn: "Tôi không muốn có máy ảnh." },
+        { jp: "A: あなたは今何が一番ほしいですか。B: 新しい車がほしいです。", vn: "A: Bây giờ bạn muốn có cái gì nhất? B: Tôi muốn có ô tô mới." }
+      ]},
+      { pattern: "Vたいです", meaning: "Muốn làm hành động V", note: "Động từ bỏ ます thêm たいです. Đối tượng chịu hành động có thể đi với が hoặc を.", examples: [
+        { jp: "私はご飯を食べたいです。", vn: "Tôi muốn ăn cơm." },
+        { jp: "私は水を飲みたいです。", vn: "Tôi muốn uống nước." },
+        { jp: "寿司を食べたいです。", vn: "Tôi muốn ăn sushi." },
+        { jp: "うちへ帰りたいです。", vn: "Tôi muốn về nhà." },
+        { jp: "彼と結婚したいです。", vn: "Tôi muốn kết hôn với anh ấy." }
+      ]},
+      { pattern: "Vたくないです", meaning: "Không muốn làm hành động V", note: "Phủ định của Vtai. Đổi đuôi たい thành たくないです.", examples: [
+        { jp: "寿司が食べたくないです。", vn: "Tôi không muốn ăn sushi." },
+        { jp: "コーヒーが飲みたくないです。", vn: "Tôi không muốn uống cà phê." },
+        { jp: "映画が見たくないです。", vn: "Tôi không muốn xem phim." },
+        { jp: "うちへ帰りたくないです。", vn: "Tôi không muốn về nhà." },
+        { jp: "彼と結婚したくないです。", vn: "Tôi không muốn kết hôn với anh ấy." }
+      ]},
+      { pattern: "N(địa điểm) へ V(bỏ ます)に 行きます/来ます/帰ります", meaning: "Đi/Đến/Về N để thực hiện mục đích V", note: "Danh từ đứng trước に có thể là danh từ mục đích hành động hoặc động từ bỏ ます.", examples: [
+        { jp: "コーヒーを飲みに行きます。", vn: "Tôi đi uống cà phê." },
+        { jp: "肉と野菜を買いに行きます。", vn: "Tôi đi mua thịt và rau." },
+        { jp: "昨日、本を読みにいきました。", vn: "Hôm qua tôi đã đi đọc sách." },
+        { jp: "週末、食事に行きます。", vn: "Cuối tuần tôi đi ăn uống." },
+        { jp: "プールへ泳ぎに行きます。", vn: "Tôi đi đến hồ bơi để bơi." }
+      ]},
+      { pattern: "何か / 誰か / どこか", meaning: "Cái gì đó / Ai đó / Nơi nào đó", note: "Đại từ bất định. Khi đi kèm trợ từ を hoặc へ có thể lược bỏ trợ từ.", examples: [
+        { jp: "A: 明日、休みですから、どこか行きませんか。B: ええ、行きましょう。", vn: "A: Ngày mai nghỉ, đi đâu đó chơi không? B: Vâng, đi nào." },
+        { jp: "A: 寂しいですから、誰かと話したいです。B: 私と話しましょう。", vn: "A: Vì buồn nên tôi muốn nói chuyện với ai đó. B: Hãy nói chuyện với tôi đi." },
+        { jp: "A: お腹がすきましたね。何か食べたいですか。B: ええ、おにぎりを食べたいです。", vn: "A: Đói bụng rồi nhỉ. Có muốn ăn cái gì đó không? B: Có, tôi muốn ăn cơm nắm." },
+        { jp: "喉が渇きましたから, 何か飲みたいです。", vn: "Vì khát nước nên tôi muốn uống cái gì đó." },
+        { jp: "冬休みにどこかへ行きたいです。", vn: "Kỳ nghỉ đông tôi muốn đi đâu đó chơi." }
+      ]}
+    ];
+
+    lessonDialogues[13] = [
+      { jp: "A: 今、何が一番欲しいですか。B: 新しい車が欲しいです。今の車は古いですから。A: そうですか。私は時間が欲しいです。", vn: "A: Bây giờ bạn muốn có cái gì nhất? B: Tôi muốn có ô tô mới. Vì ô tô bây giờ cũ rồi. A: Vậy à. Tôi thì muốn có thời gian." },
+      { jp: "A: 週末は何かしましたか。B: ええ、神戸へインド料理を食べに行きました。とてもおいしかったですよ。A: そうですか。私も行きたいです。", vn: "A: Cuối tuần bạn có làm gì không? B: Có, tôi đã đi Kobe để ăn món Ấn Độ. Ngon lắm đấy. A: Thế à. Tôi cũng muốn đi." },
+      { jp: "A: 暑いですね。どこかへ泳ぎに行きませんか。B: いいですね。じゃ、土曜日に一緒に行きましょう。", vn: "A: Nóng quá nhỉ. Đi đâu đó bơi không? B: Hay đấy. Vậy thứ bảy tuần này cùng đi nhé." }
+    ];
+
+    qData[13] = {
+      p: ["お金___ほしいです。|が|を,に,で", "水___飲みたいです。|を|が,に,で", "デパート___行きます。|へ|に,で,を", "買い物___行きます。|に|で,を,へ", "パソコン___ほしいです。|が|を,に,で", "うち___ほしいです。|が|を,に,で", "カメラ___欲しくないです。|が|を,に,で", "あなたは何___ほしいですか。|が|を,に,で", "ご飯___食べたいです。|を|が,に,で", "寿司___食べたいです。|を|が,に,で"],
+      v: ["___がほしいですか。|何|どこか,何か,誰か", "___を食べたいですか。|何|どこか,何か,誰か", "___に行きたいです。|どこか|何か,誰か,何", "映画を___に行きます。|見|どこか,何か,誰か", "コーヒーを___に行きます。|飲み|どこか,何か,誰か", "肉と野菜を___に行きます。|買い|どこか,何か,誰か", "本を___にいきました。|読み|どこか,何か,誰か", "プールへ___に行きます。|泳ぎ|どこか,何か,誰か", "公園へ___に行きます。|散歩|どこか,何か,誰か", "日本へ___に行きます。|買い物|どこか,何か,誰か"],
+      g: ["ほしく___。|ないです|ありません,でした,じゃありませんでした", "帰りたく___。|ないです|ありません,でした,じゃありませんでした", "遊びに___。|行きます|行きました,行きません,行って", "結婚し___。|たいです|たくないです,たかったです,たくなかったです", "コーヒーが飲みたく___。|ないです|ありません,でした,じゃありませんでした", "映画が見たく___。|ないです|ありません,でした,じゃありませんでした", "彼と結婚したく___。|ないです|ありません,でした,じゃありませんでした", "週末、食事に___。|行きます|行きました,行きません,行って", "喫茶店へコーヒーを飲みに___。|いきます|いきました,いきません,いって", "どこかへ行き___。|たいです|たくないです,たかったです,たくなかったです"]
+    };
+// =================================================================
+    // KHO DỮ LIỆU CHUYÊN SÂU BÀI 14 ĐẾN BÀI 20 (PHẦN 3)
+    // =================================================================
+
+    // --- BÀI 14 ---
+    lessonGrammar[14] = [
+      { pattern: "Vて ください", meaning: "Hãy làm hành động V", note: "Dùng để yêu cầu, nhờ vả hoặc sai khiến người khác làm việc gì đó một cách lịch sự.", examples: [
+        { jp: "ここに名前を書いてください。", vn: "Hãy viết tên vào đây." },
+        { jp: "すみません、パスポートを見せてください。", vn: "Xin lỗi, hãy cho tôi xem hộ chiếu." },
+        { jp: "どうぞたくさん食べてください。", vn: "Xin mời ăn nhiều vào nhé." },
+        { jp: "ちょっと待ってください。", vn: "Hãy đợi một chút." },
+        { jp: "A: ドアを開けてください。B: はい, わかりました。", vn: "A: Hãy mở cửa giúp tôi. B: Vâng, tôi hiểu rồi." }
+      ]},
+      { pattern: "Vて います (Hiện tại tiếp diễn)", meaning: "Đang làm hành động V", note: "Diễn tả một hành động đang xảy ra tại chính thời điểm nói.", examples: [
+        { jp: "今、コーヒーを飲んでいます。", vn: "Bây giờ tôi đang uống cà phê." },
+        { jp: "今、サンドイッチを食べています。", vn: "Bây giờ tôi đang ăn sandwich." },
+        { jp: "A: 何を読んでいますか。B: 新聞を読んでいます。", vn: "A: Bạn đang đọc gì thế? B: Tôi đang đọc báo." },
+        { jp: "A: 何を食べていますか。B: カレーを食べています。", vn: "A: Bạn đang ăn gì thế? B: Tôi đang ăn cà-ri." },
+        { jp: "A: 今、何をしていますか。B: 日本語を勉強しています。", vn: "A: Bây giờ bạn đang làm gì thế? B: Tôi đang học tiếng Nhật." }
+      ]},
+      { pattern: "Vましょうか", meaning: "Để tôi làm V giúp nhé?", note: "Bày tỏ lời đề nghị muốn chủ động giúp đỡ người khác thực hiện một việc gì đó.", examples: [
+        { jp: "A: 写真を撮りましょうか。B: はい、お願いします。", vn: "A: Để tôi chụp ảnh giúp nhé? B: Vâng, làm ơn giúp tôi." },
+        { jp: "A: 荷物を持ちましょうか。B: いいえ、結構です。", vn: "A: Để tôi mang hành lý giúp nhé? B: Không, tôi tự làm được rồi." },
+        { jp: "A: 窓を開けましょうか。B: はい、すみません。お願いします。", vn: "A: Để tôi mở cửa sổ giúp nhé? B: Vâng, xin lỗi. Nhờ anh nhé." },
+        { jp: "A: タクシーを呼びましょうか。B: ええ、1台お願いします。", vn: "A: Để tôi gọi taxi giúp nhé? B: Vâng, cho tôi 1 chiếc." },
+        { jp: "A: 傘を貸しましょうか。B: ええ、ありがとうございます。", vn: "A: Để tôi cho mượn ô nhé? B: Ôi, cảm ơn bạn nhiều." }
+      ]},
+      { pattern: "V(bỏ ます) かた", meaning: "Cách làm hành động V", note: "Biến động từ thành danh từ chỉ cách thức phương pháp thực hiện.", examples: [
+        { jp: "漢字の書き方がわかりません。", vn: "Tôi không biết cách viết chữ Hán." },
+        { jp: "A: このカメラの使い方を教えてください。B: はい, いいですよ。", vn: "A: Hãy chỉ cho tôi cách dùng chiếc máy ảnh này với. B: Vâng, được chứ." },
+        { jp: "美味しいコーヒーの作り方です。", vn: "Đây là cách pha cà phê ngon." },
+        { jp: "日本語の勉強の仕方が上手ですね。", vn: "Cách thức học tiếng Nhật của bạn hay ghê." },
+        { jp: "この言葉の読み方を教えてください。", vn: "Hãy chỉ cho tôi cách đọc từ này." }
+      ]}
+    ];
+
+    lessonDialogues[14] = [
+      { jp: "A: すみません、ちょっと待ってください。荷物が多いですから。B: 荷物を持ちましょうか。A: はい、すみません。お願いします。", vn: "A: Xin lỗi, hãy đợi tôi một chút. Vì hành lý nhiều quá. B: Để tôi xách hộ nhé? A: Vâng, xin lỗi. Nhờ anh nhé." },
+      { jp: "A: 今、何をしていますか。雨が降っていますか。B: いいえ、降っていません。友達とサッカーをしていますよ。", vn: "A: Bây giờ đang làm gì thế? Trời có mưa không? B: Không, không mưa. Tôi đang chơi đá bóng với bạn." },
+      { jp: "A: 漢字の書き方が分かりません。教えてください。B: じゃ、ここにゆっくり書いてください。見せますから。", vn: "A: Tôi không biết cách viết chữ Hán này. Hãy chỉ tôi với. B: Vậy, hãy viết từ từ vào đây. Tôi sẽ làm mẫu cho xem." }
+    ];
+
+    // --- BÀI 15 ---
+    lessonGrammar[15] = [
+      { pattern: "Vて もいいです", meaning: "Làm hành động V cũng được", note: "Dùng để xin phép thực hiện hành động hoặc cho phép đối phương làm gì.", examples: [
+        { jp: "ご飯を食べてもいいです。", vn: "Ăn cơm cũng được." },
+        { jp: "寝てもいいです。", vn: "Ngủ luôn cũng được." },
+        { jp: "A: 写真を撮ってもいいですか。B: はい、いいですよ。", vn: "A: Tôi chụp ảnh có được không? B: Vâng, được chứ." },
+        { jp: "A: ここに座ってもいいですか。B: ええ、どうぞ。", vn: "A: Tôi ngồi chỗ này được không? B: Vâng, xin mời." },
+        { jp: "A: エアコンをつけてもいいですか。B: はい、いいですよ。", vn: "A: Tôi bật điều hòa nhiệt độ lên nhé? B: Vâng, được chứ." }
+      ]},
+      { pattern: "Vて はいけません", meaning: "Cấm làm / Không được làm hành động V", note: "Biểu thị sự cấm đoán, không được phép thực hiện hành vi do quy định luật lệ.", examples: [
+        { jp: "ここで泳いではいけません。", vn: "Cấm bơi lội ở khu vực này." },
+        { jp: "危ないから入ってはいけません。", vn: "Vì nguy hiểm nên cấm đi vào." },
+        { jp: "写真を撮ってはいけません。", vn: "Không được phép chụp hình." },
+        { jp: "ここでタバコを吸ってはいけません。", vn: "Cấm hút thuốc lá ở đây." },
+        { jp: "病院で電話をかけてはいけません。", vn: "Không được gọi điện thoại trong bệnh viện." }
+      ]},
+      { pattern: "Vて います (Trạng thái kết quả)", meaning: "Đang ở trạng thái V", note: "Hành động đã xảy ra và hoàn tất trong quá khứ nhưng kết quả hiện trạng vẫn duy trì lưu giữ ở hiện tại.", examples: [
+        { jp: "私は結婚しています。", vn: "Tôi đã kết hôn (và hiện đang lập gia đình)." },
+        { jp: "私はソン先生を知っています。", vn: "Tôi biết thầy Sơn." },
+        { jp: "私は車を持っています。", vn: "Tôi có xe hơi." },
+        { jp: "今、ハノイに住んでいます。", vn: "Bây giờ tôi đang sinh sống ở Hà Nội." },
+        { jp: "A: 山田さんを知っていますか。B: いいえ、知りません。", vn: "A: Bạn có biết anh Yamada không? B: Không, tôi không biết (Phủ định dùng 知りません)." }
+      ]},
+      { pattern: "Vて います (Thói quen nghề nghiệp)", meaning: "Làm hành động V thường xuyên lặp đi lặp lại", note: "Diễn tả thói quen hoặc hành động mang tính chất lặp đi lặp lại lâu dài, nghề nghiệp, kinh doanh buôn bán.", examples: [
+        { jp: "アップルでiPhoneを売っています。", vn: "Tại công ty Apple có bán điện thoại iPhone." },
+        { jp: "私は日本のiPhoneを使っています。", vn: "Tôi thường dùng chiếc iPhone của Nhật." },
+        { jp: "HNLの会社で働いています。", vn: "Tôi đang làm việc tại công ty HNL." },
+        { jp: "HNLで日本語を勉強しています。", vn: "Tôi hằng ngày học tiếng Nhật ở HNL." },
+        { jp: "HNLで日本語を教えています。", vn: "Tôi đang đảm nhiệm dạy tiếng Nhật tại HNL." }
+      ]}
+    ];
+
+    lessonDialogues[15] = [
+      { jp: "A: すみません、ここで写真を撮ってもいいですか。B: いいえ、写真を撮ってはいけません。美術館ですから。A: ああ、そうですか。すみません。", vn: "A: Xin lỗi, chụp ảnh ở chỗ này được không ạ? B: Không, không được chụp ảnh đâu ạ. Vì là bảo tàng mỹ thuật. A: Ôi thế ạ. Tôi xin lỗi." },
+      { jp: "A: マリアさんは独身ですか。B: いいえ、結婚しています。ベトナムのハノイに住んでいますよ。A: そうですか。仕事は何をしていますか。B: 英語を教えています。", vn: "A: Maria còn độc thân à? B: Không, cô ấy kết hôn rồi. Hiện đang sống ở Hà Nội, Việt Nam đấy. A: Thế à. Cô ấy làm nghề gì? B: Đang dạy tiếng Anh." },
+      { jp: "A: このカタログをもらってもいいですか。B: ええ、いいですよ。どうぞ持って行ってください。", vn: "A: Tôi xin cuốn danh mục catalog này có được không? B: Vâng, được chứ. Xin mời bạn cứ cầm lấy đi." }
+    ];
+
+    // --- BÀI 16 ---
+    lessonGrammar[16] = [
+      { pattern: "V1て、V2て、V3ます", meaning: "Làm V1, rồi V2, sau đó làm V3", note: "Liệt kê chuỗi các hành động xảy ra tuần tự liên tiếp nối nhau theo trục trình tự thời gian.", examples: [
+        { jp: "毎朝、起きて、浴びて、それから朝ご飯を食べます。", vn: "Mỗi sáng tôi thức dậy, tắm rửa, rồi sau đó ăn sáng." },
+        { jp: "うちへ帰って、テレビを見て、それから寝ます。", vn: "Về nhà, xem tivi, rồi đi ngủ." },
+        { jp: "昨日、デパートへ行って、買い物をして、映画を見ました。", vn: "Hôm qua tôi đi bách hóa, mua sắm rồi xem phim truyện." },
+        { jp: "本を読んで、手紙を書いて、寝ました。", vn: "Tôi đọc sách, viết thư rồi đi ngủ luôn." },
+        { jp: "A: 友達に会って、何をしましたか。B: 一一緒に食事をしました。", vn: "A: Gặp bạn xong bạn làm gì? B: Chúng tôi đã ăn uống cùng nhau." }
+      ]},
+      { pattern: "N1 で、N2 です", meaning: "Là N1 và đồng thời là N2", note: "Dùng kết nối hai danh từ dùng khi muốn miêu tả đồng thời nhiều thông tin đặc điểm về cùng một chủ thể.", examples: [
+        { jp: "カリナさんは30歳で、会社員です。", vn: "Chị Karina 30 tuổi, và là nhân viên công ty." },
+        { jp: "太郎くんは9歳で、学生です。", vn: "Bé Tarou 9 tuổi, hiện là học sinh." },
+        { jp: "彼女はベトナム人で、実習生です。", vn: "Cô ấy là người Việt Nam, và là thực tập sinh." },
+        { jp: "ズンさんはクラス長で、18歳です。", vn: "Dũng là lớp trưởng, năm nay 18 tuổi." },
+        { jp: "これは日本の本で、とても面白いです。", vn: "Đây là cuốn sách của Nhật, và nội dung vô cùng thú vị." }
+      ]},
+      { pattern: "Aな で / Aい(bỏ い)くて", meaning: "Vừa mang tính chất A1 lại vừa A2", note: "Cách liên kết nối các tính từ. Tính từ đuôi な thay bằng で, tính từ đuôi い bỏ い thêm くて.", examples: [
+        { jp: "ジャンさんはきれいで、料理が上手です。", vn: "Karina vừa xinh đẹp lại vừa nấu ăn giỏi." },
+        { jp: "太郎くんはハンサムで、とても親切です。", vn: "Bé Tarou vừa đẹp trai lại vừa vô cùng tốt bụng." },
+        { jp: "カリナさんは若くて、頭がいいです。", vn: "Chị Karina vừa trẻ trung lại vừa thông minh." },
+        { jp: "太郎くんは頭が良くて、とても可愛いです。", vn: "Bé Tarou thông minh và trông rất dễ thương." },
+        { jp: "このiPhoneは便利で、安全です。", vn: "Chiếc iPhone này tiện lợi và độ bảo mật an toàn." }
+      ]},
+      { pattern: "V1て から、V2ます", meaning: "Sau khi hoàn thành xong V1 mới tiến hành làm V2", note: "Nhấn mạnh hành động vế 2 chỉ được phép diễn ra sau khi hành vi vế 1 đã chấm dứt hoàn tất.", examples: [
+        { jp: "日本へ来てから、日本語を勉強します。", vn: "Sau khi sang Nhật Bản tôi mới chính thức học tiếng Nhật." },
+        { jp: "うちへ帰ってから、ご飯を食べます。", vn: "Về nhà xong xuôi tôi mới ăn cơm." },
+        { jp: "A: 日本へ来てから、まず何をしますか。B: 富士山を見に行きたいです。", vn: "A: Sau khi đến Nhật, việc đầu tiên bạn làm gì? B: Tôi muốn đi ngắm núi Phú Sĩ." },
+        { jp: "手を洗ってから、ご飯を食べます。", vn: "Rửa tay sạch sẽ xong rồi mới ăn cơm." },
+        { jp: "仕事が終わってから、飲みに行きませんか。", vn: "Công việc xong xuôi rồi chúng ta đi uống chút gì không?" }
+      ]},
+      { pattern: "N1 は N2 が A", meaning: "N1 thì có bộ phận bộ vị N2 mang tính chất đặc điểm A", note: "Mẫu câu miêu tả thuộc tính, đặc điểm một phần bộ phận cơ thể hoặc tính chất của chủ thể N1.", examples: [
+        { jp: "ウサギは耳が長いです。", vn: "Con thỏ thì có đôi tai dài." },
+        { jp: "象は鼻が長いです。", vn: "Con voi thì có chiếc mũi dài." },
+        { jp: "蛇は体が長いです。", vn: "Con rắn thì có cơ thể dài." },
+        { jp: "マリアさんは髪が長いです。", vn: "Chị Maria có mái tóc dài óng ả." },
+        { jp: "日本は山が多いです。", vn: "Đất nước Nhật Bản thì có nhiều đồi núi." }
+      ]}
+    ];
+
+    lessonDialogues[16] = [
+      { jp: "A: 昨日、大学が終わってから何をしましたか。B: 新宿へ行って、映画を見て、それから友達とお茶を飲みました。", vn: "A: Hôm qua, sau khi học xong ở trường đại học bạn làm gì thế? B: Tôi đi Shinjuku, xem phim truyện, rồi sau đó đi uống trà cùng bạn bè." },
+      { jp: "A: カリナさんはどんな人ですか。B: 若くて、きれいで, そして頭が良くて親切な人ですよ。", vn: "A: Chị Karina là người thế nào vậy? B: Là người vừa trẻ trung, xinh đẹp, thông minh lại tốt bụng nữa đó." },
+      { jp: "A: すみません、マリアさんはどの人ですか。B: あの髪が長くて、背が高い人ですよ。ほら, あそこにいます。", vn: "A: Xin lỗi, chị Maria là người nào thế? B: Là cái người tóc dài, dáng cao cao kia kìa. Nhìn xem, cô ấy đứng đằng kia kìa." }
+    ];
+
+    // --- BÀI 17 ---
+    lessonGrammar[17] = [
+      { pattern: "Vないで ください", meaning: "Xin đừng làm hành động V", note: "Mẫu câu yêu cầu khuyên bảo một cách lịch sự đối phương không được thực hiện một hành vi nào đó.", examples: [
+        { jp: "危ないですから、写真を撮らないでください。", vn: "Vì nguy hiểm nên xin vui lòng đừng chụp ảnh ở đây." },
+        { jp: "お酒をたくさん飲まないでください。", vn: "Xin vui lòng đừng uống nhiều rượu quá." },
+        { jp: "ここでタバコを吸わないでください。", vn: "Xin vui lòng đừng hút thuốc lá ở vị trí này." },
+        { jp: "私の大切な約束を忘れないでください。", vn: "Xin đừng quên cái hẹn quan trọng của tôi nhé." },
+        { jp: "A: 心配しないでください。B: はい, わかりました。", vn: "A: Xin đừng quá lo lắng lo âu. B: Vâng, tôi biết rồi." }
+      ]},
+      { pattern: "Vなければ なりません", meaning: "Bắt buộc bắt phải làm hành động V", note: "Biểu thị nghĩa vụ bách tính bắt buộc phải làm, không phụ thuộc ý chí cá nhân.", examples: [
+        { jp: "病気ですから、毎日薬を飲まなければなりません。", vn: "Vì đang đau ốm nên hằng ngày tôi phải uống thuốc." },
+        { jp: "仕事が多いですから、今晩残業しなければなりません。", vn: "Vì việc nhiều nên tối nay tôi phải tăng ca làm thêm." },
+        { jp: "毎朝、6時に起きなければなりません。", vn: "Mỗi sáng sớm tôi bắt buộc phải thức dậy lúc 6 giờ." },
+        { jp: "教室で日本語を話さなければなりません。", vn: "Trong lớp học chúng tôi bắt buộc phải nói bằng tiếng Nhật." },
+        { jp: "明日テストですから、今晩勉強しなければなりません。", vn: "Vì mai kiểm tra nên tối nay phải học bài." }
+      ]},
+      { pattern: "Vなくても いいです", meaning: "Không làm hành động V cũng được", note: "Biểu thị sự cho phép đối phương không cần thiết phải tiến hành thực hiện một hành vi nào đó.", examples: [
+        { jp: "足が痛いですから、サッカーをしなくてもいいです。", vn: "Vì đau chân nên bạn không chơi đá bóng cũng được." },
+        { jp: "お腹がいっぱいですから、全部食べなくてもいいです。", vn: "Vì no bụng rồi nên không ăn hết toàn bộ cũng được." },
+        { jp: "熱がありますから、今日の宿題をしなくてもいいです。", vn: "Vì bị sốt nên bài tập hôm nay không làm cũng được." },
+        { jp: "日曜日ですから、学校へ行かなくてもいいです。", vn: "Vì là ngày Chủ nhật nên không cần đến trường học cũng được." },
+        { jp: "A: 急がなくてもいいですか。B: はい, 時間がたくさんありますから。", vn: "A: Không cần vội vã vội vàng có được không? B: Vâng, vì còn nhiều thời gian mà." }
+      ]},
+      { pattern: "Thời gian までに Vます", meaning: "Phải thực hiện xong hành động V trước mốc thời hạn", note: "Chỉ rõ giới hạn mốc thời gian cuối cùng hành động bắt buộc phải hoàn thành kết thúc.", examples: [
+        { jp: "夜7時半までにうちへ帰らなければなりません。", vn: "Tôi phải quay về nhà trước mốc 7 giờ rưỡi tối." },
+        { jp: "9時までに学校へ来なければなりません。", vn: "Học sinh phải có mặt ở trường trước 9 giờ." },
+        { jp: "夜12時までに寝るようにしています。", vn: "Tôi cố gắng ngủ trước 12 giờ đêm." },
+        { jp: "来週の月曜日までにレポートを出さなければなりません。", vn: "Phải nộp bản báo cáo trước ngày thứ hai tuần sau." },
+        { jp: "30歳までに結婚したいと考えています。", vn: "Tôi muốn kết hôn trước khi chạm mốc 30 tuổi." }
+      ]}
+    ];
+
+    lessonDialogues[17] = [
+      { jp: "A: すみません、ここでタバコを吸わないでください。禁煙ですよ。B: あ、はい、すみません。どこで吸ってもいいですか。A: 外の喫煙所で吸ってください。", vn: "A: Xin lỗi, xin đừng hút thuốc ở đây. Khu vực cấm hút thuốc đó ạ. B: Á, vâng xin lỗi. Vậy tôi hút ở đâu được nhỉ? A: Xin mời ra khu hút thuốc ngoài trời ạ." },
+      { jp: "A: 明日の晩のパーティーは、何時までに帰らなければなりませんか。B: 10時半までに帰らなければなりません。寮のドアが閉まりますから。", vn: "A: Buổi tiệc tối mai bắt buộc phải về trước mấy giờ vậy? B: Phải về trước 10 giờ rưỡi. Vì cửa ký túc xá sẽ đóng lại sau giờ đó." },
+      { jp: "A: 先生、明日も学校へ来なければなりませんか。B: いいえ、明日は休みですから, 来なくてもいいですよ。ゆっくり休んでください。", vn: "A: Thầy ơi, mai em có phải đến trường không ạ? B: Không, mai nghỉ nên em không đến cũng được. Hãy nghỉ ngơi thoải mái đi." }
+    ];
+
+    // --- BÀI 18 ---
+    lessonGrammar[18] = [
+      { pattern: "N / Vること が できます", meaning: "Có khả năng làm N / hành động V", note: "Diễn tả năng lực thiên phú, kỹ năng được học tập hoặc khả năng hoàn cảnh cho phép thực hiện hành vi.", examples: [
+        { jp: "私はスキーができます。", vn: "Tôi có thể chơi trượt tuyết." },
+        { jp: "一人で日本料理を作ることができます。", vn: "Tôi có thể tự mình nấu được món ăn Nhật." },
+        { jp: "大勢の前で日本語を話すことができます。", vn: "Tôi có thể nói tiếng Nhật tự tin trước đám đông." },
+        { jp: "子供の頃からピアノを弾くことができます。", vn: "Tôi có thể chơi đàn piano từ thuở nhỏ." },
+        { jp: "夜遅くでも図書館で本を読むことができます。", vn: "Người ta có thể đọc sách ở thư viện ngay cả lúc đêm muộn." }
+      ]},
+      { pattern: "私の趣味 は N / Vること です", meaning: "Sở thích cá nhân của tôi là N / việc làm hành động V", note: "Dùng giới thiệu bản thân. Bắt buộc động từ phải thêm こと để danh từ hóa cụm hành động hành vi.", examples: [
+        { jp: "私の趣味は楽しい旅行です。", vn: "Sở thích của tôi là những chuyến đi du lịch vui vẻ." },
+        { jp: "私の趣味は川での釣りです。", vn: "Sở thích của tôi là câu cá ở bờ sông." },
+        { jp: "私の趣味は色々な写真を撮ることです。", vn: "Sở thích của tôi là chụp thật nhiều bức ảnh đa dạng." },
+        { jp: "私の趣味は外国の本を読むことです。", vn: "Sở thích của tôi là đọc sách nước ngoài." },
+        { jp: "A: あなたの趣味は何ですか。B: 音楽を聞くことです。", vn: "A: Sở thích của bạn là cái gì thế? B: Là việc lắng nghe âm nhạc." }
+      ]},
+      { pattern: "V1る まえに、V2ます", meaning: "Trước khi thực hiện V1 thì làm hành động V2", note: "Hành động vế 2 luôn xảy ra trước mốc thời gian vế 1. Động từ vế 1 bắt buộc luôn ở thể từ điển (Vる).", examples: [
+        { jp: "ご飯を食べる前に必ず手を洗います。", vn: "Trước khi ăn cơm tôi luôn rửa tay sạch sẽ." },
+        { jp: "夜寝る前に温かいシャワーを浴びます。", vn: "Trước khi ngủ ban đêm tôi tắm vòi sen nước ấm." },
+        { jp: "大切なテストの前に一生懸命勉強します。", vn: "Trước kỳ thi quan trọng tôi học hành cực kỳ chăm chỉ." },
+        { jp: "A: 日本へ行く前にまず何をしますか。B: ビザを申請します。", vn: "A: Trước khi sang Nhật bạn làm gì đầu tiên? B: Tôi xin cấp thị thực visa." },
+        { jp: "彼と結婚する前に長い間旅行をしたいです。", vn: "Trước khi kết hôn với anh ấy tôi muốn đi du lịch dài ngày." }
+      ]},
+      { pattern: "なかなか Vません", meaning: "Mãi mà không V / Khó lòng mà làm được V", note: "Phó từ なかなか kết hợp thể phủ định chỉ trạng thái khó khăn, trì trệ mãi chưa hoàn tất.", examples: [
+        { jp: "ベトナムの南部ではなかなか雪を見ることができません。", vn: "Ở miền nam Việt Nam thì khó lòng mà nhìn thấy tuyết rơi." },
+        { jp: "高いですから、なかなか新しい車を買いません。", vn: "Vì đắt đỏ nên mãi mà tôi chưa mua ô tô mới." },
+        { jp: "言葉が難しいですから, なかなか漢字を覚えられません。", vn: "Từ vựng khó quá nên mãi tôi không nhớ nổi chữ Hán." },
+        { jp: "バスがなかなか来ませんから, 遅刻しました。", vn: "Xe buýt mãi không thấy tới nên tôi đã bị muộn giờ." },
+        { jp: "複雑ですから, なかなか理解することができません。", vn: "Vì phức tạp quá nên khó lòng mà hiểu thấu đáo được." }
+      ]}
+    ];
+
+    lessonDialogues[18] = [
+      { jp: "A: サントスさんは車の運転をすることができますか。B: はい、できますよ。国際免許を持っていますから。A: すごいですね。どこでも行くことができますね。", vn: "A: Anh Santos có thể lái xe ô tô được không? B: Có, tôi lái được chứ. Vì tôi có bằng lái quốc tế mà. A: Tuyệt vời quá. Vậy thì đi đâu cũng được nhỉ." },
+      { jp: "A: マリアさんの趣味は何ですか。テニスですか。B: いいえ、私の趣味は写真を撮ることと, 外国の音楽を聞くことです。", vn: "A: Sở thích của chị Maria là gì thế? Chơi tennis à? B: Không, sở thích của tôi là chụp ảnh và lắng nghe âm nhạc nước ngoài." },
+      { jp: "A: ご飯を食べる前に、「いただきます」と言いましたか。B: はい、言いました。日本の文化ですから, 覚えましたよ。", vn: "A: Trước khi ăn cơm bạn có nói 'Itadakimasu' không? B: Có, tôi nói chứ. Vì là văn hóa Nhật nên tôi đã ghi nhớ rồi." }
+    ];
+
+    // --- BÀI 19 ---
+    lessonGrammar[19] = [
+      { pattern: "Vた ことが あります", meaning: "Đã từng thực hiện hành động V trong quá khứ", note: "Diễn tả trải nghiệm, kinh nghiệm trải qua trong đời. Không dùng cho hành động có tính chất hiển nhiên.", examples: [
+        { jp: "私は一度京都へ行ったことがあります。", vn: "Tôi đã từng có dịp đi đến Kyoto một lần." },
+        { jp: "日本の有名な相撲を見たことがあります。", vn: "Tôi đã từng xem trận đấu Sumo nổi tiếng của Nhật." },
+        { jp: "自分で美味しい日本料理を作ったことがあります。", vn: "Tôi đã từng tự tay nấu món ăn Nhật Bản ngon lành." },
+        { jp: "友達と一緒に高い富士山に登ったことがあります。", vn: "Tôi đã từng cùng bạn bè leo lên ngọn núi Phú Sĩ cao vút." },
+        { jp: "A: お寿司を食べたことがありますか。B: いいえ、一度もありません。", vn: "A: Bạn đã từng ăn món sushi bao giờ chưa? B: Chưa, tôi chưa ăn một lần nào cả." }
+      ]},
+      { pattern: "V1たり、V2たり します", meaning: "Lúc thì làm V1, lúc lại làm V2... (Liệt kê)", note: "Liệt kê các hành động mang tính chất tiêu biểu, không phụ thuộc trình tự thời gian thời mốc. Động từ cuối cùng quyết định thời gian.", examples: [
+        { jp: "日曜日、私は部屋を掃除したり、洗濯したりしました。", vn: "Ngày Chủ nhật, tôi lúc thì dọn dẹp phòng ốc, lúc thì giặt giũ quần áo." },
+        { jp: "明日、私は友達に手紙を書いたり、日本語を勉強したりします。", vn: "Ngày mai, tôi sẽ viết thư cho bạn, rồi học tiếng Nhật chẳng hạn." },
+        { jp: "A: 毎週末、何をしますか。B: 買い物したり、映画を見たりします。", vn: "A: Mỗi cuối tuần bạn thường làm gì? B: Tôi đi mua sắm, rồi xem phim truyện này nọ." },
+        { jp: "去年の夏休み、海で泳いだり、山に登ったりしました。", vn: "Kỳ nghỉ hè năm ngoái, tôi lúc thì đi bơi ở biển, lúc lại leo núi." },
+        { jp: "暇な時、音楽を聞いたり、本を読んだりして過ごします。", vn: "Khi rảnh rỗi, tôi thường nghe nhạc, đọc sách để giết thời gian." }
+      ]},
+      { pattern: "A(bỏ い)く なります / N・A(bỏ な)に なります", meaning: "Biến đổi trạng thái (Trở nên / Trở thành)", note: "Biểu thị sự thay đổi diện mạo, tính chất hoặc nghề nghiệp cương vị theo thời gian.", examples: [
+        { jp: "子供は毎日大きくなります。", vn: "Đứa trẻ mỗi ngày một lớn khôn lớn lên." },
+        { jp: "毎日勉強して賢くなります。", vn: "Mỗi ngày tôi học bài và trở nên thông minh hơn." },
+        { jp: "私の将来の夢は、優しい医者になりたいです。", vn: "Ước mơ tương lai của tôi là muốn trở thành một bác sĩ nhân từ." },
+        { jp: "良い薬を飲んでから、体が元気になりました。", vn: "Sau khi uống thuốc tốt, cơ thể tôi đã trở nên khỏe mạnh trở lại." },
+        { jp: "綺麗に化粧してから、顔が美しくなりました。", vn: "Sau khi trang điểm lộng lẫy, gương mặt đã trở nên xinh đẹp hẳn lên." }
+      ]},
+      { pattern: "将来、何に なりますか", meaning: "Tương lai bạn sẽ trở thành ai / nghề gì?", note: "Dùng để hỏi về định hướng nghề nghiệp, vị trí trong tương lai tương lai.", examples: [
+        { jp: "A: 将来、何になりたいですか。B: 日本語の先生になります。", vn: "A: Tương lai bạn muốn trở thành gì? B: Tôi sẽ trở thành giáo viên dạy tiếng Nhật." },
+        { jp: "3月になると、だんだん暖かくて春になります。", vn: "Cứ sang tháng 3 là thời tiết ấm dần và trở thành mùa xuân." },
+        { jp: "8月はとても暑い夏になります。", vn: "Tháng 8 sẽ trở thành chu kỳ mùa hè vô cùng nóng nực." },
+        { jp: "A: 誰になりたいですか。B: 有名な歌手になりたいです。", vn: "A: Bạn muốn trở thành ai? B: Tôi muốn biến thành một ca sĩ nổi tiếng." },
+        { jp: "午後6時になると, 辺りは暗くなります。", vn: "Cứ đến 6 giờ tối là xung quanh bắt đầu tối om." }
+      ]}
+    ];
+
+    lessonDialogues[19] = [
+      { jp: "A: 今まで歌舞伎を見たことがありますか。B: いいえ、一度もありませんが, ぜひ一度見たいと思います。面白そうですね。", vn: "A: Từ trước tới giờ bạn đã từng xem kịch Kabuki chưa? B: Chưa, tôi chưa xem lần nào cả nhưng nhất định muốn xem một lần. Trông có vẻ thú vị nhỉ." },
+      { jp: "A: 休みの日はいつも何をしますか。B: 日によって違いますが、本を読んだり、公園を散歩したりします。", vn: "A: Ngày nghỉ bạn thường làm cái gì vậy? B: Tùy từng ngày thay đổi khác nhau, khi thì đọc sách, lúc lại đi dạo mát ở công viên." },
+      { jp: "A: 薬を飲んでから, もう体は良くなりましたか。B: ええ、おかげさまで元気になりました。心配しないでください。", vn: "A: Sau khi uống thuốc cơ thể đã đỡ hơn chưa? B: Vâng, ơn trời tôi đã khỏe khoắn trở lại rồi. Xin đừng lo âu nữa." }
+    ];
+
+    // --- BÀI 20 ---
+    lessonGrammar[20] = [
+      { pattern: "V Thể thông thường (Giao tiếp ngắn)", meaning: "Thể thông thường ứng dụng của động từ", note: "Dùng trong văn nói nói chuyện thân mật suồng sã với bạn bè thân thiết, người dưới, gia đình.", examples: [
+        { jp: "明日、学校に行く。 (Lịch sự: 行きます)", vn: "Mai tao đi học." },
+        { jp: "今日、学校に行かない。 (Lịch sự: 行きません)", vn: "Hôm nay tao không đi học." },
+        { jp: "昨日、学校に行った。 (Lịch sự: 行きました)", vn: "Hôm qua tao đi học rồi." },
+        { jp: "一昨日、学校に行かなかった。 (Lịch sự: 行きませんでした)", vn: "Hôm kia tao đã không đi học." },
+        { jp: "A: 毎日本を読む？ B: うん、読むよ。 (Lịch sự: 読みますか)", vn: "A: Mỗi ngày mày có đọc sách không? B: Ừ, tao có đọc chứ." }
+      ]},
+      { pattern: "N / Aな Thể thông thường (Dùng だ / じゃない)", meaning: "Thể thông thường của Danh từ và Tính từ đuôi な", note: "Thay thế です bằng だ trong câu khẳng định, じゃありません bằng じゃない trong câu phủ định.", examples: [
+        { jp: "明日は雨だ。 (Lịch sự: 雨です)", vn: "Mai trời mưa đấy." },
+        { jp: "明日は雨じゃない。 (Lịch sự: 雨じゃありません)", vn: "Mai trời không mưa đâu." },
+        { jp: "昨日は大忙しの休みだった。 (Lịch sự: 休みでした)", vn: "Hôm qua đã là một ngày nghỉ bận rộn." },
+        { jp: "昨日は休みじゃなかった。 (Lịch sự: 休みじゃありませんでした)", vn: "Hôm qua đã không phải là ngày nghỉ." },
+        { jp: "A: 今日は暇？ B: うん、暇だよ。 (Bỏ だ trong câu hỏi câu trả lời ngắn)", vn: "A: Hôm nay rảnh không mày? B: Ừ, rảnh ran mà." }
+      ]},
+      { pattern: "Aい Thể thông thường (Lược bỏ です)", meaning: "Thể thông thường câu tính từ đuôi い", note: "Chỉ đơn thuần lược bỏ đuôi です ở phía cuối câu nói.", examples: [
+        { jp: "象はとても体が大きい。 (Lịch sự: 大きいです)", vn: "Con voi có cơ thể to lớn thật." },
+        { jp: "今日の天気は暑くない。 (Lịch sự: 暑くないです)", vn: "Thời tiết hôm nay không nóng nực." },
+        { jp: "昨日の夜は寒かった。 (Lịch sự: 寒かったです)", vn: "Tối hôm qua trời lạnh buốt." },
+        { jp: "先週の試験は難しくなかった。 (Lịch sự: 難しくなかったです)", vn: "Kỳ thi tuần trước đã không khó khăn lắm." },
+        { jp: "A: 日本語はおもしろい？ B: うん、すごくおもしろい。 (Bỏ です)", vn: "A: Học tiếng Nhật thú vị không mày? B: Ừ, thú vị dã man." }
+      ]},
+      { pattern: "Lược bỏ trợ từ trong văn nói thân mật", meaning: "Cách nói tắt lược bỏ trợ từ は、を、へ", note: "Trong giao tiếp hội thoại hằng ngày, khi ý nghĩa câu đã rõ ràng, các trợ từ thường biến mất.", examples: [
+        { jp: "ご飯食べる？ (Gốc: ご飯を 食べる?)", vn: "Ăn cơm không mày?" },
+        { jp: "明日、どこ行く？ (Gốc: どこへ 行く?)", vn: "Mai mày đi đâu thế?" },
+        { jp: "これ何？ (Gốc: これは何ですか)", vn: "Cái này cái gì vậy?" },
+        { jp: "コーヒーと紅茶とどっち好き？ (Gốc: どちらが 好き?)", vn: "Cà phê với trà hồng thích cái nào hơn hả mày?" },
+        { jp: "危ないからタバコを吸わないで。 (Gốc: 吸わないでください)", vn: "Nguy hiểm nên đừng hút thuốc lá nha." }
+      ]}
+    ];
+
+    lessonDialogues[20] = [
+      { jp: "A: 明日、時間ある？暇？ B: うん、あるよ。特に用事はないけど, どうして？ A: 一緒に映画見に行かない？ B: いいね。行こう行こう。", vn: "A: Mai rảnh không mày, có thời gian không? B: Ừ rảnh mà, không có việc gì đặc biệt cả, sao thế? A: Đi xem phim với tao không? B: Hay đấy. Đi luôn đi luôn." },
+      { jp: "A: その辞書、山田さんの？ B: うううん、山田さんのじゃないよ。私の。A: ちょっと借りてもいい？ B: うん、いいよ。どうぞ。", vn: "A: Cuốn từ điển đó của anh Yamada hả mày? B: Không, không phải của Yamada đâu. Của tao đó. A: Cho tao mượn xíu được không? B: Ừ được chứ, cầm lấy đi." },
+      { jp: "A: お腹すいた？何か食べる？ B: うん、すいた。でも冷蔵庫の中に何もなくて困っている。A: じゃ、外へ食べに行こう！", vn: "A: Đói bụng chưa mày? Ăn gì không? B: Ừ đói rồi. Nhưng trong tủ lạnh không có gì cả, chán ghê. A: Thế thì ra ngoài ăn đi!" }
+    ];
+
+    // =================================================================
+    // ĐOẠN MÃ SỐ 4 CHUẨN 100% - ĐẦY ĐỦ ĐỒNG BỘ TỪ BÀI 21 ĐẾN BÀI 25
+    // =================================================================
+
+    // --- ĐIỀN NGỮ PHÁP BÀI 21 ĐẾN BÀI 25 ---
+    lessonGrammar[21] = [
+      { pattern: "V/N/A普通形 と思います", meaning: "Tôi nghĩ là ～", note: "Bày tỏ suy nghĩ, phỏng đoán hoặc quan điểm cá nhân. Danh từ và tính từ な giữ nguyên だ ở khẳng định hiện tại.", examples: [
+        { jp: "A: きのうはあめがふりましたか。B: はい、あめがふったと思います。", vn: "A: Hôm qua trời đã mưa phải không? B: Vâng, tôi nghĩ là trời đã mưa." },
+        { jp: "A: これはなんですか。B: かさだと思います。", vn: "A: Cái này là cái gì? B: Tôi nghĩ đó là cái ô." },
+        { jp: "A: にほんの かいしゃ は たいへんですか。B: たいへんだと思います。", vn: "A: Công ty Nhật vất vả lắm phải không? B: Tôi nghĩ là vất vả." },
+        { jp: "A: このりょうり は からいですか。B: からいと思います。", vn: "A: Món ăn này cay phải không? B: Tôi nghĩ là cay." },
+        { jp: "A: ミラーさんはもう帰りましたか。B: はい、たぶん かえったと思います。", vn: "A: Anh Miller đã về chưa? B: Vâng, tôi nghĩ có lẽ anh ấy đã về rồi." }
+      ]},
+      { pattern: "～についてどう思いますか", meaning: "Bạn nghĩ thế nào về ～?", note: "Dùng để hỏi ý kiến hoặc nhận xét của đối phương về một chủ đề.", examples: [
+        { jp: "A: 日本のせいかつについてどう思いますか。B: べんりだと思います。", vn: "A: Bạn nghĩ thế nào về cuộc sống ở Nhật? B: Tôi nghĩ là rất tiện lợi." },
+        { jp: "A: 日本の会社についてどう思いますか。B: 厳しいですが良いと思います。", vn: "A: Bạn nghĩ thế nào về công ty Nhật? B: Tôi nghĩ là nghiêm khắc nhưng tốt." },
+        { jp: "A: 日本人についてどう思いますか。B: 親切だと思います。", vn: "A: Bạn nghĩ thế nào về người Nhật? B: Tôi nghĩ là họ rất tốt bụng." },
+        { jp: "A: 日本りょうりについてどう思いますか。B: おいしいと思います。", vn: "A: Bạn nghĩ thế nào về món ăn Nhật? B: Tôi nghĩ là ngon." },
+        { jp: "A: SAMSUNGのテレビについてどう思いますか。B: 画質が良いと思います。", vn: "A: Bạn nghĩ thế nào về tivi Samsung? B: Tôi nghĩ là chất lượng ảnh tốt." }
+      ]},
+      { pattern: "Mệnh đề + と言いました", meaning: "Đã nói rằng ～", note: "Trích dẫn lời nói trực tiếp (trong ngoặc kép) hoặc gián tiếp (đưa về thể thông thường).", examples: [
+        { jp: "リーさんは「私はすしがたべたいです」と言いました。", vn: "Chị Ly đã nói trực tiếp: 'Tôi muốn ăn sushi'." },
+        { jp: "リーさんは彼女はすしがたべたいと言いました。", vn: "Chị Ly đã nói gián tiếp rằng cô ấy muốn ăn sushi." },
+        { jp: "A: たべるまえに何と言いますか。B: 「いただきます」と言います。", vn: "A: Trước khi ăn thì nói gì? B: Nói 'Itadakimasu'." },
+        { jp: "A: たべたあとで何と言いますか。B: 「ごちそうさま」と言います。", vn: "A: Sau khi ăn xong thì nói gì? B: Nói 'Gochisousama'." },
+        { jp: "A: ねるまえに何と言いますか。B: 「おやすみなさい」と言います。", vn: "A: Trước khi ngủ thì nói gì? B: Nói 'Oyasuminasai'." }
+      ]},
+      { pattern: "～でしょう？", meaning: "～ Phải không?", note: "Dùng để tìm kiếm sự đồng tình từ người nghe khi nghĩ họ cũng biết thông tin.", examples: [
+        { jp: "すしはおいしいでしょう？", vn: "Sushi ngon đúng không nhỉ?" },
+        { jp: "もくようびはテストでしょう？", vn: "Thứ Năm có bài kiểm tra đúng không?" },
+        { jp: "もくようびはテストがあるでしょう？", vn: "Thứ Năm chắc chắn là có bài kiểm tra phải không?" },
+        { jp: "かんじはむずかしいでしょう？", vn: "Chữ Hán khó đúng không nhỉ?" },
+        { jp: "TRANGさんはかわいいでしょう？", vn: "Trang dễ thương đúng không nào?" }
+      ]},
+      { pattern: "Địa điểm で Danh từ があります", meaning: "Có tổ chức sự kiện / thiên tai tại địa điểm", note: "Trợ từ で chỉ nơi diễn ra sự kiện, lễ hội, tai nạn hoặc thiên tai bão lũ.", examples: [
+        { jp: "ベトナムでアセアンがあります。", vn: "Hội nghị ASEAN được tổ chức tại Việt Nam." },
+        { jp: "QATARでワールドカップがあります。", vn: "World Cup được tổ chức tại Qatar." },
+        { jp: "中部でたいふうがあります。", vn: "Ở miền Trung đang có bão xảy ra." },
+        { jp: "がっこうのまえでじこがあります。", vn: "Vừa có tai nạn xảy ra ở trước cổng trường." },
+        { jp: "ふるさとでけっこんしきがあります。", vn: "Ở quê tôi đang tổ chức lễ cưới." }
+      ]}
+    ];
+
+    lessonGrammar[22] = [
+      { pattern: "Mệnh đề bổ ngữ + Danh từ (Định ngữ)", meaning: "Danh từ mang đặc điểm hành động...", note: "Động từ trong mệnh đề phụ chia về thể thông thường, chủ ngữ mệnh đề phụ dùng trợ từ が.", examples: [
+        { jp: "これは私がつくった料理だ。", vn: "Đây là món ăn do tự tay tôi nấu nướng." },
+        { jp: "レストランでたべた料理だ。", vn: "Đây là món ăn mà chúng ta đã thưởng thức ở nhà hàng." },
+        { jp: "おしょうがつにたべる料理だ。", vn: "Đây là món ăn truyền thống ăn vào dịp Tết." },
+        { jp: "きょねんかったカメラだ。", vn: "Đây là chiếc máy ảnh tôi đã mua từ năm ngoái." },
+        { jp: "日本でとった写真だ。", vn: "Đây là bức ảnh tôi đã chụp khi ở bên Nhật." }
+      ]},
+      { pattern: "Vる + じかん / やくそく / 用事", meaning: "Thời gian / Hẹn / Việc bận để làm V", note: "Mệnh đề bổ nghĩa định ngữ trực tiếp cho nhóm danh từ kế hoạch, thời gian biểu.", examples: [
+        { jp: "A: 朝ご飯を食べる時間がありますか。B: いいえ、ねるじかんがない。", vn: "A: Có thời gian ăn sáng không? B: Không, đến thời gian ngủ tôi còn đang thiếu đây." },
+        { jp: "ぎんこうにいくようじがある。", vn: "Tôi có việc bận phải đi ra ngân hàng giải quyết." },
+        { jp: "友達のプレゼントをかうようじがある。", vn: "Tôi có việc riêng phải đi mua quà tặng cho bạn." },
+        { jp: "ともだちとりょこうにいくやくそくがある。", vn: "Tôi đã có cuộc hẹn đi du lịch xa cùng với nhóm bạn." },
+        { jp: "かれとえいがをみるやくそくがある。", vn: "Tôi có cái hẹn đi xem phim rạp với anh ấy." }
+      ]},
+      { pattern: "スーツをきている人", meaning: "Người đang...", note: "Mệnh đề định ngữ làm thành phần chủ ngữ chính đứng trước trợ từ は của câu.", examples: [
+        { jp: "A: ダルシャンさんはどの人ですか。B: スーツをきている人はダルシャンさんだ。", vn: "A: Anh Darshan là người nào vậy? B: Người đang mặc bộ vest là anh Darshan đấy." },
+        { jp: "シャツをきている人はさとうさんだ。", vn: "Người đang mặc chiếc áo sơ mi là chị Sato." },
+        { jp: "めがねをかけている人はソフィアさんだ。", vn: "Người đang đeo cặp kính cận là chị Sophia." },
+        { jp: "ぼうしをかぶっている人はゲイトさんだ。", vn: "Người đang đội chiếc mũ lưỡi trai là anh Gates." },
+        { jp: "あそこでえをかいている人はメイさんです。", vn: "Người đang vẽ tranh ở đằng kia là chị May." }
+      ]},
+      { pattern: "Mệnh đề bổ ngữ + Vị ngữ tính từ", meaning: "Cái danh từ mà... thì rất...", note: "Tính chất của danh từ được giới hạn rõ ràng bởi mệnh đề hành động bổ nghĩa đi kèm.", examples: [
+        { jp: "よくいくとしょかんはしずかだ。", vn: "Ngôi thư viện mà tôi thường xuyên ghé tới rất yên tĩnh." },
+        { jp: "きのうのんだワインはおいしかった。", vn: "Chai rượu vang mà chúng ta uống ngày hôm qua đã rất ngon." },
+        { jp: "せんしゅういったこうえんはにぎやかだった。", vn: "Khu công viên tuần trước tôi đi dạo đã rất náo nhiệt." },
+        { jp: "きのう見たえいがはよかった。", vn: "Bộ phim chiếu rạp hôm qua tôi xem thực sự rất hay." },
+        { jp: "日本でかったきものはすごくたかかった。", vn: "Bộ đồ Kimono tôi mua ở bên Nhật đã vô cùng đắt đỏ." }
+      ]}
+    ];
+
+    lessonGrammar[23] = [
+      { pattern: "V普通形/Vた/A/N + とき", meaning: "Khi ～ / Vào lúc ～", note: "Xác định mốc thời điểm hành động. Tính từ な giữ な, Danh từ thêm の trước とき.", examples: [
+        { jp: "がいこくにいくとき、パスポートがいります。", vn: "Khi đi ra nước ngoài, bạn cần có hộ chiếu." },
+        { jp: "みちがわからないとき、GOOGLEMAPをつかってください。", vn: "Khi không biết đường, hãy mở ứng dụng Google Map lên dùng nhé." },
+        { jp: "A: タクシーをおりるとき、なにをしますか。B: おかねをはらいます。", vn: "A: Khi xuống xe taxi thì làm gì? B: Thanh toán tiền." },
+        { jp: "みちをわたるとき、くるまに気をつけます。", vn: "Khi băng qua đường, phải chú ý cẩn thận xe cộ." },
+        { jp: "A: ねるとき、なにをしますか. B: でんきをけします。", vn: "A: Khi đi ngủ bạn làm gì? B: Tôi tắt đèn điện." }
+      ]},
+      { pattern: "Vる と、～", meaning: "Hễ làm V thì ngay lập tức ～ diễn ra tự nhiên", note: "Chỉ quy luật tự nhiên, hệ quả tất yếu hoặc dùng trong chỉ dẫn hướng đi giao thông.", examples: [
+        { jp: "おさけをのむと顔があかくなります。", vn: "Hễ cứ uống rượu vào là mặt mũi đỏ gay lên." },
+        { jp: "はるになると、さくらがさく。", vn: "Hễ mùa xuân gõ cửa là hoa anh đào lại đua nở." },
+        { jp: "A: ボタンをおすとどうなりますか. B: ジュースがでます。", vn: "A: Ấn nút này thì sao? B: Nước trái cây tự động chảy ra." },
+        { jp: "まっすぐ行くと、右に大きな銀行がある。", vn: "Cứ đi thẳng tắp là thấy ngân hàng lớn bên tay phải." },
+        { jp: "交差点をみぎへまがると、左に図書館がある。", vn: "Rẽ phải ở ngã tư là thấy thư viện nằm ngay bên tay trái." }
+      ]},
+      { pattern: "N を わたる / さんぽする", meaning: "Băng qua N / Đi dạo ở phạm vi không gian N", note: "Trợ từ を đi liền với động từ di chuyển để vạch rõ hành trình không gian đi qua.", examples: [
+        { jp: "はしをわたるとき、川を見ます。", vn: "Khi đi băng qua cầu, tôi thường ngắm nhìn dòng sông." },
+        { jp: "みちをわたるとき、左右を確認します。", vn: "Khi qua đường, phải nhìn ngó bên trái bên phải." },
+        { jp: "毎朝、近くのこうえんをさんぽする。", vn: "Mỗi sáng tôi đều đi dạo quanh khu công viên gần nhà." },
+        { jp: "週末、きれいなうみをさんぽする。", vn: "Cuối tuần, tôi đi dạo mát dọc bờ biển tuyệt đẹp." },
+        { jp: "交差点をみぎへまがります。", vn: "Rẽ phải ở ngay vị trí ngã tư." }
+      ]}
+    ];
+
+    lessonGrammar[24] = [
+      { pattern: "Người が (私に) N をくれます", meaning: "Ai đó tặng / cho tôi cái gì", note: "Chỉ dùng khi ngôi vị người nhận là bản thân tôi hoặc các thành viên trong gia đình tôi.", examples: [
+        { jp: "ガーさんがすてきなプレゼントをくれました。", vn: "Chị Nga đã chủ động tặng cho tôi một món quà tuyệt vời." },
+        { jp: "ははが美味しいお菓子をくれました。", vn: "Mẹ đã gửi cho tôi những chiếc bánh kẹo ăn vặt rất ngon." },
+        { jp: "ナタリーさんは私に長い手紙をくれました。", vn: "Natalee đã viết và gửi cho tôi một bức thư dài." },
+        { jp: "リーさんは私にかばんをくれました。", vn: "Chị Lee đã cho tôi một chiếc cặp sách." },
+        { jp: "ワンさんは私に時計をくれた。", vn: "Anh Wan đã tặng cho tôi chiếc đồng hồ đeo tay này." }
+      ]},
+      { pattern: "Vて あげます / もらいます / くれます", meaning: "Mối quan hệ cho và nhận hành vi giúp đỡ", note: "あげます: làm cho ai, もらいます: được ai làm cho, くれます: ai chủ động làm cho mình.", examples: [
+        { jp: "私はワンさんに地図を書いてあげました。", vn: "Tôi đã vẽ hộ một tấm bản đồ dễ hiểu giúp cho anh Wan." },
+        { jp: "私はワンさんに見せてもらいました。", vn: "Tôi đã được anh Wan cho xem hành trình." },
+        { jp: "カリナさんが美味しい料理をつくってくれました。", vn: "Chị Karina đã chủ động nấu món ăn ngon giúp cho tôi." },
+        { jp: "さとうさんが難しい日本語を教えてくれました。", vn: "Chị Sato đã tận tình giảng giải tiếng Nhật khó giúp tôi." },
+        { jp: "たなかさんに引っ越しを手伝ってもらいました。", vn: "Tôi đã được anh Tanaka đến hỗ trợ dọn nhà giúp." }
+      ]}
+    ];
+
+    lessonGrammar[25] = [
+      { pattern: "Vたら / Aかったら / N・Aなだったら", meaning: "Nếu... thì...", note: "Thể giả định điều kiện quá khứ. Động từ chia thể た thêm ら, phủ định dùng なかったら.", examples: [
+        { jp: "もしお金がたくさんあったら何をしますか。B: 広い家を買う。", vn: "A: Nếu có thật nhiều tiền bạn làm gì? B: Tôi sẽ mua một ngôi nhà rộng lớn." },
+        { jp: "もし明日雨がふらなかったら、一緒に買い物する。", vn: "Nếu ngày mai trời không đổ mưa, chúng ta cùng đi mua sắm nhé." },
+        { jp: "A: 部屋が暑かったらどうしますか。B: まどをあける。", vn: "A: Nếu phòng nóng quá thì làm sao? B: Mở cửa sổ ra." },
+        { jp: "A: 明日、雨だったらどうしますか。B: でかけない。", vn: "A: Mai nếu trời đổ mưa thì làm thế nào? B: Tôi ở nhà không đi ra ngoài." },
+        { jp: "今日のべんきょうがおわったら、すぐ家へかえる。", vn: "Sau khi việc học hành ngày hôm nay kết thúc, tôi sẽ vọt về nhà ngay." }
+      ]},
+      { pattern: "Vても / Aくても / N・Aなでも", meaning: "Dù cho... đi chăng nữa thì vẫn cứ...", note: "Mẫu câu giả định tương phản đối lập, hay đi kèm phó từいくら để tăng mức độ.", examples: [
+        { jp: "あめが激しくふっても、約束だからいく。", vn: "Dù trời có mưa to như trút nước tôi vẫn quyết đi vì đã có hẹn." },
+        { jp: "いくらあつくても、エアコンをつけないでがんばる。", vn: "Dù thời tiết có nóng nực cỡ nào đi nữa tôi vẫn cố chịu không bật điều hòa." },
+        { jp: "いくらさむくても、毎朝冷たい水でかおをあらう。", vn: "Dù trời có lạnh buốt giá thế nào đi nữa, mỗi sáng tôi vẫn rửa mặt bằng nước lạnh." },
+        { jp: "A: 日曜日でも働かなければなりませんか。B: はい、仕事がありますから。", vn: "A: Dù là chủ nhật vẫn phải làm việc à? B: Vâng, vì có việc bận." },
+        { jp: "いくら高い薬をのんでも、病気が全然よくならない。", vn: "Dù có uống thuốc đắt tiền cỡ nào đi nữa, bệnh tình vẫn hoàn toàn không đỡ lên." }
+      ]}
+    ];
+
+    // --- 2. ĐIỀN HỘI THOẠI BÀI 21 ĐẾN BÀI 25 ---
+    lessonDialogues[21] = [
+      { jp: "A: 日本のせいかつについてどう思いますか。B: 大変ですが、とてもべんりだと思います。物価が高いですね。", vn: "A: Bạn nghĩ thế nào về cuộc sống ở Nhật? B: Vất vả nhưng tôi nghĩ là rất tiện lợi. Có điều giá cả đắt đỏ quá nhỉ." },
+      { jp: "A: リーさんは何と言いましたか。B: 彼女は「私はすしがたべたいです」と言いましたよ。一緒に行きましょう。", vn: "A: Chị Ly đã nói gì thế? B: Cô ấy nói là 'Tôi muốn ăn sushi' đấy. Chúng ta cùng đi thôi." },
+      { jp: "A: もくようびは日本語のテストがあるでしょう？ B: ええ、たぶんあると思います。今晩勉強しなければなりません。", vn: "A: Thứ Năm có bài kiểm tra tiếng Nhật phải không? B: Vâng, tôi nghĩ là có đấy. Tối nay phải học bài thôi." }
+    ];
+
+    lessonDialogues[22] = [
+      { jp: "A: これはお正月につべる料理ですか。とても美味しいですね。B: ありがとうございます。これは私が昨日つくった料理です。", vn: "A: Đây là món ăn ăn vào dịp Tết phải không ạ? Ngon tuyệt vời luôn. B: Cảm ơn bạn nhiều. Đây là món do tự tay tôi làm ngày hôm qua đó." },
+      { jp: "A: 広い庭があるうちがほしいですね。B: そうですね。ゴルフができるにわがあるうちは私の夢です。", vn: "A: Thèm có một ngôi nhà có sân vườn rộng rãi quá đi mất. B: Đúng vậy nhỉ. Nhà có vườn chơi được cả golf là ước mơ đời tôi đó." },
+      { jp: "A: あのシャツをきている人はだれですか。B: ああ、あそこにいる人はさとうさんですよ。私の友達です。", vn: "A: Cái người đang mặc áo sơ mi kia là ai thế nhỉ? B: À, người đứng ở đằng kia là chị Sato đấy. Là bạn của tôi." }
+    ];
+
+    lessonDialogues[23] = [
+      { jp: "A: がいこくにいくとき、なにがいりますか。B: パスポートがいりますよ。忘れないでくださいね。", vn: "A: Khi đi ra nước ngoài cần có cái gì thế? B: Cần hộ chiếu đấy nhé. Xin đừng quên mang theo." },
+      { jp: "A: おさけをのむと顔があかくなりますか。B: ええ、私は少しのむとすぐ赤くなります。恥ずかしいですよ。", vn: "A: Cứ uống rượu vào là mặt bạn bị đỏ lên hả? B: Vâng, tôi uống chút xíu thôi là mặt đỏ gay ngay. Ngại lắm cơ." },
+      { jp: "A: すみません、図書館はどこですか。B: この道をまっすぐ行くと、右にありますよ。交差点の手前です。", vn: "A: Xin lỗi thư viện ở đâu thế ạ? B: Cứ đi thẳng con đường này là nó nằm ở bên phải đấy. Ngay trước ngã tư." }
+    ];
+
+    lessonDialogues[24] = [
+      { jp: "A: その時計はとても素敵ですね。どこで買いましたか。B: いいえ、これは誕生日にワンさんがくれた時計ですよ。", vn: "A: Chiếc đồng hồ đeo tay kia trông đẹp quá ta! Mua ở đâu thế bạn? B: Không, đây là chiếc đồng hồ anh Wan tặng cho tôi dịp sinh nhật đó." },
+      { jp: "A: 引っ越しは大変でしたね。だれか手伝ってくれましたか。B: ええ、たなかさんに手伝ってもらいました。とても助かりました。", vn: "A: Việc dọn nhà vất vả ghê nhỉ. Có ai phụ giúp bạn không vậy? B: Có chứ, tôi được anh Tanaka qua phụ dọn giúp. Đỡ biết bao nhiêu." },
+      { jp: "A: おじいさんは毎日新聞を読みますか。B: いいえ、目が悪いですから、私がいつも読んであげるんですよ。", vn: "A: Ông cụ có đọc báo hằng ngày không bạn? B: Không, mắt ông yếu rồi nên tôi luôn là người ngồi đọc báo hộ giúp ông đấy." }
+    ];
+
+    lessonDialogues[25] = [
+      { jp: "A: もしお金が1億円あったら、何をしたいですか。B: 世界旅行をしたいですね。広い庭がある家も買いたいです。", vn: "A: Giả sử nếu có hẳn 100 triệu Yên trong tay bạn muốn làm gì nhất? B: Tôi muốn đi du lịch vòng quanh thế giới này. Ngoài ra muốn tậu cả nhà có sân vườn rộng nữa." },
+      { jp: "A: 明日雨がふったら, 旅行に行きますか。B: ええ、いくら雨がふっても、絶対に行きますよ。楽しみにしていますから。", vn: "A: Ngày mai nếu trời đổ mưa thì bạn có đi du lịch nữa không thế? B: Có chứ, dù mưa bão cỡ nào tôi cũng quyết đi bằng được. Vì tôi đã mong chờ bấy lâu nay rồi." },
+      { jp: "A: この漢字の意味が分かりません。B: いくら辞書でしらべても分からないときは、いつでも私に聞いてくださいね。", vn: "A: Em không hiểu nghĩa của chữ Hán này ạ. B: Những lúc dù có tra từ điển cỡ nào vẫn chịu chết không ra thì bất cứ lúc nào cũng cứ hỏi thầy nhé." }
+    ];
+
+    // --- 3. ĐIỀN TOÀN BỘ TRẮC NGHIỆM BÀI 14 ĐẾN BÀI 25 ---
+    Object.assign(qData, {
+      14: {
+        p: ["ここ___名前を書いてください。|に|で,を,へ", "タクシー___呼びましょうか。|を|が,に,で", "今___雨が降っています。|が|は,に,で", "ドア___開けてください。|を|が,に,で", "パスポート___見せてください。|を|が,に,で", "写真___撮りましょうか。|を|が,に,で", "荷物___持ちましょうか。|を|が,に,で", "窓___開けましょうか。|を|が,に,で", "漢字___書き方がわかりません。|の|は,が,に", "カメラ___使い方を教えてください。|の|は,が,に"],
+        v: ["パスポートを___ください。|見せて|待って,持ち,つけ", "少し___ください。|待って|見せて,持ち,つけ", "荷物を___ましょうか。|持ち|見せて,待って,つけ", "エアコンを___ましょうか。|つけ|見せて,待って,持ち", "何を___ていますか。|読んで|勉強して,寝て,終わって", "何を___ていますか。|食べて|飲んで,書いて,会う", "今、何を___いますか。|して|見せて,待って,持ち", "___書き方がわかりません。|漢字の|見せて,待って,持ち", "美味しいコーヒーの___方です。|作り|見せて,待って,持ち", "日本語の勉強の仕___。|方|見せて,待って,持ち"],
+        g: ["___ください。|読んで|食べて,書き,教えて", "___います。|食べて|読んで,書き,教えて", "___ましょうか。|書き|読んで,食べて,教えて", "使い方を___ください。|教えて|読んで,食べて,書き", "どうぞ___ください。|食べて|読んで,書き,教えて", "今、コーヒーを飲んで___。|います|いません,いました,いませんでした", "今、サンドイッチを食べて___。|います|いません,いました,いませんでした", "写真を撮り___。|ましょうか|ます,ません,ました", "荷物を持ち___。|ましょうか|ます,ません,ました", "タクシーを呼び___。|ましょうか|ます,ません,ました"]
+      },
+      15: {
+        p: ["写真___撮ってもいいですか。|を|が,に,で", "ここ___車を止めては。|に|で,を,へ", "どこ___住んでいますか。|に|で,を,へ", "会社___働いています。|で|に,を,へ", "ご飯___食べてもいいです。|を|が,に,で", "エアコン___つけてもいいですか。|を|が,に,で", "ここ___泳いではいけません。|で|に,を,へ", "病院___電話をかけてはいけません。|で|に,を,へ", "ハノイ___住んでいます。|に|で,を,へ", "アップル___iPhoneを売っています。|で|に,を,へ"],
+        v: ["___はいけません。|入って|座って,結婚して,住んで", "___もいいです。|座って|入って,結婚して,住んで", "独身ですか？いいえ、___います。|結婚して|入って,座って,住んで", "大阪に___います。|住んで|入って,座って,結婚して", "寝て___いいです。|も|入って,座って,結婚して", "写真を___もいいですか。|撮って|入って,座って,結婚して", "危ないから___はいけません。|入って|座って,結婚して,住んで", "タバコを___はいけません。|吸って|入って,座って,結婚して", "ソン先生を___います。|知って|入って,座って,結婚して", "車を___います。|持って|入って,座って,結婚して"],
+        g: ["___もいいですか。|帰って|吸って,知って,持って", "___はいけません。|吸って|帰って,知って,持って", "___います。|知って|帰って,吸って,持って", "___いません。|持って|帰って,吸って,知って", "バスに___。|乗ります|降ります,乗り換えます,登ります", "電車を___。|降ります|乗ります,乗り換えます,登ります", "電車から新幹線に___。|乗り換えます|乗ります,降ります,登ります", "山に___。|登ります|乗ります,降ります,乗り換えます", "電車は駅に___。|着きました|乗ります,降ります,乗り換えます", "iPhoneを___います。|使って|乗ります,降ります,乗り換えます"]
+      },
+      16: {
+        p: ["朝起きて、浴びて、それ___朝ご飯を食べます。|から|まで,に,を", "ご飯を食べて___、寝ます。|から|まで,に,で", "ハノイ___人が多いです。|は|が,を,に", "象は鼻___長いです。|が|を,に,で", "カリナさん___30歳で、会社員です。|は|が,を,に", "太郎くん___9歳で、学生です。|は|が,を,に", "彼女___ベトナム人で、実習生です。|は|が,を,に", "ズンさん___クラス長で、18歳です。|は|が,を,に", "これ___日本の本で、面白いです。|は|が,を,に", "ウサギ___耳が長いです。|は|が,を,に"],
+        v: ["銀行へ___、お金を下ろします。|行って|ハンサムで,新しくて,大学へ", "ジョイさんは___、親切です。|ハンサムで|行って,新しくて,大学へ", "この車は___、安いです。|新しくて|行って,ハンサムで,大学へ", "どうやって___行きますか。|大学へ|行って,ハンサムで,新しくて", "毎朝、起きて、___、それから朝ご飯を食べます。|浴びて|行って,ハンサムで,新しくて", "帰って、テレビを___、それから寝ます。|見て|行って,ハンサムで,新しくて", "デパートへ行って、買い物を___、映画を見ました。|して|行って,ハンサムで,新しくて", "本を読んで、手紙を___、寝ました。|書いて|行って,ハンサムで,新しくて", "友達に___、食事しました。|会って|行って,ハンサムで,新しくて", "ジャンさんはきれいで、___です。|上手|行って,ハンサムで,新しくて"],
+        g: ["___、遊びます。|勉強して|終わってから,長いです,大きいです", "___、寝ます。|終わってから|勉強して,長いです,大きいです", "髪が___。|長いです|勉強して,終わってから,大きいです", "目が___。|大きいです|勉強して,終わってから,長いです", "日本へ来てから、日本語を___。|勉強します|勉強して,終わってから,長いです", "帰ってから、___。|食べます|勉強して,終わってから,長いです", "日本へ来てから、何を___。|しますか|勉強して,終わってから,長いです", "手を洗ってから、ご飯を___。|食べます|勉強して,終わってから,長いです", "仕事が終わってから、飲みに___。|行きます|勉強して,終わってから,長いです", "太郎くんはハンサムで、親切___。|です|勉強して,終わってから,長いです"]
+      },
+      17: {
+        p: ["ここ___写真を撮らないで。|で|に,を,へ", "車___止めないでください。|を|が,に,で", "7時___帰らなければなりません。|までに|で,を,へ", "明日___来なくてもいい。|は|が,を,に", "ビール___飲まないでください。|を|が,に,で", "ここ___タバコを吸わないでください。|で|に,を,へ", "病気___から、薬を飲みます。|です|で,を,へ", "仕事___多いですから、残業します。|が|を,に,で", "毎朝、6時___起きなければ。|に|で,を,へ", "教室___日本語を話さなければ。|で|に,を,へ"],
+        v: ["無理を___ください。|しないで|飲まなければ,払わなくても,金曜日", "薬を___なりません。|飲まなければ|しないで,払わなくても,金曜日", "お金を___いいです。|払わなくても|しないで,飲まなければ,金曜日", "___までに。|金曜日|しないで,飲まなければ,払わなくても", "写真を___でください。|撮らない|しないで,飲まなければ,払わなくても", "ビールを___でください。|飲まない|しないで,飲まなければ,払わなくても", "ここでタバコを___でください。|吸わない|しないで,飲まなければ,払わなくても", "___でください。|忘れない|しないで,飲まなければ,払わなくても", "心配し___でください。|ない|しないで,飲まなければ,払わなくても", "薬を飲まなければ___。|なりません|しないで,飲まなければ,払わなくても"],
+        g: ["___でください。|忘れない|出さなければ,脱がなくても,起き", "___なりません。|出さなければ|忘れない,脱がなくても,起き", "___いいです。|脱がなくても|忘れない,出さなければ,起き", "___なければなりません。|起き|忘れない,出さなければ,脱がなくても", "残業し___なりません。|なければ|忘れない,出さなければ,脱がなくても", "起き___なりません。|なければ|忘れない,出さなければ,脱がなくても", "話さ___なりません。|なければ|忘れない,出さなければ,脱がなくても", "勉強し___なりません。|なければ|忘れない,出さなければ,脱がなくても", "サッカーをし___いいです。|なくても|忘れない,出さなければ,脱がなくても", "食べ___いいです。|なくても|忘れない,出さなければ,脱がなくても"]
+      },
+      18: {
+        p: ["漢字___読むことができます。|が|を,に,で", "趣味___映画です。|は|が,を,に", "寝る___、本を読みます。|前に|は,が,を", "日本___行く前に。|へ|に,で,を", "スキー___できます。|が|を,に,で", "料理___作ることができます。|を|が,に,で", "日本語___話すことができます。|を|が,に,で", "ピアノ___弾くことができます。|を|が,に,で", "図書館___本を読むことができます。|で|に,を,へ", "私___趣味は旅行です。|の|は,が,に"],
+        v: ["___ことができます。|泳ぐ|スキー,描く,食事の", "___ができます。|スキー|泳ぐ,描く,食事の", "趣味は絵を___ことです。|描く|泳ぐ,スキー,食事の", "___前に、手を洗います。|食事の|泳ぐ,スキー,描く", "私の趣味は___です。|旅行|泳ぐ,スキー,描く", "私の趣味は___です。|釣り|泳ぐ,スキー,描く", "私の趣味は写真を___ことです。|撮る|泳ぐ,スキー,描く", "私の趣味は本を___ことです。|読む|泳ぐ,スキー,描く", "あなたの___は何ですか。|趣味|泳ぐ,スキー,描く", "___前に手を洗います。|食べる|泳ぐ,スキー,描く"],
+        g: ["___ことができますか。|運転する|来る,集める,行きたいです", "___前に。|来る|運転する,集める,行きたいです", "___ことです。|集める|運転する,来る,行きたいです", "ぜひ___。|行きたいです|運転する,来る,集める", "寝る___に浴びます。|前|運転する,来る,集める", "テストの前に___します。|勉強|運転する,来る,集める", "日本へ行く前に何を___か。|します|運転する,来る,集める", "結婚する前に何を___か。|します|運転する,来る,集める", "ベトナムでなかなか雪を見る___ができません。|こと|運転する,来る,集める", "なかなかエベレストに___ません。|登り|運転する,来る,集める"]
+      },
+      19: {
+        p: ["相撲___見たことがあります。|を|が,に,で", "休みの日___、。|は|が,を,に", "秋___なりました。|に|で,を,へ", "部屋___きれいに。|が|を,に,で", "京都___行ったことがあります。|へ|に,で,を", "日本料理___作ったことがあります。|を|が,に,で", "富士山___登ったことがあります。|に|で,を,へ", "昨日、私は掃除___、洗濯したりしました。|したり|が,を,に", "明日、私は手紙を書いたり、勉強___します。|したり|は,が,を", "週末、何___しますか。|を|が,に,で"],
+        v: ["___ことがあります。|行った|聞い,読ん,高く", "音楽を___りします。|聞い|行った,読ん,高く", "本を___りします。|読ん|行った,聞い,高く", "___なります。|高く|行った,聞い,読ん", "___ことがあります。|見た|行った,聞い,読ん", "___ことがあります。|作った|行った,聞い,読ん", "___ことがあります。|登った|行った,聞い,読ん", "___ことがありますか。|行った|聞い,読ん,高く", "買い物し___、映画を見たりします。|たり|行った,聞い,読ん", "海で泳いだり、山に___りしました。|登った|行った,聞い,読ん"],
+        g: ["___ことがあります。|食べた|食べ,元気に,20歳に", "___り、飲んだりします。|食べ|食べた,元気に,20歳に", "___なります。|元気に|食べた,食べ,20歳に", "___なりました。|20歳に|食べた,食べ,元気に", "大きくなります。|大きく|食べた,食べ,元気に", "背が高くなります。|高く|食べた,食べ,元気に", "私の夢は医者になり___です。|たい|食べた,食べ,元気に", "薬を飲んでから、元気に___ました。|なり|食べた,食べ,元気に", "化粧してから、きれいに___ました。|なり|食べた,食べ,元気に", "将来、何に___か。|なります|食べた,食べ,元気に"]
+      },
+      20: {
+        p: ["明日___暇？|は|が,を,に", "富士山___登った？|に|で,を,へ", "映画___見に行く？|を|が,に,で", "明日は雨___。|だ|です,じゃありません,でした", "明日は雨___。|じゃない|です,じゃありません,でした", "昨日は休み___。|だった|です,じゃありません,でした", "昨日は休み___。|じゃなかった|です,じゃありません,でした", "象は体___大きい。|が|を,に,で", "今日は暑く___。|ない|です,じゃありません,でした", "昨日は寒___。|かった|です,じゃありません,でした"],
+        v: ["明日、___？|来る|行く,行かない,持っている", "うん、___。|行く|来る,行かない,持っている", "ううん、___。|行かない|来る,行く,持っている", "辞書、___？|持っている|来る,行く,行かない", "ご飯___？|食べる|来る,行く,行かない", "明日、どこ___？|行く|来る,行かない,持っている", "これ___？|何|来る,行く,行かない", "コーヒーと紅茶とどっち___？|好き|来る,行く,行かない", "タバコを___で。|吸わない|来る,行く,行かない", "見に___？ ええ、行こう。|行かない|来る,行く,持っている"],
+        g: ["明日雨___。|だ|？,きれい,だった", "毎日忙しい___。|？|だ,きれい,だった", "きれい___。|だ|？,だった,じゃない", "昨日休み___。|だった|だ,？,きれい", "学校に___。|行く|だ,？,きれい", "学校に___。|行かない|だ,？,きれい", "学校に___。|行った|だ,？,きれい", "学校に___。|行かなかった|だ,？,きれい", "毎日本を読む？ うん、___。|読む|だ,？,きれい", "試験は難しく___。|なかった|だ,？,きれい"]
+      },
+      21: {
+        p: ["あそこで事故___ありました。|が|で,を,へ", "ビール___飲みませんか。|でも|が,に,を", "日本___生活についてどう思いますか。|の|が,を,に", "リーさんはすし___食べたいと言いました。|が|を,に,で", "木曜日___テストでしょう？|は|が,を,に", "日本の会社___ついてどう思いますか。|に|で,を,へ", "プレゼントをあげるまえ___「どうぞ」と言います。|に|で,を,へ", "ハノイ___アセアンがあります。|で|に,を,へ", "たぶん明日___雨だと思います。|は|が,を,に", "彼は何___言いましたか。|と|が,を,に"],
+        v: ["日本の生活はとても___だと思います。|便利|大変,意見,台風", "自分の___を話します。|意見|意味,台風,準備", "この漢字の___がわかりません。|意味|意見,台風,橋", "ベトナムで大きな___がありました。|台風|意見,意味,準備", "明日パーティーの___をします。|準備|意見,意味,台風", "お腹がすいた。すきやき___食べない？|でも|から,まで,と", "木曜日は___でしょう？|テスト|台風,意味,意見", "QATARで___があります。|ワールドカップ|台風,意味,意見", "___すしが好きだと思います。|たぶん|だいたい,全然,よく", "入るまえに「___」と言います。|しつれいします|いただきます,どうぞ,ありがとう"],
+        g: ["明日、雨がふると___。|思います|言いました,でしょう,あります", "リーさんはすしが食べたいと___。|言いました|思います,でしょう,あります", "バンミーはおいしい___？|でしょう|思います,と言いました,があります", "ふるさとで結婚式が___。|あります|思います,言いました,でしょう", "いいえ、休みじゃないと___。|思います|言いました,でしょう,あります", "食べる前に何と___か。|言います|思います,でしょう,あります", "はい、飲むことができると___。|思います|言いました,でしょう,あります", "TRANGさんはかわいい___？|でしょう|だと思います,と言いました,があります", "学校の前で事故が___。|ありました|思いました,でしょう,言いました", "つまらないね。映画でも見に___？|行かない|行きます,行きました,行って"]
+      },
+      22: {
+        p: ["これ___私が作った料理です。|は|が,を,に", "プール___あるうちがほしい。|が|を,に,で", "父___もらった時計を毎日使う。|に|が,を,で", "朝ご飯を食べる時間___ない。|が|を,に,で", "シャツを着ている人___さとうさんだ。|は|が,を,に", "友達___会う約束がある。|に|が,を,で", "メガネ___かけている人は誰ですか。|を|が,に,で", "よく行く図書館___静かだ。|は|が,を,に", "棚にある電話___見せてください。|を|が,に,で", "日本___買った着物は高かった。|で|に,を,へ"],
+        v: ["これは子供が書いた___です。|絵|時間,約束,用事", "あさごはんを食べる___がない。|時間|絵,約束,用事", "友達に会う___がある。|約束|絵,時間,用事", "病院に行く___がある。|用事|絵,時間,約束", "___をきている人はすずきさんだ。|きもの|めがね,ぼうし,シャツ", "___をかけている人はソフィアさんだ。|めがね|きもの,ぼうし,シャツ", "___をかぶっている人はゲイトさんだ。|ぼうし|きもの,めがね,シャツ", "いらない___を捨てました。|もの|時間,約束,用事", "広い___があるうちがほしい。|にわ|時間,約束,用事", "明日___で買うものは肉と卵だ。|スーパー|にわ,約束,用事"],
+        g: ["これは日本で___写真です。|とった|とる,とらない,とって", "図書館で___本を読んだ。|かりた|かりる,かりない,かりて", "いっしょに食事___か。|しましょう|します,しました,して", "イタリアで___靴をよくはいている。|かった|かう,かわない,かって", "彼と映画を___約束がある。|みる|みた,みない,みて", "スーツを___人はダルシャンさんだ。|きている|きえている,きった,きて", "昨日___ワインは美味しかった。|のんだ|のむ,のまない,のんで", "タイで___くだものは安かった。|うっている|うった,うる,うって", "あそこに___電話を見せてください。|ある|あった,ない,あって", "銀行にいく用事___。|がある|がない,はあります,になります"]
+      },
+      23: {
+        p: ["外国に行く___、パスポートがいります。|とき|から,まで,と", "橋___わたるとき、気をつけます。|を|が,に,で", "お酒を飲む___顔が赤くなります。|と|から,まで,とき", "春に成る___さくらが咲く。|と|から,まで,とき", "まっすぐ行く___右に銀行があります。|と|から,まで,とき", "ひまな時、本___読みます。|を|が,に,で", "交差点を右___曲がると図書館がある。|へ|を,に,で", "あつい時、エアコン___つけます。|を|が,に,で", "タクシーを降りるとき、お金___払う。|を|が,に,で", "病気の時、病院___行く。|へ|を,に,へ"],
+        v: ["___をわたるとき、気をつけます。|みち|台風,準備,意味", "___をわたると右に銀行がある。|はし|みち,角,交差点", "最初の___を右へ曲がります。|交差点|はし,みち,角", "公園を___します。|さんぽ|曲がり,わたり,乗り", "___行くと右に銀行がある。|まっすぐ|よく,だいたい,全然", "二番目の角を左へ___。|曲がる|わたる,さんぽする,行く", "___の時、病院へ行きます。|びょうき|ひま,あつ,さむ", "___時、セーターを着ます。|さむい|あつい,ひまな,びょうきの", "財布を___時、どうしますか。|わすれた|おちた,なくした,おわった", "ボタンを押すと___が出る。|ジュース|はし,みち,交差点"],
+        g: ["道が___とき、GOOGLEMAPを使いなさい。|わからない|わかります,わかった,わかって", "寝るとき、電気を___。|消します|消した,消さない,消して", "出かけるとき、「行ってきます」と___。|言う|言った,言わない,行って", "帰ったとき、「ただいま」と___。|言う|言った,言わない,行って", "食べたとき、「ごちそうさま」と___。|言う|言った,言わない,行って", "頭が痛い時、どう___か。|します|した,しない,して", "秋になると___なる。|すずしく|すずしい,すずしくて,すずしそう", "夏になると___なる。|あつく|あつい,あつくて,あつそう", "日本人が話すと日本語が上手に___。|なる|なります,なった,なって", "交差点を右へ曲がって100メートル___行くと喫茶店がある。|ぐらい|から,まで,とき"]
+      },
+      24: {
+        p: ["ガーさんがプレゼント___くれました。|を|が,に,で", "私はワンさん___地図を書いてあげました。|に|が,を,で", "私はおじいさん___新聞を読んであげました。|に|が,を,で", "私はワンさん___見せてもらいました。|に|が,を,で", "ラン先生___日本語を教えてもらいます。|に|が,を,で", "カリナさんが料理___作ってくれました。|を|が,に,で", "ミラーさんが空港___送ってくれました。|まで|から,に,を", "母は誕生日___服をくれます。|に|が,を,で", "私は家族にお金___もらいます。|を|が,に,で", "両親に会いに子供___連れてきます。|を|が,に,で"],
+        v: ["宿題を___します。|なおし|くれ,紹介,説明", "みなさんにアンさんを___します。|紹介|なおし,説明,案内", "友達に問題を___します。|説明|なおし,紹介,案内", "日本人の友達にハノイを___します。|案内|なおし,紹介,説明", "学校へ子供を___行きます。|つれて|なおし,紹介,説明", "母が___をくれました。|お菓子|おじいさん,おばあさん,ホームステイ", "私は来月から___をします。|ホームステイ|お菓子,おじいさん,おばあさん", "___自分で料理を作ります。|ほかに|ぜんぶ,たくさん,よく", "お金がたくさんありますから___買います。|ぜんぶ|ほかに,少し,全然", "あした、___を手伝ってくれませんか。|引っ越し|お菓子,ホームステイ,おじいさん"],
+        g: ["ワンさんは時計を___。|くれました|あげました,もらいました,した", "私はワンさんに電話番号を教えて___。|あげました|もらいました,くれました,した", "たなかさんに手伝って___。|もらいました|あげました,くれました,した", "さとうさんが日本語を教えて___。|くれました|あげました,もらいました,した", "私は山田さんにごはんを作って___。|あげました|もらいました,くれました,した", "私は父に電話を買って___。|もらいました|あげました,くれました,した", "友達は空港まで送って___。|くれました|あげました,もらいました,した", "リーさんはカンさんに本を___。|あげました|もらいました,くれました,した", "リンさんはカンさんに本を___。|もらいました|あげました,くれました,した", "ワンさんは私に時計を___。|くれました|あげました,もらいました,した"]
+      },
+      25: {
+        p: ["もしお金___あったら、家を買う。|が|を,に,で", "雨___ふったら、サッカーをしない。|が|を,に,で", "7時___なったら、ごはんを食べる。|に|が,を,で", "子供___病気のとき、病院へ連れていく。|が|を,に,で", "雨___ふっても、行きます。|が|を,に,で", "いくらお金___あっても、結婚しない。|が|を,に,で", "日曜日___働かなければならない。|でも|から,まで,と", "ご主人___出かけるまえに、何と言う？|が|を,に,で", "学校___出たら、会社で働く。|を|が,に,で", "誕生日にお腹___痛かったら、どうしますか。|が|を,に,で"],
+        v: ["もし明日___だったら、カラオケへ行く。|ひま|いい天気,雨,寒い", "もし明日___だったら、公園を散歩する。|いい天気|ひま,雨,寒い", "___だったら、出かけない。|雨|ひま,いい天気,寒い", "嫌いだったら、___なくてもいい。|飲ま|ひま,いい天気,寒い", "___かったら、顔を洗います。|ねむ|あつ,ひま,雨", "___かったら、エアコンをつけます。|あつ|ねむ,ひま,雨", "家へ帰ったら、___をあびる。|シャワー|ごはん,本,車", "なんさいになったら車を___ことができますか。|運転する|乗る,歩く,行く", "いくら___ても、買わない。|やすく|たかく,べんり,ひま", "いくら___ても、わからない。|しらべ|みて,きいて,よんで"],
+        g: ["時間があったら、本を___。|読む|読んで,読まない,読んだ", "安かったら、___。|買う|買わない,買った,買って", "勉強が終わったら、家へ___。|帰る|帰った,帰らない,帰って", "薬を飲んでも、よく___。|ならない|なります,なった,なって", "眠くても、勉強しなければ___。|ならない|なります,なった,なって", "もし雨が___たら、買い物をする。|ふらなかっ|ふる,ふった,ふって", "お腹が痛かったら、薬を___。|飲む|飲まない,読んだ,飲んで", "パスポートをなくしたら、大使館へ___。|行く|行った,行かない,行って", "いくら便利___、行かない。|でも|から,まで,とき", "妻が病気に___、どうしますか。|なったら|なります,なった,なって"]
+      }
+    });
+
+    // --- 4. KHỞI CHẠY LẠI TOÀN BỘ APP CHUẨN ---
+    if (typeof initApp === 'function') {
+      initApp();
+    }
+  </script>
+</body>
+</html>
