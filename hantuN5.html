@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Hán Tự N5 Sonkuro · Học Kanji Siêu Hiệu Quả</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #f8f6f3;
+      --surface: #ffffff;
+      --text: #2c2416;
+      --text-secondary: #5e5546;
+      --primary: #b43b3b;
+      --primary-light: #d4685a;
+      --accent: #e8a87c;
+      --gold: #c9a23b;
+      --border: #e7dfd4;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow: 0 8px 28px rgba(0,0,0,0.08);
+      --shadow-lg: 0 20px 40px rgba(0,0,0,0.12);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --font-jp: 'Noto Sans JP', 'Yu Gothic', sans-serif;
+      --font-ui: 'Inter', system-ui, sans-serif;
+    }
+
+    body.dark {
+      --bg: #1a1a1a;
+      --surface: #262320;
+      --text: #f0ede5;
+      --text-secondary: #b7aa96;
+      --primary: #e07060;
+      --primary-light: #f09080;
+      --accent: #dba978;
+      --gold: #e6c468;
+      --border: #3a3430;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.25);
+      --shadow: 0 8px 28px rgba(0,0,0,0.4);
+      --shadow-lg: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    body {
+      font-family: var(--font-ui);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background var(--transition), color var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      padding-bottom: 90px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo span {
+      font-family: var(--font-jp);
+      font-size: 2rem;
+    }
+    .theme-toggle {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      background: var(--surface);
+      padding: 6px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .nav-btn {
+      flex: 1 0 auto;
+      padding: 12px 10px;
+      border: none;
+      background: transparent;
+      border-radius: 16px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-secondary);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-family: var(--font-ui);
+    }
+    .nav-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(180, 60, 60, 0.3);
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 480px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .stat-box {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 10px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 10px;
+      transition: width 0.6s ease;
+    }
+
+    .kanji-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .kanji-tile {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+      position: relative;
+      color: var(--text);
+      min-height: 85px;
+    }
+    .kanji-tile.learned {
+      border-color: var(--accent);
+      background: #fef7e6;
+    }
+    body.dark .kanji-tile.learned {
+      background: #332c1f;
+    }
+    .kanji-tile:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+    .kanji-tile .kanji-main {
+      font-family: var(--font-jp);
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .kanji-tile .hanviet-sub {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      font-weight: 500;
+    }
+    .kanji-tile .badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      font-size: 0.6rem;
+      background: var(--gold);
+      color: #fff;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flashcard-container {
+      perspective: 1000px;
+      width: 100%;
+      max-width: 340px;
+      margin: 10px auto;
+      height: 320px;
+      cursor: pointer;
+    }
+    .flashcard {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.5s;
+      border-radius: var(--radius);
+    }
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+    .flashcard-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-shadow: var(--shadow-lg);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .flashcard-back {
+      transform: rotateY(180deg);
+      gap: 6px;
+    }
+    .flashcard-kanji {
+      font-family: var(--font-jp);
+      font-size: 4.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .flashcard-hanviet {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    .flashcard-meaning {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    .flashcard-examples {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      text-align: left;
+      line-height: 1.4;
+    }
+    .fc-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+    .btn-ghost { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+    .btn-sm { padding: 6px 14px; font-size: 0.8rem; }
+
+    .quiz-option {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin: 8px 0;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+      text-align: left;
+      font-size: 1rem;
+      font-family: var(--font-ui);
+      color: var(--text);
+    }
+    .quiz-option:hover {
+      border-color: var(--primary-light);
+    }
+    .quiz-option.correct {
+      background: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+    }
+    .quiz-option.wrong {
+      background: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 2px solid var(--border);
+      background: #fffef9;
+    }
+    body.dark .canvas-wrapper {
+      background: #2a2820;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      touch-action: none;
+    }
+    .canvas-tools {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .write-eval {
+      margin-top: 12px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.2s;
+    }
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 24px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal h3 {
+      font-family: var(--font-jp);
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .modal .hanviet-detail {
+      text-align: center;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    .modal .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .close-btn {
+      position: sticky;
+      top: 0;
+      float: right;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    footer {
+      margin-top: 10px;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="header">
+      <div class="logo"><span>漢</span> Hán Tự N5 SONKURO</div>
+      <button class="theme-toggle" id="themeToggle">🌙 Tối</button>
+    </div>
+
+    <nav class="nav" id="nav">
+      <button class="nav-btn active" data-view="dashboard">📊 Tổng quan</button>
+      <button class="nav-btn" data-view="learn">📖 Học</button>
+      <button class="nav-btn" data-view="flashcard">🃏 Flashcard</button>
+      <button class="nav-btn" data-view="quiz">❓ Quiz</button>
+      <button class="nav-btn" data-view="write">✍️ Luyện viết</button>
+    </nav>
+
+    <div id="view-dashboard" class="view">
+      <div class="card">
+        <div class="section-title">📈 Tiến độ học tập</div>
+        <div class="grid-2">
+          <div class="stat-box"><div class="stat-value" id="totalLearned">0</div><div class="stat-label">Đã học / 50</div></div>
+          <div class="stat-box"><div class="stat-value" id="streakDays">0</div><div class="stat-label">Ngày liên tiếp</div></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%;"></div></div>
+        <p style="margin-top: 12px; font-size:0.9rem; color: var(--text-secondary);" id="reviewDueMsg">📌 0 chữ cần ôn tập hôm nay</p>
+      </div>
+      <div class="card">
+        <div class="section-title">🔥 Kanji mới hôm nay</div>
+        <div class="kanji-grid" id="newKanjiGrid"></div>
+      </div>
+    </div>
+
+    <div id="view-learn" class="view hidden">
+      <div class="card">
+        <div class="section-title">📚 Danh sách Hán tự N5</div>
+        <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+          <input type="text" id="searchKanji" placeholder="Tìm kanji..." style="flex:1; padding:10px; border-radius:50px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
+          <select id="filterStatus" style="padding:10px; border-radius:50px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
+            <option value="all">Tất cả</option>
+            <option value="learned">Đã học</option>
+            <option value="unlearned">Chưa học</option>
+          </select>
+        </div>
+        <div class="kanji-grid" id="allKanjiGrid"></div>
+      </div>
+    </div>
+
+    <div id="view-flashcard" class="view hidden">
+      <div class="card" style="text-align: center;">
+        <div class="section-title">🃏 Flashcard thông minh</div>
+        <div class="flashcard-container" id="flashcardContainer">
+          <div class="flashcard" id="flashcard">
+            <div class="flashcard-face flashcard-front">
+              <div class="flashcard-kanji" id="fcKanji">一</div>
+              <div class="flashcard-hanviet" id="fcHanViet">Nhất</div>
+              <p style="color:var(--text-secondary); font-size:0.8rem;">Chạm để lật</p>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <div class="flashcard-meaning" id="fcMeaning">Một</div>
+              <p id="fcOnyomi" style="color:var(--text-secondary)">On: イチ</p>
+              <p id="fcKunyomi" style="color:var(--text-secondary)">Kun: ひと</p>
+              <div class="flashcard-examples" id="fcExamples"></div>
+            </div>
+          </div>
+        </div>
+        <div class="fc-buttons" id="fcRating">
+          <button class="btn btn-ghost btn-sm" data-rating="0">😰 Quên</button>
+          <button class="btn btn-outline btn-sm" data-rating="1">🤔 Khó</button>
+          <button class="btn btn-primary btn-sm" data-rating="2">👍 Tốt</button>
+          <button class="btn btn-primary btn-sm" data-rating="3">🚀 Dễ</button>
+        </div>
+        <button class="btn btn-ghost" id="nextFlashcard" style="margin-top:8px;">⏭ Bỏ qua</button>
+      </div>
+    </div>
+
+    <div id="view-quiz" class="view hidden">
+      <div class="card">
+        <div class="section-title" style="justify-content:space-between;">
+          ❓ Trắc nghiệm <span id="quizScore" style="font-size:0.9rem; color:var(--gold);">Đúng: 0/0</span>
+        </div>
+        <div style="text-align:center; font-family:var(--font-jp); font-size:4rem; font-weight:700; margin:10px 0;" id="quizKanji">一</div>
+        <p style="text-align:center; color:var(--text-secondary);">Nghĩa của chữ này là gì?</p>
+        <div id="quizOptions"></div>
+        <button class="btn btn-primary" id="nextQuiz" style="width:100%; margin-top:12px;">Câu tiếp theo ▶</button>
+      </div>
+    </div>
+
+    <div id="view-write" class="view hidden">
+      <div class="card">
+        <div class="section-title">✍️ Luyện viết tay</div>
+        <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px; flex-wrap:wrap;">
+          <select id="writeSelect" style="padding:10px; border-radius:50px; border:1px solid var(--border); background:var(--bg); color:var(--text); flex:1;">
+          </select>
+          <button class="btn btn-outline btn-sm" id="showTemplateBtn">👁 Xem mẫu</button>
+        </div>
+        <div class="canvas-wrapper">
+          <canvas id="writeCanvas" width="350" height="350"></canvas>
+        </div>
+        <div class="canvas-tools">
+          <button class="btn btn-ghost btn-sm" id="clearCanvas">🗑 Xóa</button>
+          <button class="btn btn-ghost btn-sm" id="undoCanvas">↩ Hoàn tác</button>
+          <input type="color" id="brushColor" value="#2c2416" style="width:40px; height:40px; border-radius:50%; border:none; cursor:pointer;">
+          <input type="range" id="brushSize" min="1" max="10" value="3" style="width:80px;">
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; justify-content: center;">
+          <button class="btn btn-primary btn-sm" id="evaluateBtn">🔍 Đánh giá</button>
+          <button class="btn btn-ghost btn-sm" id="rewriteBtn">🔄 Viết lại</button>
+          <button class="btn btn-outline btn-sm" id="nextWriteBtn">⏭ Tiếp</button>
+        </div>
+        <div class="write-eval" id="evalResult"></div>
+      </div>
+    </div>
+
+    <footer>© 2026 Hán Tự N5 Pro · Học mọi lúc, mọi nơi</footer>
+  </div>
+
+  <div class="modal-overlay hidden" id="kanjiModal">
+    <div class="modal">
+      <button class="close-btn" id="closeModal">&times;</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ---------- DỮ LIỆU HÁN TỰ N5 (đã bổ sung tối thiểu 3 ví dụ) ----------
+      const kanjiData = [
+        {id:1,kanji:"一",on:"イチ",kun:"ひと.つ",meaning:"Một",hanviet:"Nhất",strokes:1,radical:"一",radicalMeaning:"số một",examples:["一人 (ひとり) - một mình","一月 (いちがつ) - tháng một","一度 (いちど) - một lần","一冊 (いっさつ) - một cuốn"],mnemonic:"Một nét ngang đơn giản."},
+        {id:2,kanji:"二",on:"ニ",kun:"ふた.つ",meaning:"Hai",hanviet:"Nhị",strokes:2,radical:"二",radicalMeaning:"hai",examples:["二人 (ふたり) - hai người","二月 (にがつ) - tháng hai","二回 (にかい) - hai lần","二台 (にだい) - hai chiếc"],mnemonic:"Hai nét ngang."},
+        {id:3,kanji:"三",on:"サン",kun:"み.つ",meaning:"Ba",hanviet:"Tam",strokes:3,radical:"一",radicalMeaning:"một",examples:["三月 (さんがつ) - tháng ba","三つ (みっつ) - ba cái","三人 (さんにん) - ba người","三回 (さんかい) - ba lần"],mnemonic:"Ba nét ngang."},
+        {id:4,kanji:"四",on:"シ",kun:"よ.つ",meaning:"Bốn",hanviet:"Tứ",strokes:5,radical:"囗",radicalMeaning:"vây quanh",examples:["四月 (しがつ) - tháng tư","四つ (よっつ) - bốn cái","四回 (よんかい) - bốn lần","四角 (しかく) - hình vuông"],mnemonic:"Hình vuông có hai nét bên trong."},
+        {id:5,kanji:"五",on:"ゴ",kun:"いつ.つ",meaning:"Năm",hanviet:"Ngũ",strokes:4,radical:"二",radicalMeaning:"hai",examples:["五月 (ごがつ) - tháng năm","五つ (いつつ) - năm cái","五回 (ごかい) - năm lần","五千 (ごせん) - 5000"],mnemonic:"Như chữ 三 thêm nét dọc."},
+        {id:6,kanji:"六",on:"ロク",kun:"む.つ",meaning:"Sáu",hanviet:"Lục",strokes:4,radical:"八",radicalMeaning:"tám",examples:["六月 (ろくがつ) - tháng sáu","六つ (むっつ) - sáu cái","六回 (ろっかい) - sáu lần","六百 (ろっぴゃく) - 600"],mnemonic:"Nóc nhà có hai chân."},
+        {id:7,kanji:"七",on:"シチ",kun:"なな.つ",meaning:"Bảy",hanviet:"Thất",strokes:2,radical:"一",radicalMeaning:"một",examples:["七月 (しちがつ) - tháng bảy","七つ (ななつ) - bảy cái","七回 (ななかい) - bảy lần","七百 (ななひゃく) - 700"],mnemonic:"Nét ngang cong kết thúc."},
+        {id:8,kanji:"八",on:"ハチ",kun:"や.つ",meaning:"Tám",hanviet:"Bát",strokes:2,radical:"八",radicalMeaning:"tám",examples:["八月 (はちがつ) - tháng tám","八つ (やっつ) - tám cái","八回 (はちかい) - tám lần","八百 (はっぴゃく) - 800"],mnemonic:"Hai nét xiên mở ra."},
+        {id:9,kanji:"九",on:"キュウ",kun:"ここの.つ",meaning:"Chín",hanviet:"Cửu",strokes:2,radical:"乙",radicalMeaning:"thứ hai",examples:["九月 (くがつ) - tháng chín","九つ (ここのつ) - chín cái","九回 (きゅうかい) - chín lần","九百 (きゅうひゃく) - 900"],mnemonic:"Nét cong như cái móc."},
+        {id:10,kanji:"十",on:"ジュウ",kun:"とお",meaning:"Mười",hanviet:"Thập",strokes:2,radical:"十",radicalMeaning:"mười",examples:["十月 (じゅうがつ) - tháng mười","十回 (じゅっかい) - mười lần","十分 (じゅっぷん) - 10 phút","十人 (じゅうにん) - 10 người"],mnemonic:"Dấu cộng."},
+        {id:11,kanji:"百",on:"ヒャク",kun:"もも",meaning:"Trăm",hanviet:"Bách",strokes:6,radical:"白",radicalMeaning:"trắng",examples:["百円 (ひゃくえん) - 100 yên","三百 (さんびゃく) - 300","百人 (ひゃくにん) - 100 người","百回 (ひゃっかい) - 100 lần"],mnemonic:"Một trăm là một nét trên chữ bạch."},
+        {id:12,kanji:"千",on:"セン",kun:"ち",meaning:"Nghìn",hanviet:"Thiên",strokes:3,radical:"十",radicalMeaning:"mười",examples:["千円 (せんえん) - 1000 yên","三千 (さんぜん) - 3000","千人 (せんにん) - 1000 người","千回 (せんかい) - 1000 lần"],mnemonic:"Nét phẩy trên chữ thập."},
+        {id:13,kanji:"万",on:"マン",kun:"よろず",meaning:"Vạn",hanviet:"Vạn",strokes:3,radical:"一",radicalMeaning:"một",examples:["一万 (いちまん) - 10,000","百万 (ひゃくまん) - 1 triệu","万円 (まんえん) - 10,000 yên","万人 (ばんにん) - muôn người"],mnemonic:"Giống chữ lực thêm nét."},
+        {id:14,kanji:"円",on:"エン",kun:"まる.い",meaning:"Yên, tròn",hanviet:"Viên",strokes:4,radical:"冂",radicalMeaning:"vùng hoang vu",examples:["百円 (ひゃくえん) - 100 yên","円い (まるい) - tròn","円高 (えんだか) - yên tăng giá","千円札 (せんえんさつ) - tờ 1000 yên"],mnemonic:"Hình chữ nhật có nét ngang."},
+        {id:15,kanji:"年",on:"ネン",kun:"とし",meaning:"Năm",hanviet:"Niên",strokes:6,radical:"干",radicalMeaning:"can",examples:["今年 (ことし) - năm nay","去年 (きょねん) - năm ngoái","来年 (らいねん) - năm sau","毎年 (まいとし) - hàng năm"],mnemonic:"Bộ can với nét sổ dài."},
+        {id:16,kanji:"月",on:"ゲツ,ガツ",kun:"つき",meaning:"Tháng, mặt trăng",hanviet:"Nguyệt",strokes:4,radical:"月",radicalMeaning:"mặt trăng",examples:["一月 (いちがつ) - tháng một","月曜日 (げつようび) - thứ hai","毎月 (まいつき) - hàng tháng","月見 (つきみ) - ngắm trăng"],mnemonic:"Hình lưỡi liềm có hai chân."},
+        {id:17,kanji:"日",on:"ニチ",kun:"ひ",meaning:"Ngày, mặt trời",hanviet:"Nhật",strokes:4,radical:"日",radicalMeaning:"mặt trời",examples:["日曜日 (にちようび) - chủ nhật","毎日 (まいにち) - mỗi ngày","休日 (きゅうじつ) - ngày nghỉ","日の出 (ひので) - bình minh"],mnemonic:"Ô vuông có nét ngang giữa."},
+        {id:18,kanji:"時",on:"ジ",kun:"とき",meaning:"Thời gian",hanviet:"Thời",strokes:10,radical:"日",radicalMeaning:"mặt trời",examples:["時間 (じかん) - thời gian","時計 (とけい) - đồng hồ","当時 (とうじ) - lúc đó","時代 (じだい) - thời đại"],mnemonic:"Mặt trời + chùa."},
+        {id:19,kanji:"分",on:"ブン",kun:"わ.ける",meaning:"Phút, phân chia",hanviet:"Phân",strokes:4,radical:"刀",radicalMeaning:"đao",examples:["十分 (じゅっぷん) - 10 phút","半分 (はんぶん) - một nửa","自分 (じぶん) - bản thân","分ける (わける) - chia"],mnemonic:"Chữ bát và đao."},
+        {id:20,kanji:"半",on:"ハン",kun:"なか.ば",meaning:"Một nửa",hanviet:"Bán",strokes:5,radical:"十",radicalMeaning:"mười",examples:["半分 (はんぶん) - một nửa","半年 (はんとし) - nửa năm","半日 (はんにち) - nửa ngày","大半 (たいはん) - phần lớn"],mnemonic:"Chia đôi chữ thập."},
+        {id:21,kanji:"毎",on:"マイ",kun:"ごと",meaning:"Mỗi",hanviet:"Mỗi",strokes:6,radical:"毋",radicalMeaning:"mẹ",examples:["毎日 (まいにち) - mỗi ngày","毎月 (まいつき) - mỗi tháng","毎年 (まいとし) - mỗi năm","毎回 (まいかい) - mỗi lần"],mnemonic:"Người mẹ đội mũ."},
+        {id:22,kanji:"今",on:"コン",kun:"いま",meaning:"Bây giờ",hanviet:"Kim",strokes:4,radical:"人",radicalMeaning:"người",examples:["今日 (きょう) - hôm nay","今週 (こんしゅう) - tuần này","今年 (ことし) - năm nay","今月 (こんげつ) - tháng này"],mnemonic:"Cái nón úp xuống."},
+        {id:23,kanji:"先",on:"セン",kun:"さき",meaning:"Trước, tương lai",hanviet:"Tiên",strokes:6,radical:"儿",radicalMeaning:"nhân nhi",examples:["先生 (せんせい) - giáo viên","先週 (せんしゅう) - tuần trước","先月 (せんげつ) - tháng trước","先日 (せんじつ) - hôm trước"],mnemonic:"Bò trên đất."},
+        {id:24,kanji:"来",on:"ライ",kun:"く.る",meaning:"Đến",hanviet:"Lai",strokes:7,radical:"木",radicalMeaning:"mộc",examples:["来年 (らいねん) - năm sau","来週 (らいしゅう) - tuần sau","来月 (らいげつ) - tháng sau","来る (くる) - đến"],mnemonic:"Cây lúa."},
+        {id:25,kanji:"前",on:"ゼン",kun:"まえ",meaning:"Trước",hanviet:"Tiền",strokes:9,radical:"刀",radicalMeaning:"đao",examples:["名前 (なまえ) - tên","前年 (ぜんねん) - năm trước","午前 (ごぜん) - buổi sáng","前回 (ぜんかい) - lần trước"],mnemonic:"Cắt sừng."},
+        {id:26,kanji:"後",on:"ゴ",kun:"あと",meaning:"Sau",hanviet:"Hậu",strokes:9,radical:"彳",radicalMeaning:"xích",examples:["午後 (ごご) - buổi chiều","後で (あとで) - sau đó","後ろ (うしろ) - phía sau","最後 (さいご) - cuối cùng"],mnemonic:"Đi chậm."},
+        {id:27,kanji:"上",on:"ジョウ",kun:"うえ",meaning:"Trên",hanviet:"Thượng",strokes:3,radical:"一",radicalMeaning:"một",examples:["上手 (じょうず) - giỏi","上着 (うわぎ) - áo khoác","上がる (あがる) - lên","以上 (いじょう) - trở lên"],mnemonic:"Nét ngang dưới nét sổ."},
+        {id:28,kanji:"下",on:"カ",kun:"した",meaning:"Dưới",hanviet:"Hạ",strokes:3,radical:"一",radicalMeaning:"một",examples:["地下 (ちか) - ngầm","下さい (ください) - xin hãy","下がる (さがる) - đi xuống","以下 (いか) - trở xuống"],mnemonic:"Nét ngang trên nét sổ."},
+        {id:29,kanji:"中",on:"チュウ",kun:"なか",meaning:"Trong",hanviet:"Trung",strokes:4,radical:"丨",radicalMeaning:"cổn",examples:["中国 (ちゅうごく) - Trung Quốc","中に (なかに) - bên trong","勉強中 (べんきょうちゅう) - đang học","一日中 (いちにちじゅう) - suốt ngày"],mnemonic:"Cái hộp có gạch giữa."},
+        {id:30,kanji:"外",on:"ガイ",kun:"そと",meaning:"Ngoài",hanviet:"Ngoại",strokes:5,radical:"夕",radicalMeaning:"dạ",examples:["外国 (がいこく) - nước ngoài","外で (そとで) - bên ngoài","以外 (いがい) - ngoại trừ","海外 (かいがい) - nước ngoài"],mnemonic:"Buổi tối đi ra ngoài."},
+        {id:31,kanji:"右",on:"ウ",kun:"みぎ",meaning:"Phải",hanviet:"Hữu",strokes:5,radical:"口",radicalMeaning:"khẩu",examples:["右手 (みぎて) - tay phải","右側 (みぎがわ) - bên phải","右折 (うせつ) - rẽ phải","右足 (みぎあし) - chân phải"],mnemonic:"Tay đưa vào miệng."},
+        {id:32,kanji:"左",on:"サ",kun:"ひだり",meaning:"Trái",hanviet:"Tả",strokes:5,radical:"工",radicalMeaning:"công",examples:["左手 (ひだりて) - tay trái","左側 (ひだりがわ) - bên trái","左折 (させつ) - rẽ trái","左足 (ひだりあし) - chân trái"],mnemonic:"Tay cầm công cụ."},
+        {id:33,kanji:"北",on:"ホク",kun:"きた",meaning:"Bắc",hanviet:"Bắc",strokes:5,radical:"匕",radicalMeaning:"chủy",examples:["北海道 (ほっかいどう) - Hokkaido","北口 (きたぐち) - cửa bắc","北国 (きたぐに) - xứ bắc","北風 (きたかぜ) - gió bắc"],mnemonic:"Hai người quay lưng."},
+        {id:34,kanji:"南",on:"ナン",kun:"みなみ",meaning:"Nam",hanviet:"Nam",strokes:9,radical:"十",radicalMeaning:"mười",examples:["南口 (みなみぐち) - cửa nam","南国 (なんごく) - nước phương nam","南風 (みなみかぜ) - gió nam","東南 (とうなん) - đông nam"],mnemonic:"Cây cối phía nam."},
+        {id:35,kanji:"東",on:"トウ",kun:"ひがし",meaning:"Đông",hanviet:"Đông",strokes:8,radical:"木",radicalMeaning:"mộc",examples:["東京 (とうきょう) - Tokyo","東口 (ひがしぐち) - cửa đông","関東 (かんとう) - vùng Kanto","東南 (とうなん) - đông nam"],mnemonic:"Mặt trời mọc sau cây."},
+        {id:36,kanji:"西",on:"セイ",kun:"にし",meaning:"Tây",hanviet:"Tây",strokes:6,radical:"襾",radicalMeaning:"tây",examples:["西口 (にしぐち) - cửa tây","関西 (かんさい) - vùng Kansai","西風 (にしかぜ) - gió tây","西南 (せいなん) - tây nam"],mnemonic:"Chim đậu tổ."},
+        {id:37,kanji:"大",on:"ダイ",kun:"おお.きい",meaning:"Lớn",hanviet:"Đại",strokes:3,radical:"大",radicalMeaning:"đại",examples:["大人 (おとな) - người lớn","大きい (おおきい) - to lớn","大学 (だいがく) - đại học","大好き (だいすき) - rất thích"],mnemonic:"Người dang tay."},
+        {id:38,kanji:"小",on:"ショウ",kun:"ちい.さい",meaning:"Nhỏ",hanviet:"Tiểu",strokes:3,radical:"小",radicalMeaning:"tiểu",examples:["小学校 (しょうがっこう) - trường tiểu học","小さい (ちいさい) - nhỏ","小鳥 (ことり) - chim nhỏ","小説 (しょうせつ) - tiểu thuyết"],mnemonic:"Hạt móc nhỏ."},
+        {id:39,kanji:"高",on:"コウ",kun:"たか.い",meaning:"Cao",hanviet:"Cao",strokes:10,radical:"高",radicalMeaning:"cao",examples:["高校 (こうこう) - trung học","高い (たかい) - cao","高級 (こうきゅう) - cao cấp","最高 (さいこう) - cao nhất"],mnemonic:"Tháp cao có cửa sổ."},
+        {id:40,kanji:"安",on:"アン",kun:"やす.い",meaning:"Yên tâm, rẻ",hanviet:"An",strokes:6,radical:"宀",radicalMeaning:"miên",examples:["安心 (あんしん) - an tâm","安全 (あんぜん) - an toàn","安い (やすい) - rẻ","不安 (ふあん) - bất an"],mnemonic:"Phụ nữ dưới mái nhà."},
+        {id:41,kanji:"新",on:"シン",kun:"あたら.しい",meaning:"Mới",hanviet:"Tân",strokes:13,radical:"斤",radicalMeaning:"cân",examples:["新聞 (しんぶん) - báo chí","新しい (あたらしい) - mới","新幹線 (しんかんせん) - tàu Shinkansen","新人 (しんじん) - người mới"],mnemonic:"Rìu chặt cây thân."},
+        {id:42,kanji:"古",on:"コ",kun:"ふる.い",meaning:"Cũ",hanviet:"Cổ",strokes:5,radical:"口",radicalMeaning:"khẩu",examples:["古い (ふるい) - cũ","中古 (ちゅうこ) - đồ cũ","古本 (ふるほん) - sách cũ","古代 (こだい) - cổ đại"],mnemonic:"Câu chuyện mười miệng."},
+        {id:43,kanji:"長",on:"チョウ",kun:"なが.い",meaning:"Dài",hanviet:"Trường",strokes:8,radical:"長",radicalMeaning:"trường",examples:["長崎 (ながさき) - Nagasaki","長い (ながい) - dài","社長 (しゃちょう) - giám đốc","長男 (ちょうなん) - con trai trưởng"],mnemonic:"Tóc dài bay."},
+        {id:44,kanji:"人",on:"ジン",kun:"ひと",meaning:"Người",hanviet:"Nhân",strokes:2,radical:"人",radicalMeaning:"nhân",examples:["日本人 (にほんじん) - người Nhật","大人 (おとな) - người lớn","三人 (さんにん) - ba người","人気 (にんき) - nổi tiếng"],mnemonic:"Hai chân đứng."},
+        {id:45,kanji:"子",on:"シ",kun:"こ",meaning:"Trẻ con",hanviet:"Tử",strokes:3,radical:"子",radicalMeaning:"tử",examples:["子供 (こども) - trẻ em","女の子 (おんなのこ) - bé gái","男の子 (おとこのこ) - bé trai","電子 (でんし) - điện tử"],mnemonic:"Đứa bé quấn tã."},
+        {id:46,kanji:"女",on:"ジョ",kun:"おんな",meaning:"Phụ nữ",hanviet:"Nữ",strokes:3,radical:"女",radicalMeaning:"nữ",examples:["女性 (じょせい) - phụ nữ","女の子 (おんなのこ) - bé gái","彼女 (かのじょ) - cô ấy","女王 (じょおう) - nữ hoàng"],mnemonic:"Dáng ngồi điệu."},
+        {id:47,kanji:"男",on:"ダン",kun:"おとこ",meaning:"Đàn ông",hanviet:"Nam",strokes:7,radical:"田",radicalMeaning:"điền",examples:["男性 (だんせい) - nam giới","男の子 (おとこのこ) - bé trai","長男 (ちょうなん) - con trai trưởng","男性用 (だんせいよう) - dành cho nam"],mnemonic:"Ruộng + sức mạnh."},
+        {id:48,kanji:"学",on:"ガク",kun:"まな.ぶ",meaning:"Học",hanviet:"Học",strokes:8,radical:"子",radicalMeaning:"tử",examples:["学校 (がっこう) - trường học","学生 (がくせい) - học sinh","大学 (だいがく) - đại học","勉強 (べんきょう) - học tập"],mnemonic:"Đứa trẻ dưới mái trường."},
+        {id:49,kanji:"校",on:"コウ",kun:"",meaning:"Trường học",hanviet:"Hiệu",strokes:10,radical:"木",radicalMeaning:"mộc",examples:["学校 (がっこう) - trường học","高校 (こうこう) - trung học","校長 (こうちょう) - hiệu trưởng","校庭 (こうてい) - sân trường"],mnemonic:"Cây cối giao nhau."},
+        {id:50,kanji:"生",on:"セイ",kun:"い.きる",meaning:"Sống, sinh",hanviet:"Sinh",strokes:5,radical:"生",radicalMeaning:"sinh",examples:["先生 (せんせい) - giáo viên","学生 (がくせい) - học sinh","生活 (せいかつ) - sinh hoạt","生まれる (うまれる) - sinh ra"],mnemonic:"Cây mọc trên đất."}
+      ];
+
+      // ---------- STATE ----------
+      let state = {
+        darkMode: false,
+        currentView: 'dashboard',
+        learnedIds: new Set(),
+        streak: 0,
+        lastStudyDate: null,
+        reviews: {},
+        flashcardQueue: [],
+        currentFCIndex: 0,
+        quizCurrent: null,
+        quizCorrect: 0,
+        quizTotal: 0,
+        writeHistory: [],
+        brushColor: '#2c2416',
+        brushSize: 3,
+      };
+
+      function loadState() {
+        const saved = localStorage.getItem('kanji_n5_state');
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            state.learnedIds = new Set(parsed.learnedIds || []);
+            state.streak = parsed.streak || 0;
+            state.lastStudyDate = parsed.lastStudyDate || null;
+            state.reviews = parsed.reviews || {};
+            state.darkMode = parsed.darkMode || false;
+            state.quizCorrect = parsed.quizCorrect || 0;
+            state.quizTotal = parsed.quizTotal || 0;
+          } catch(e) {}
+        }
+        if (state.darkMode) document.body.classList.add('dark');
+        updateThemeButton();
+      }
+      function saveState() {
+        const toSave = {
+          learnedIds: Array.from(state.learnedIds),
+          streak: state.streak,
+          lastStudyDate: state.lastStudyDate,
+          reviews: state.reviews,
+          darkMode: state.darkMode,
+          quizCorrect: state.quizCorrect,
+          quizTotal: state.quizTotal,
+        };
+        localStorage.setItem('kanji_n5_state', JSON.stringify(toSave));
+      }
+
+      function updateThemeButton() {
+        document.getElementById('themeToggle').innerHTML = state.darkMode ? '☀️ Sáng' : '🌙 Tối';
+      }
+
+      function updateStreak() {
+        const today = new Date().toDateString();
+        if (state.lastStudyDate !== today) {
+          const yesterday = new Date(Date.now() - 86400000).toDateString();
+          if (state.lastStudyDate === yesterday) state.streak += 1;
+          else if (state.lastStudyDate !== today) state.streak = 1;
+          state.lastStudyDate = today;
+          saveState();
+        }
+      }
+
+      function markLearned(id) {
+        if (!state.learnedIds.has(id)) {
+          state.learnedIds.add(id);
+          updateStreak();
+          saveState();
+        }
+      }
+
+      function getDueReviews() {
+        const now = new Date();
+        const due = [];
+        for (const id in state.reviews) {
+          const r = state.reviews[id];
+          if (!r.nextReview || new Date(r.nextReview) <= now) due.push(parseInt(id));
+        }
+        return due;
+      }
+
+      function updateReview(id, rating) {
+        if (!state.reviews[id]) state.reviews[id] = { ease: 2.5, interval: 0, repetitions: 0, nextReview: null };
+        const r = state.reviews[id];
+        if (rating >= 2) {
+          if (r.repetitions === 0) r.interval = 1;
+          else if (r.repetitions === 1) r.interval = 3;
+          else r.interval = Math.round(r.interval * r.ease);
+          r.repetitions += 1;
+        } else {
+          r.repetitions = 0;
+          r.interval = 0;
+        }
+        r.ease = Math.max(1.3, r.ease + (0.1 - (2 - rating) * (0.08 + (2 - rating) * 0.02)));
+        const next = new Date();
+        next.setDate(next.getDate() + r.interval);
+        r.nextReview = next.toISOString();
+        markLearned(id);
+        saveState();
+      }
+
+      function renderDashboard() {
+        document.getElementById('totalLearned').textContent = state.learnedIds.size;
+        document.getElementById('streakDays').textContent = state.streak;
+        document.getElementById('progressFill').style.width = (state.learnedIds.size / kanjiData.length * 100) + '%';
+        const due = getDueReviews();
+        document.getElementById('reviewDueMsg').textContent = `📌 ${due.length} chữ cần ôn tập hôm nay`;
+
+        const unlearned = kanjiData.filter(k => !state.learnedIds.has(k.id)).slice(0, 6);
+        const grid = document.getElementById('newKanjiGrid');
+        grid.innerHTML = unlearned.map(k => 
+          `<div class="kanji-tile" data-id="${k.id}" title="${k.meaning} (${k.hanviet})">
+            <span class="kanji-main">${k.kanji}</span>
+            <span class="hanviet-sub">${k.hanviet}</span>
+          </div>`
+        ).join('');
+        if (unlearned.length === 0) grid.innerHTML = '<p style="grid-column:span 6; text-align:center;">🎉 Bạn đã học hết Hán tự N5!</p>';
+      }
+
+      function renderAllKanji(filter = 'all', search = '') {
+        let filtered = kanjiData;
+        if (filter === 'learned') filtered = filtered.filter(k => state.learnedIds.has(k.id));
+        else if (filter === 'unlearned') filtered = filtered.filter(k => !state.learnedIds.has(k.id));
+        if (search) filtered = filtered.filter(k => k.kanji.includes(search) || k.meaning.toLowerCase().includes(search.toLowerCase()) || k.on.includes(search) || k.hanviet.toLowerCase().includes(search.toLowerCase()));
+        const grid = document.getElementById('allKanjiGrid');
+        grid.innerHTML = filtered.map(k => 
+          `<div class="kanji-tile ${state.learnedIds.has(k.id) ? 'learned' : ''}" data-id="${k.id}" title="${k.meaning} (${k.hanviet})">
+            <span class="kanji-main">${k.kanji}</span>
+            <span class="hanviet-sub">${k.hanviet}</span>
+            ${state.learnedIds.has(k.id) ? '<span class="badge">✓</span>' : ''}
+          </div>`
+        ).join('');
+      }
+
+      function buildFlashcardQueue() {
+        const due = getDueReviews();
+        const dueSet = new Set(due);
+        let queue = kanjiData.filter(k => dueSet.has(k.id));
+        const unlearned = kanjiData.filter(k => !state.learnedIds.has(k.id) && !dueSet.has(k.id));
+        queue = [...queue, ...unlearned];
+        state.flashcardQueue = queue;
+        state.currentFCIndex = 0;
+      }
+
+      function renderFlashcard() {
+        if (state.flashcardQueue.length === 0) {
+          document.getElementById('fcKanji').textContent = '🎉';
+          document.getElementById('fcHanViet').textContent = '';
+          document.getElementById('flashcard').classList.remove('flipped');
+          document.getElementById('fcMeaning').textContent = 'Hoàn thành!';
+          document.getElementById('fcOnyomi').textContent = '';
+          document.getElementById('fcKunyomi').textContent = '';
+          document.getElementById('fcExamples').innerHTML = '';
+          return;
+        }
+        const k = state.flashcardQueue[state.currentFCIndex];
+        document.getElementById('fcKanji').textContent = k.kanji;
+        document.getElementById('fcHanViet').textContent = k.hanviet;
+        document.getElementById('fcMeaning').textContent = k.meaning;
+        document.getElementById('fcOnyomi').textContent = 'On: ' + k.on;
+        document.getElementById('fcKunyomi').textContent = 'Kun: ' + (k.kun || '—');
+        document.getElementById('fcExamples').innerHTML = k.examples.map(ex => `• ${ex}`).join('<br>');
+        document.getElementById('flashcard').classList.remove('flipped');
+      }
+
+      function nextFlashcard() {
+        if (state.flashcardQueue.length === 0) return;
+        state.currentFCIndex = (state.currentFCIndex + 1) % state.flashcardQueue.length;
+        renderFlashcard();
+      }
+
+      function generateQuiz() {
+        const correct = kanjiData[Math.floor(Math.random() * kanjiData.length)];
+        let options = [correct.meaning];
+        while (options.length < 4) {
+          const rand = kanjiData[Math.floor(Math.random() * kanjiData.length)];
+          if (!options.includes(rand.meaning)) options.push(rand.meaning);
+        }
+        options = options.sort(() => Math.random() - 0.5);
+        state.quizCurrent = { correctId: correct.id, kanji: correct.kanji, options, answered: false };
+        document.getElementById('quizKanji').textContent = correct.kanji;
+        document.getElementById('quizScore').textContent = `Đúng: ${state.quizCorrect}/${state.quizTotal}`;
+        const optsDiv = document.getElementById('quizOptions');
+        optsDiv.innerHTML = options.map(opt => 
+          `<button class="quiz-option" data-meaning="${opt}">${opt}</button>`
+        ).join('');
+      }
+
+      // Canvas & Writing
+      let canvas, ctx, painting = false;
+      function initCanvas() {
+        canvas = document.getElementById('writeCanvas');
+        ctx = canvas.getContext('2d');
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        state.writeHistory = [];
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        canvas.addEventListener('mousedown', startPainting);
+        canvas.addEventListener('mousemove', paint);
+        canvas.addEventListener('mouseup', stopPainting);
+        canvas.addEventListener('touchstart', startPainting);
+        canvas.addEventListener('touchmove', paint);
+        canvas.addEventListener('touchend', stopPainting);
+      }
+      function resizeCanvas() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width || 350;
+        canvas.height = 350;
+        ctx.strokeStyle = state.brushColor;
+        ctx.lineWidth = state.brushSize;
+      }
+      function startPainting(e) {
+        e.preventDefault();
+        painting = true;
+        ctx.beginPath();
+        const pos = getPos(e);
+        ctx.moveTo(pos.x, pos.y);
+        saveCanvasState();
+      }
+      function paint(e) {
+        if (!painting) return;
+        e.preventDefault();
+        const pos = getPos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.strokeStyle = state.brushColor;
+        ctx.lineWidth = state.brushSize;
+        ctx.stroke();
+      }
+      function stopPainting() {
+        painting = false;
+        ctx.closePath();
+      }
+      function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        if (e.touches) {
+          return { x: (e.touches[0].clientX - rect.left) * scaleX, y: (e.touches[0].clientY - rect.top) * scaleY };
+        }
+        return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+      }
+      function saveCanvasState() {
+        state.writeHistory.push(canvas.toDataURL());
+      }
+      function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        state.writeHistory = [];
+      }
+      function undoCanvas() {
+        if (state.writeHistory.length > 0) {
+          state.writeHistory.pop();
+          const img = new Image();
+          img.onload = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+          };
+          img.src = state.writeHistory.length ? state.writeHistory[state.writeHistory.length-1] : '';
+          if (!state.writeHistory.length) ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+
+      function evaluateDrawing() {
+        const select = document.getElementById('writeSelect');
+        const kanjiId = parseInt(select.value);
+        const k = kanjiData.find(k => k.id === kanjiId);
+        if (!k) return;
+
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = canvas.width;
+        offCanvas.height = canvas.height;
+        const offCtx = offCanvas.getContext('2d');
+        offCtx.fillStyle = '#000';
+        offCtx.font = `bold ${canvas.width * 0.8}px 'Noto Sans JP'`;
+        offCtx.textAlign = 'center';
+        offCtx.textBaseline = 'middle';
+        offCtx.fillText(k.kanji, canvas.width/2, canvas.height/2);
+
+        const userImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const refImageData = offCtx.getImageData(0, 0, canvas.width, canvas.height);
+
+        const userPixels = userImageData.data;
+        const refPixels = refImageData.data;
+        let matchCount = 0;
+        let totalRefDark = 0;
+
+        for (let i = 0; i < userPixels.length; i += 4) {
+          const userGray = (userPixels[i] + userPixels[i+1] + userPixels[i+2]) / 3;
+          const refGray = (refPixels[i] + refPixels[i+1] + refPixels[i+2]) / 3;
+          const userDark = userGray < 128 ? 1 : 0;
+          const refDark = refGray < 128 ? 1 : 0;
+
+          if (refDark) totalRefDark++;
+          if (userDark && refDark) matchCount++;
+        }
+
+        const similarity = totalRefDark > 0 ? Math.round((matchCount / totalRefDark) * 100) : 0;
+        const resultDiv = document.getElementById('evalResult');
+        resultDiv.innerHTML = `📊 Độ tương đồng: <strong>${similarity}%</strong>`;
+
+        if (similarity >= 65) {
+          markLearned(kanjiId);
+          resultDiv.innerHTML += ' ✅ Rất tốt! Đã ghi nhận đã học.';
+          refreshAllViews();
+        } else {
+          resultDiv.innerHTML += ' Hãy thử viết lại gần giống mẫu hơn nhé.';
+        }
+      }
+
+      function nextWriteKanji() {
+        const select = document.getElementById('writeSelect');
+        const currentIndex = select.selectedIndex;
+        const nextIndex = (currentIndex + 1) % select.options.length;
+        select.selectedIndex = nextIndex;
+        clearCanvas();
+        document.getElementById('evalResult').innerHTML = '';
+      }
+
+      function showKanjiDetail(id) {
+        const k = kanjiData.find(k => k.id === id);
+        if (!k) return;
+        const modal = document.getElementById('kanjiModal');
+        document.getElementById('modalContent').innerHTML = `
+          <h3>${k.kanji}</h3>
+          <div class="hanviet-detail">Âm Hán Việt: <strong>${k.hanviet}</strong></div>
+          <div class="detail-row"><span>Âm On</span><strong>${k.on}</strong></div>
+          <div class="detail-row"><span>Âm Kun</span><strong>${k.kun || '—'}</strong></div>
+          <div class="detail-row"><span>Nghĩa</span><strong>${k.meaning}</strong></div>
+          <div class="detail-row"><span>Số nét</span><strong>${k.strokes}</strong></div>
+          <div class="detail-row"><span>Bộ thủ</span><strong>${k.radical} (${k.radicalMeaning})</strong></div>
+          <div class="detail-row"><span>Ví dụ</span><span>${k.examples.join('<br>')}</span></div>
+          <p style="margin-top:12px; font-style:italic;">💡 ${k.mnemonic}</p>
+          <button class="btn btn-primary" style="width:100%; margin-top:12px;" id="modalMarkLearned">Đánh dấu đã học</button>
+        `;
+        modal.classList.remove('hidden');
+        document.getElementById('modalMarkLearned').addEventListener('click', () => {
+          markLearned(k.id);
+          modal.classList.add('hidden');
+          refreshAllViews();
+        });
+      }
+
+      function switchView(view) {
+        state.currentView = view;
+        document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+        document.getElementById(`view-${view}`).classList.remove('hidden');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.nav-btn[data-view="${view}"]`).classList.add('active');
+        if (view === 'dashboard') renderDashboard();
+        if (view === 'learn') renderAllKanji(document.getElementById('filterStatus')?.value || 'all', document.getElementById('searchKanji')?.value || '');
+        if (view === 'flashcard') { buildFlashcardQueue(); renderFlashcard(); }
+        if (view === 'quiz') generateQuiz();
+        if (view === 'write') { populateWriteSelect(); document.getElementById('evalResult').innerHTML = ''; }
+      }
+
+      function refreshAllViews() {
+        renderDashboard();
+        renderAllKanji(document.getElementById('filterStatus')?.value || 'all', document.getElementById('searchKanji')?.value || '');
+        if (state.currentView === 'flashcard') { buildFlashcardQueue(); renderFlashcard(); }
+      }
+
+      function populateWriteSelect() {
+        const sel = document.getElementById('writeSelect');
+        sel.innerHTML = kanjiData.map(k => `<option value="${k.id}">${k.kanji} - ${k.hanviet} (${k.meaning})</option>`).join('');
+      }
+
+      function bindEvents() {
+        document.getElementById('themeToggle').addEventListener('click', () => {
+          state.darkMode = !state.darkMode;
+          document.body.classList.toggle('dark', state.darkMode);
+          updateThemeButton();
+          saveState();
+        });
+
+        document.getElementById('nav').addEventListener('click', (e) => {
+          const btn = e.target.closest('.nav-btn');
+          if (!btn) return;
+          switchView(btn.dataset.view);
+        });
+
+        document.addEventListener('click', (e) => {
+          const tile = e.target.closest('.kanji-tile');
+          if (tile && tile.dataset.id) {
+            showKanjiDetail(parseInt(tile.dataset.id));
+          }
+        });
+
+        document.getElementById('searchKanji').addEventListener('input', (e) => {
+          renderAllKanji(document.getElementById('filterStatus').value, e.target.value);
+        });
+        document.getElementById('filterStatus').addEventListener('change', (e) => {
+          renderAllKanji(e.target.value, document.getElementById('searchKanji').value);
+        });
+
+        document.getElementById('flashcardContainer').addEventListener('click', () => {
+          document.getElementById('flashcard').classList.toggle('flipped');
+        });
+        document.getElementById('fcRating').addEventListener('click', (e) => {
+          const btn = e.target.closest('button');
+          if (!btn || !btn.dataset.rating) return;
+          const rating = parseInt(btn.dataset.rating);
+          const k = state.flashcardQueue[state.currentFCIndex];
+          if (k) {
+            updateReview(k.id, rating);
+            nextFlashcard();
+            refreshAllViews();
+          }
+        });
+        document.getElementById('nextFlashcard').addEventListener('click', nextFlashcard);
+
+        document.getElementById('quizOptions').addEventListener('click', (e) => {
+          const opt = e.target.closest('.quiz-option');
+          if (!opt || state.quizCurrent.answered) return;
+          state.quizCurrent.answered = true;
+          state.quizTotal++;
+          const selected = opt.dataset.meaning;
+          const correctMeaning = kanjiData.find(k => k.id === state.quizCurrent.correctId).meaning;
+          if (selected === correctMeaning) {
+            opt.classList.add('correct');
+            state.quizCorrect++;
+            markLearned(state.quizCurrent.correctId);
+          } else {
+            opt.classList.add('wrong');
+            document.querySelectorAll('.quiz-option').forEach(o => {
+              if (o.dataset.meaning === correctMeaning) o.classList.add('correct');
+            });
+          }
+          document.getElementById('quizScore').textContent = `Đúng: ${state.quizCorrect}/${state.quizTotal}`;
+          saveState();
+          setTimeout(() => { generateQuiz(); }, 1200);
+        });
+        document.getElementById('nextQuiz').addEventListener('click', generateQuiz);
+
+        document.getElementById('clearCanvas').addEventListener('click', clearCanvas);
+        document.getElementById('undoCanvas').addEventListener('click', undoCanvas);
+        document.getElementById('brushColor').addEventListener('input', (e) => { state.brushColor = e.target.value; });
+        document.getElementById('brushSize').addEventListener('input', (e) => { state.brushSize = parseInt(e.target.value); });
+        document.getElementById('showTemplateBtn').addEventListener('click', () => {
+          const id = parseInt(document.getElementById('writeSelect').value);
+          const k = kanjiData.find(k => k.id === id);
+          if (k) {
+            ctx.save();
+            ctx.globalAlpha = 0.2;
+            ctx.font = `bold ${canvas.width * 0.8}px 'Noto Sans JP'`;
+            ctx.fillStyle = state.darkMode ? '#fff' : '#000';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(k.kanji, canvas.width/2, canvas.height/2);
+            ctx.restore();
+            saveCanvasState();
+          }
+        });
+
+        document.getElementById('evaluateBtn').addEventListener('click', evaluateDrawing);
+        document.getElementById('rewriteBtn').addEventListener('click', () => {
+          clearCanvas();
+          document.getElementById('evalResult').innerHTML = '';
+        });
+        document.getElementById('nextWriteBtn').addEventListener('click', nextWriteKanji);
+
+        document.getElementById('closeModal').addEventListener('click', () => {
+          document.getElementById('kanjiModal').classList.add('hidden');
+        });
+        document.getElementById('kanjiModal').addEventListener('click', (e) => {
+          if (e.target === e.currentTarget) document.getElementById('kanjiModal').classList.add('hidden');
+        });
+      }
+
+      function init() {
+        loadState();
+        initCanvas();
+        bindEvents();
+        switchView('dashboard');
+        populateWriteSelect();
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
