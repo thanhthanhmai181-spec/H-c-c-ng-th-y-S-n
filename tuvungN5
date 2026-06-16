@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>N5 Từ Vựng - SONKURO</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Noto Sans JP', system-ui, sans-serif; background: #f0f4f8; color: #1a2a3a; max-width: 600px; margin: auto; min-height: 100vh; padding: 16px 16px 40px; }
+    .hidden { display: none !important; }
+    .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 20px; border: none; border-radius: 16px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; background: #2563eb; color: white; }
+    .btn:hover { background: #1d4ed8; transform: translateY(-1px); }
+    .btn-outline { background: white; color: #2563eb; border: 2px solid #2563eb; }
+    .btn-outline:hover { background: #eff6ff; }
+    .btn-sm { padding: 8px 14px; font-size: 0.9rem; }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; background: white; border-radius: 20px; padding: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+    .tab { flex: 1; text-align: center; padding: 12px 6px; border-radius: 16px; font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
+    .tab.active { background: #2563eb; color: white; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .stat-box { background: #f8fafc; border-radius: 16px; padding: 16px; text-align: center; }
+    .stat-box .num { font-size: 2rem; font-weight: 700; color: #0f172a; }
+    .stat-box .lbl { font-size: 0.85rem; color: #64748b; }
+    .word-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f1f5f9; gap: 12px; }
+    .word-info { flex: 1; }
+    .word-main { font-size: 1.4rem; font-weight: 700; color: #0f172a; line-height: 1.3; }
+    .word-reading { font-size: 0.85rem; color: #64748b; margin-top: 2px; }
+    .word-meaning { font-size: 1.2rem; font-weight: 800; background: #1e293b; color: #fef9c3; display: inline-block; padding: 4px 12px; border-radius: 20px; margin-top: 6px; letter-spacing: 0.5px; }
+    .word-sub { font-size: 0.8rem; color: #64748b; margin-top: 6px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .speaker { cursor: pointer; font-size: 1.3rem; background: none; border: none; padding: 6px; border-radius: 30px; transition: 0.1s; }
+    .speaker:active { background: #e2e8f0; }
+    .flashcard-container { perspective: 800px; height: 260px; margin: 8px 0 20px; }
+    .flashcard { position: relative; width: 100%; height: 100%; transition: transform 0.5s; transform-style: preserve-3d; cursor: pointer; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .front { background: white; font-size: 2rem; font-weight: 600; }
+    .back { background: #fffbeb; transform: rotateY(180deg); font-size: 1.2rem; text-align: center; }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .quiz-option { background: white; padding: 16px; border-radius: 14px; border: 2px solid #e2e8f0; cursor: pointer; transition: 0.15s; font-size: 1rem; font-weight: 500; }
+    .quiz-option:active { transform: scale(0.97); }
+    .quiz-option.correct { border-color: #16a34a; background: #f0fdf4; }
+    .quiz-option.wrong { border-color: #dc2626; background: #fef2f2; }
+    .filter-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+    select, input { padding: 10px 14px; border-radius: 14px; border: 1px solid #e2e8f0; font-size: 0.95rem; outline: none; background: white; }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center; margin-bottom:12px; font-size:1.8rem;">📖 N5 Từ Vựng - SONKURO</h1>
+
+  <div class="tabs" id="tabBar">
+    <div class="tab active" data-tab="dashboard">🏠</div>
+    <div class="tab" data-tab="wordlist">📋 Từ</div>
+    <div class="tab" data-tab="flashcard">🃏 Ôn</div>
+    <div class="tab" data-tab="quiz">❓ Quiz</div>
+    <div class="tab" data-tab="lessons">📚 Bài</div>
+  </div>
+
+  <div id="dashboardView">
+    <div class="stat-grid" id="statsContainer"></div>
+    <div class="card" style="margin-top:16px; text-align:center;">
+      <p id="dailyMessage" style="font-weight:500; margin-bottom:12px;"></p>
+      <button class="btn" id="btnStartReview" style="width:100%; margin-bottom:8px;">🔄 Ôn tập từ cần ôn</button>
+      <button class="btn btn-outline" id="btnLearnNew" style="width:100%;">🆕 Học 10 từ mới</button>
+    </div>
+    <div class="card" style="text-align:center;">
+      <p style="font-size:0.9rem; color:#475569;">Chọn bài mặc định khi học từ mới</p>
+      <select id="defaultLessonSelect" style="margin-top:8px; width:100%;"></select>
+    </div>
+  </div>
+
+  <div id="wordListView" class="hidden">
+    <div class="filter-row">
+      <select id="lessonFilter" style="flex:1;"></select>
+      <input type="text" id="searchInput" placeholder="Tìm từ..." style="flex:2;">
+    </div>
+    <div id="wordListContainer"></div>
+  </div>
+
+  <div id="flashcardView" class="hidden">
+    <div class="card">
+      <div class="flashcard-container" id="flashcardContainer">
+        <div class="flashcard" id="flashcard">
+          <div class="front"><span id="fcFront"></span><button class="speaker" id="speakFront" style="margin-left:12px;">🔊</button></div>
+          <div class="back"><span id="fcBack"></span><button class="speaker" id="speakBack" style="margin-left:12px;">🔊</button></div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; justify-content:center; margin-top:16px;">
+        <button class="btn" id="btnForgot" style="background:#e11d48;">😕 Chưa nhớ</button>
+        <button class="btn" id="btnRemembered" style="background:#16a34a;">😊 Đã nhớ</button>
+      </div>
+      <p id="fcProgress" style="text-align:center; margin-top:14px; color:#64748b;"></p>
+      <button class="btn btn-outline btn-sm" id="btnEndFlashcard" style="margin-top:8px; width:100%;">⏹ Kết thúc phiên</button>
+    </div>
+  </div>
+
+  <div id="quizView" class="hidden">
+    <div class="card" style="text-align:center;">
+      <h2 id="quizQuestion" style="font-size:2rem; margin:16px 0;"></h2>
+      <div class="quiz-options" id="quizOptions"></div>
+      <p id="quizFeedback" style="margin-top:16px; font-weight:600; min-height:24px;"></p>
+      <button class="btn" id="btnNextQuiz" style="margin-top:8px; width:100%;">⏩ Câu tiếp theo</button>
+    </div>
+  </div>
+
+  <div id="lessonsView" class="hidden">
+    <div id="lessonsContainer"></div>
+  </div>
+
+<script>
+  // --------------------------------------------------------------
+  // DỮ LIỆU TỪ VỰNG ĐẦY ĐỦ 25 BÀI (931 TỪ)
+  // --------------------------------------------------------------
+  let vocabData = [];
+  function add(id, kanji, hiragana, meaning, type, lesson) {
+    vocabData.push({ id, kanji, hiragana, meaning, type, lesson, example: "", exampleMeaning: "" });
+  }
+
+  // ================= BÀI 1 (1-33) =================
+  add(1,"私","わたし","tôi","đại từ",1); add(2,"あなた","あなた","bạn","đại từ",1); add(3,"あの人","あのひと","người đó","danh từ",1);
+  add(4,"あの方","あのかた","vị đó (kính ngữ)","danh từ",1); add(5,"～さん","～さん","anh/chị/ông/bà ~","hậu tố",1); add(6,"～ちゃん","～ちゃん","bé ~ (thân mật)","hậu tố",1);
+  add(7,"～人","～じん","người ~","hậu tố",1); add(8,"先生","せんせい","thầy/cô giáo","danh từ",1); add(9,"教師","きょうし","giáo viên","danh từ",1);
+  add(10,"学生","がくせい","học sinh","danh từ",1); add(11,"会社員","かいしゃいん","nhân viên công ty","danh từ",1); add(12,"社員","しゃいん","nhân viên","danh từ",1);
+  add(13,"銀行員","ぎんこういん","nhân viên ngân hàng","danh từ",1); add(14,"医者","いしゃ","bác sĩ","danh từ",1); add(15,"研究者","けんきゅうしゃ","nhà nghiên cứu","danh từ",1);
+  add(16,"大学","だいがく","đại học","danh từ",1); add(17,"病院","びょういん","bệnh viện","danh từ",1); add(18,"誰","だれ","ai","đại từ",1);
+  add(19,"どなた","どなた","vị nào (kính ngữ)","đại từ",1); add(20,"～歳","～さい","~ tuổi","hậu tố",1); add(21,"何歳","なんさい","mấy tuổi","từ để hỏi",1);
+  add(22,"おいくつ","おいくつ","bao nhiêu tuổi (kính)","từ để hỏi",1); add(23,"はい","はい","vâng/có","thán từ",1); add(24,"いいえ","いいえ","không","thán từ",1);
+  add(25,"失礼ですが","しつれいですが","xin lỗi khi làm phiền","cụm từ",1); add(26,"お名前は？","おなまえは？","tên bạn là?","cụm từ",1); add(27,"初めまして","はじめまして","rất vui được gặp bạn","cụm từ",1);
+  add(28,"どうぞよろしくお願いします","どうぞよろしくおねがいします","rất mong được giúp đỡ","cụm từ",1); add(29,"こちらは～さんです","こちらは～さんです","đây là anh/chị ~","cụm từ",1);
+  add(30,"～から来ました","～からきました","đến từ ~","cụm từ",1); add(31,"中国","ちゅうごく","Trung Quốc","danh từ",1); add(32,"日本","にほん","Nhật Bản","danh từ",1);
+  add(33,"アメリカ","アメリカ","Mỹ","danh từ",1);
+  
+  // ================= BÀI 2 (34-76) =================
+  add(34,"これ","これ","cái này","đại từ",2); add(35,"それ","それ","cái đó","đại từ",2); add(36,"あれ","あれ","cái kia","đại từ",2);
+  add(37,"この～","この～","cái - này","định từ",2); add(38,"その～","その～","cái - đó","định từ",2); add(39,"あの～","あの～","cái - kia","định từ",2);
+  add(40,"本","ほん","sách","danh từ",2); add(41,"辞書","じしょ","từ điển","danh từ",2); add(42,"雑誌","ざっし","tạp chí","danh từ",2);
+  add(43,"新聞","しんぶん","báo","danh từ",2); add(44,"ノート","ノート","vở","danh từ",2); add(45,"手帳","てちょう","sổ tay","danh từ",2);
+  add(46,"名刺","めいし","danh thiếp","danh từ",2); add(47,"鉛筆","えんぴつ","bút chì","danh từ",2); add(48,"ボールペン","ボールペン","bút bi","danh từ",2);
+  add(49,"シャープペンシル","シャープペンシル","bút chì kim","danh từ",2); add(50,"鍵","かぎ","chìa khóa","danh từ",2); add(51,"時計","とけい","đồng hồ","danh từ",2);
+  add(52,"傘","かさ","ô/dù","danh từ",2); add(53,"鞄","かばん","cặp","danh từ",2); add(54,"テレビ","テレビ","tivi","danh từ",2);
+  add(55,"ラジオ","ラジオ","radio","danh từ",2); add(56,"カメラ","カメラ","máy ảnh","danh từ",2); add(57,"コンピューター","コンピューター","máy tính","danh từ",2);
+  add(58,"自動車","じどうしゃ","xe hơi","danh từ",2); add(59,"机","つくえ","bàn","danh từ",2); add(60,"椅子","いす","ghế","danh từ",2);
+  add(61,"チョコレート","チョコレート","sô cô la","danh từ",2); add(62,"コーヒー","コーヒー","cà phê","danh từ",2); add(63,"英語","えいご","tiếng Anh","danh từ",2);
+  add(64,"日本語","にほんご","tiếng Nhật","danh từ",2); add(65,"何","なに","gì","từ để hỏi",2); add(66,"何","なん","cái gì","từ để hỏi",2);
+  add(67,"そう","そう","ừ/đúng thế","thán từ",2); add(68,"違います","ちがいます","không phải","động từ",2); add(69,"そうですか","そうですか","vậy à?","cụm từ",2);
+  add(70,"あのう","あのう","à/Ồ...","thán từ",2); add(71,"えっ","えっ","hả? (ngạc nhiên)","thán từ",2); add(72,"どうぞ","どうぞ","xin mời","phó từ",2);
+  add(73,"どうも","どうも","cảm ơn","phó từ",2); add(74,"どうもありがとうございます","どうもありがとうございます","cảm ơn rất nhiều","cụm từ",2);
+  add(75,"これからお世話になります","これからおせわになります","từ nay mong được giúp đỡ","cụm từ",2); add(76,"こちらこそよろしく","こちらこそよろしく","tôi cũng mong được giúp đỡ","cụm từ",2);
+  
+  // ================= BÀI 3 (77-118) =================
+  add(77,"ここ","ここ","đây","đại từ",3); add(78,"そこ","そこ","đó","đại từ",3); add(79,"あそこ","あそこ","đằng kia","đại từ",3);
+  add(80,"どこ","どこ","ở đâu","từ để hỏi",3); add(81,"こちら","こちら","phía này","danh từ",3); add(82,"そちら","そちら","phía đó","danh từ",3);
+  add(83,"あちら","あちら","phía kia","danh từ",3); add(84,"どちら","どちら","phía nào","từ để hỏi",3); add(85,"教室","きょうしつ","lớp học","danh từ",3);
+  add(86,"食堂","しょくどう","nhà ăn","danh từ",3); add(87,"事務所","じむしょ","văn phòng","danh từ",3); add(88,"会議室","かいぎしつ","phòng họp","danh từ",3);
+  add(89,"受付","うけつけ","quầy tiếp tân","danh từ",3); add(90,"ロビー","ロビー","sảnh","danh từ",3); add(91,"部屋","へや","phòng","danh từ",3);
+  add(92,"トイレ","トイレ","nhà vệ sinh","danh từ",3); add(93,"階段","かいだん","cầu thang","danh từ",3); add(94,"エレベーター","エレベーター","thang máy","danh từ",3);
+  add(95,"エスカレーター","エスカレーター","thang cuốn","danh từ",3); add(96,"自動販売機","じどうはんばいき","máy bán hàng tự động","danh từ",3);
+  add(97,"お国","おくに","đất nước (lịch sự)","danh từ",3); add(98,"会社","かいしゃ","công ty","danh từ",3); add(99,"家","うち","nhà","danh từ",3);
+  add(100,"電話","でんわ","điện thoại","danh từ",3); add(101,"靴","くつ","giày","danh từ",3); add(102,"ネクタイ","ネクタイ","cà vạt","danh từ",3);
+  add(103,"ワイン","ワイン","rượu vang","danh từ",3); add(104,"たばこ","たばこ","thuốc lá","danh từ",3); add(105,"売り場","うりば","quầy bán","danh từ",3);
+  add(106,"地下","ちか","tầng hầm","danh từ",3); add(107,"～階","～かい","~ tầng","hậu tố",3); add(108,"何階","なんがい","tầng mấy","từ để hỏi",3);
+  add(109,"～円","～えん","~ yên","hậu tố",3); add(110,"いくら","いくら","bao nhiêu tiền","từ để hỏi",3); add(111,"百","ひゃく","trăm","danh từ",3);
+  add(112,"千","せん","nghìn","danh từ",3); add(113,"万","まん","mười nghìn","danh từ",3); add(114,"すみません","すみません","xin lỗi","thán từ",3);
+  add(115,"～でございます","～でございます","là ~ (kính ngữ)","trợ từ",3); add(116,"見せてください","みせてください","hãy cho tôi xem","cụm từ",3);
+  add(117,"じゃ","じゃ","vậy thì","liên từ",3); add(118,"～をください","～をください","cho tôi ...","cụm từ",3);
+  
+  // ================= BÀI 4 (119-170) =================
+  add(119,"起きます","おきます","thức dậy","động từ",4); add(120,"寝ます","ねます","ngủ","động từ",4); add(121,"働きます","はたらきます","làm việc","động từ",4);
+  add(122,"休みます","やすみます","nghỉ ngơi","động từ",4); add(123,"勉強します","べんきょうします","học","động từ",4); add(124,"終わります","おわります","kết thúc","động từ",4);
+  add(125,"デパート","デパート","cửa hàng bách hóa","danh từ",4); add(126,"銀行","ぎんこう","ngân hàng","danh từ",4); add(127,"郵便局","ゆうびんきょく","bưu điện","danh từ",4);
+  add(128,"図書館","としょかん","thư viện","danh từ",4); add(129,"美術館","びじゅつかん","bảo tàng nghệ thuật","danh từ",4); add(130,"今","いま","bây giờ","danh từ",4);
+  add(131,"～時","～じ","~ giờ","hậu tố",4); add(132,"～分","～ふん","~ phút","hậu tố",4); add(133,"半","はん","rưỡi","danh từ",4);
+  add(134,"何時","なんじ","mấy giờ","từ để hỏi",4); add(135,"何分","なんぷん","mấy phút","từ để hỏi",4); add(136,"午前","ごぜん","buổi sáng (AM)","danh từ",4);
+  add(137,"午後","ごご","buổi chiều (PM)","danh từ",4); add(138,"朝","あさ","sáng","danh từ",4); add(139,"昼","ひる","trưa","danh từ",4);
+  add(140,"晩","ばん","tối","danh từ",4); add(141,"一昨日","おととい","hôm kia","danh từ",4); add(142,"昨日","きのう","hôm qua","danh từ",4);
+  add(143,"今日","きょう","hôm nay","danh từ",4); add(144,"明日","あした","ngày mai","danh từ",4); add(145,"明後日","あさって","ngày kia","danh từ",4);
+  add(146,"今朝","けさ","sáng nay","danh từ",4); add(147,"今晩","こんばん","tối nay","danh từ",4); add(148,"休み","やすみ","ngày nghỉ","danh từ",4);
+  add(149,"昼休み","ひるやすみ","nghỉ trưa","danh từ",4); add(150,"毎朝","まいあさ","mỗi sáng","danh từ",4); add(151,"毎晩","まいばん","mỗi tối","danh từ",4);
+  add(152,"毎日","まいにち","mỗi ngày","danh từ",4); add(153,"月曜日","げつようび","thứ hai","danh từ",4); add(154,"火曜日","かようび","thứ ba","danh từ",4);
+  add(155,"水曜日","すいようび","thứ tư","danh từ",4); add(156,"木曜日","もくようび","thứ năm","danh từ",4); add(157,"金曜日","きんようび","thứ sáu","danh từ",4);
+  add(158,"土曜日","どようび","thứ bảy","danh từ",4); add(159,"日曜日","にちようび","chủ nhật","danh từ",4); add(160,"何曜日","なんようび","thứ mấy","từ để hỏi",4);
+  add(161,"番号","ばんごう","số","danh từ",4); add(162,"何番","なんばん","số mấy","từ để hỏi",4); add(163,"～から","～から","từ ~","trợ từ",4);
+  add(164,"～まで","～まで","đến ~","trợ từ",4); add(165,"～と","～と","với ~","trợ từ",4); add(166,"大変ですね","たいへんですね","vất vả nhỉ","cụm từ",4);
+  add(167,"えーと","えーと","à...","thán từ",4); add(168,"お願いします","おねがいします","làm ơn","cụm từ",4); add(169,"どうもありがとうございました","どうもありがとうございました","cảm ơn rất nhiều (quá khứ)","cụm từ",4);
+  add(170,"かしこまりました","かしこまりました","hiểu rồi (kính ngữ)","cụm từ",4);
+  
+  // ================= BÀI 5 (171-224) =================
+  add(171,"行きます","いきます","đi","động từ",5); add(172,"来ます","きます","đến","động từ",5); add(173,"帰ります","かえります","về","động từ",5);
+  add(174,"学校","がっこう","trường học","danh từ",5); add(175,"スーパー","スーパー","siêu thị","danh từ",5); add(176,"駅","えき","nhà ga","danh từ",5);
+  add(177,"飛行機","ひこうき","máy bay","danh từ",5); add(178,"船","ふね","tàu thủy","danh từ",5); add(179,"電車","でんしゃ","tàu điện","danh từ",5);
+  add(180,"地下鉄","ちかてつ","tàu điện ngầm","danh từ",5); add(181,"新幹線","しんかんせん","tàu cao tốc Shinkansen","danh từ",5); add(182,"バス","バス","xe buýt","danh từ",5);
+  add(183,"タクシー","タクシー","taxi","danh từ",5); add(184,"自転車","じてんしゃ","xe đạp","danh từ",5); add(185,"歩いて","あるいて","đi bộ","phó từ",5);
+  add(186,"人","ひと","người","danh từ",5); add(187,"友達","ともだち","bạn","danh từ",5); add(188,"彼","かれ","anh ấy","đại từ",5);
+  add(189,"彼女","かのじょ","cô ấy","đại từ",5); add(190,"家族","かぞく","gia đình","danh từ",5); add(191,"一人で","ひとりで","một mình","phó từ",5);
+  add(192,"先週","せんしゅう","tuần trước","danh từ",5); add(193,"今週","こんしゅう","tuần này","danh từ",5); add(194,"来週","らいしゅう","tuần sau","danh từ",5);
+  add(195,"先月","せんげつ","tháng trước","danh từ",5); add(196,"今月","こんげつ","tháng này","danh từ",5); add(197,"来月","らいげつ","tháng sau","danh từ",5);
+  add(198,"去年","きょねん","năm ngoái","danh từ",5); add(199,"今年","ことし","năm nay","danh từ",5); add(200,"来年","らいねん","năm sau","danh từ",5);
+  add(201,"～月","～がつ","tháng ~","hậu tố",5); add(202,"何月","なんがつ","tháng mấy","từ để hỏi",5); add(203,"1日","ついたち","ngày 1","danh từ",5);
+  add(204,"2日","ふつか","ngày 2","danh từ",5); add(205,"3日","みっか","ngày 3","danh từ",5); add(206,"4日","よっか","ngày 4","danh từ",5);
+  add(207,"5日","いつか","ngày 5","danh từ",5); add(208,"6日","むいか","ngày 6","danh từ",5); add(209,"7日","なのか","ngày 7","danh từ",5);
+  add(210,"8日","ようか","ngày 8","danh từ",5); add(211,"9日","ここのか","ngày 9","danh từ",5); add(212,"10日","とおか","ngày 10","danh từ",5);
+  add(213,"14日","じゅうよっか","ngày 14","danh từ",5); add(214,"20日","はつか","ngày 20","danh từ",5); add(215,"24日","にじゅうよっか","ngày 24","danh từ",5);
+  add(216,"～日","～にち","ngày ~","hậu tố",5); add(217,"何日","なんにち","ngày mấy","từ để hỏi",5); add(218,"いつ","いつ","khi nào","từ để hỏi",5);
+  add(219,"誕生日","たんじょうび","sinh nhật","danh từ",5); add(220,"普通","ふつう","thường","danh từ",5); add(221,"急行","きゅうこう","tốc hành","danh từ",5);
+  add(222,"特急","とっきゅう","đặc tố","danh từ",5); add(223,"次の","つぎの","tiếp theo","định từ",5); add(224,"どういたしまして","どういたしまして","không có chi","cụm từ",5);
+  
+  // ================= BÀI 6 (225-277) =================
+  add(225,"食べます","たべます","ăn","động từ",6); add(226,"飲みます","のみます","uống","động từ",6); add(227,"吸います","すいます","hút (thuốc)","động từ",6);
+  add(228,"見ます","みます","xem","động từ",6); add(229,"聞きます","ききます","nghe","động từ",6); add(230,"読みます","よみます","đọc","động từ",6);
+  add(231,"書きます","かきます","viết","động từ",6); add(232,"買います","かいます","mua","động từ",6); add(233,"撮ります","とります","chụp ảnh","động từ",6);
+  add(234,"します","します","làm","động từ",6); add(235,"会います","あいます","gặp","động từ",6); add(236,"ご飯","ごはん","cơm","danh từ",6);
+  add(237,"朝ご飯","あさごはん","bữa sáng","danh từ",6); add(238,"昼ご飯","ひるごはん","bữa trưa","danh từ",6); add(239,"晩ご飯","ばんごはん","bữa tối","danh từ",6);
+  add(240,"パン","パン","bánh mì","danh từ",6); add(241,"卵","たまご","trứng","danh từ",6); add(242,"肉","にく","thịt","danh từ",6);
+  add(243,"魚","さかな","cá","danh từ",6); add(244,"野菜","やさい","rau","danh từ",6); add(245,"果物","くだもの","trái cây","danh từ",6);
+  add(246,"水","みず","nước","danh từ",6); add(247,"お茶","おちゃ","trà","danh từ",6); add(248,"紅茶","こうちゃ","trà đen","danh từ",6);
+  add(249,"牛乳","ぎゅうにゅう","sữa bò","danh từ",6); add(250,"ミルク","ミルク","sữa","danh từ",6); add(251,"ジュース","ジュース","nước trái cây","danh từ",6);
+  add(252,"ビール","ビール","bia","danh từ",6); add(253,"お酒","おさけ","rượu","danh từ",6); add(254,"ビデオ","ビデオ","video","danh từ",6);
+  add(255,"映画","えいが","phim","danh từ",6); add(256,"CD","CD","CD","danh từ",6); add(257,"手紙","てがみ","thư","danh từ",6);
+  add(258,"レポート","レポート","báo cáo","danh từ",6); add(259,"写真","しゃしん","ảnh","danh từ",6); add(260,"店","みせ","cửa hàng","danh từ",6);
+  add(261,"レストラン","レストラン","nhà hàng","danh từ",6); add(262,"庭","にわ","vườn","danh từ",6); add(263,"宿題","しゅくだい","bài tập về nhà","danh từ",6);
+  add(264,"テニス","テニス","tennis","danh từ",6); add(265,"サッカー","サッカー","bóng đá","danh từ",6); add(266,"お花見","おはなみ","ngắm hoa","danh từ",6);
+  add(267,"何","なに","cái gì","từ để hỏi",6); add(268,"一緒に","いっしょに","cùng nhau","phó từ",6); add(269,"ちょっと","ちょっと","một chút","phó từ",6);
+  add(270,"いつも","いつも","luôn luôn","phó từ",6); add(271,"時々","ときどき","thỉnh thoảng","phó từ",6); add(272,"それから","それから","sau đó","liên từ",6);
+  add(273,"ええ","ええ","ừ","thán từ",6); add(274,"いいですね","いいですね","được đấy","cụm từ",6); add(275,"わかりました","わかりました","tôi hiểu rồi","cụm từ",6);
+  add(276,"何ですか","なんですか","là gì vậy?","cụm từ",6); add(277,"じゃ、また","じゃ、また","hẹn gặp lại","cụm từ",6);
+  
+  // ================= BÀI 7 (278-319) =================
+  add(278,"切ります","きります","cắt","động từ",7); add(279,"送ります","おくります","gửi","động từ",7); add(280,"あげます","あげます","tặng","động từ",7);
+  add(281,"もらいます","もらいます","nhận","động từ",7); add(282,"貸します","かします","cho mượn","động từ",7); add(283,"借ります","かります","mượn","động từ",7);
+  add(284,"教えます","おしえます","dạy","động từ",7); add(285,"習います","ならいます","học (từ ai)","động từ",7); add(286,"かけます","かけます","gọi (điện thoại)","động từ",7);
+  add(287,"手","て","tay","danh từ",7); add(288,"箸","はし","đũa","danh từ",7); add(289,"スプーン","スプーン","thìa","danh từ",7);
+  add(290,"ナイフ","ナイフ","dao","danh từ",7); add(291,"フォーク","フォーク","dĩa","danh từ",7); add(292,"はさみ","はさみ","kéo","danh từ",7);
+  add(293,"ファクス","ファクス","máy fax","danh từ",7); add(294,"ワープロ","ワープロ","máy đánh chữ","danh từ",7); add(295,"パソコン","パソコン","máy tính","danh từ",7);
+  add(296,"パンチ","パンチ","bấm lỗ","danh từ",7); add(297,"ホッチキス","ホッチキス","dập ghim","danh từ",7); add(298,"セロテープ","セロテープ","băng dính","danh từ",7);
+  add(299,"消しゴム","けしゴム","tẩy","danh từ",7); add(300,"紙","かみ","giấy","danh từ",7); add(301,"花","はな","hoa","danh từ",7);
+  add(302,"シャツ","シャツ","áo sơ mi","danh từ",7); add(303,"プレゼント","プレゼント","quà tặng","danh từ",7); add(304,"荷物","にもつ","hành lý","danh từ",7);
+  add(305,"お金","おかね","tiền","danh từ",7); add(306,"切符","きっぷ","vé","danh từ",7); add(307,"クリスマス","クリスマス","Giáng sinh","danh từ",7);
+  add(308,"父","ちち","cha (khiêm)","danh từ",7); add(309,"母","はは","mẹ (khiêm)","danh từ",7); add(310,"お父さん","おとうさん","bố","danh từ",7);
+  add(311,"お母さん","おかあさん","mẹ","danh từ",7); add(312,"もう","もう","đã","phó từ",7); add(313,"まだ","まだ","chưa","phó từ",7);
+  add(314,"これから","これから","sau này","phó từ",7); add(315,"素敵ですね","すてきですね","tuyệt vời quá","cụm từ",7); add(316,"失礼します","しつれいします","xin phép (ra về)","cụm từ",7);
+  add(317,"いかがですか","いかがですか","như thế nào ạ?","cụm từ",7); add(318,"いただきます","いただきます","xin mời (trước khi ăn)","cụm từ",7); add(319,"旅行","りょこう","du lịch","danh từ",7);
+  
+  // ================= BÀI 8 (320-369) =================
+  add(320,"ハンサム","ハンサム","đẹp trai","tính từ-na",8); add(321,"きれい","きれい","xinh đẹp","tính từ-na",8); add(322,"静か","しずか","yên tĩnh","tính từ-na",8);
+  add(323,"にぎやか","にぎやか","nhộn nhịp","tính từ-na",8); add(324,"有名","ゆうめい","nổi tiếng","tính từ-na",8); add(325,"親切","しんせつ","tốt bụng","tính từ-na",8);
+  add(326,"元気","げんき","khỏe mạnh","tính từ-na",8); add(327,"暇","ひま","rảnh rỗi","tính từ-na",8); add(328,"便利","べんり","tiện lợi","tính từ-na",8);
+  add(329,"素敵","すてき","tuyệt vời","tính từ-na",8); add(330,"大きい","おおきい","to lớn","tính từ-i",8); add(331,"小さい","ちいさい","nhỏ bé","tính từ-i",8);
+  add(332,"新しい","あたらしい","mới","tính từ-i",8); add(333,"古い","ふるい","cũ","tính từ-i",8); add(334,"良い","よい","tốt","tính từ-i",8);
+  add(335,"悪い","わるい","xấu","tính từ-i",8); add(336,"暑い","あつい","nóng (thời tiết)","tính từ-i",8); add(337,"寒い","さむい","lạnh","tính từ-i",8);
+  add(338,"冷たい","つめたい","mát","tính từ-i",8); add(339,"難しい","むずかしい","khó","tính từ-i",8); add(340,"易しい","やさしい","dễ","tính từ-i",8);
+  add(341,"高い","たかい","cao/đắt","tính từ-i",8); add(342,"安い","やすい","rẻ","tính từ-i",8); add(343,"低い","ひくい","thấp","tính từ-i",8);
+  add(344,"面白い","おもしろい","thú vị","tính từ-i",8); add(345,"美味しい","おいしい","ngon","tính từ-i",8); add(346,"忙しい","いそがしい","bận rộn","tính từ-i",8);
+  add(347,"楽しい","たのしい","vui vẻ","tính từ-i",8); add(348,"白い","しろい","trắng","tính từ-i",8); add(349,"黒い","くろい","đen","tính từ-i",8);
+  add(350,"赤い","あかい","đỏ","tính từ-i",8); add(351,"青い","あおい","xanh","tính từ-i",8); add(352,"桜","さくら","hoa anh đào","danh từ",8);
+  add(353,"山","やま","núi","danh từ",8); add(354,"町","まち","thành phố","danh từ",8); add(355,"食べ物","たべもの","đồ ăn","danh từ",8);
+  add(356,"車","くるま","xe hơi","danh từ",8); add(357,"所","ところ","nơi chốn","danh từ",8); add(358,"寮","りょう","ký túc xá","danh từ",8);
+  add(359,"勉強","べんきょう","học tập","danh từ",8); add(360,"生活","せいかつ","cuộc sống","danh từ",8); add(361,"お仕事","おしごと","công việc","danh từ",8);
+  add(362,"どう","どう","như thế nào?","từ để hỏi",8); add(363,"どんな","どんな","loại nào ~?","định từ",8); add(364,"どれ","どれ","cái nào?","đại từ",8);
+  add(365,"とても","とても","rất","phó từ",8); add(366,"あまり","あまり","không ~ lắm","phó từ",8); add(367,"そして","そして","và","liên từ",8);
+  add(368,"～が、～","～が、～","nhưng ~","trợ từ",8); add(369,"お元気ですか","おげんきですか","bạn có khỏe không?","cụm từ",8);
+  
+  // ================= BÀI 9 (370-415) =================
+  add(370,"分かります","わかります","hiểu","động từ",9); add(371,"あります","あります","có","động từ",9); add(372,"好き","すき","thích","tính từ-na",9);
+  add(373,"嫌い","きらい","ghét","tính từ-na",9); add(374,"上手","じょうず","giỏi","tính từ-na",9); add(375,"下手","へた","kém","tính từ-na",9);
+  add(376,"料理","りょうり","món ăn","danh từ",9); add(377,"飲み物","のみもの","đồ uống","danh từ",9); add(378,"スポーツ","スポーツ","thể thao","danh từ",9);
+  add(379,"野球","やきゅう","bóng chày","danh từ",9); add(380,"ダンス","ダンス","khiêu vũ","danh từ",9); add(381,"音楽","おんがく","âm nhạc","danh từ",9);
+  add(382,"歌","うた","hát","danh từ",9); add(383,"コンサート","コンサート","buổi hòa nhạc","danh từ",9); add(384,"カラオケ","カラオケ","karaoke","danh từ",9);
+  add(385,"絵","え","tranh","danh từ",9); add(386,"字","じ","chữ","danh từ",9); add(387,"漢字","かんじ","chữ Hán","danh từ",9);
+  add(388,"平仮名","ひらがな","Hiragana","danh từ",9); add(389,"片仮名","かたかな","Katakana","danh từ",9); add(390,"ローマ字","ローマじ","chữ La Mã","danh từ",9);
+  add(391,"細かいお金","こまかいおかね","tiền lẻ","danh từ",9); add(392,"チケット","チケット","vé","danh từ",9); add(393,"時間","じかん","thời gian","danh từ",9);
+  add(394,"用事","ようじ","việc bận","danh từ",9); add(395,"約束","やくそく","hẹn, cuộc hẹn","danh từ",9); add(396,"ご主人","ごしゅじん","chồng (người khác)","danh từ",9);
+  add(397,"夫","おっと","chồng (của mình)","danh từ",9); add(398,"奥さん","おくさん","vợ (người khác)","danh từ",9); add(399,"妻","つま","vợ (của mình)","danh từ",9);
+  add(400,"子供","こども","con cái","danh từ",9); add(401,"よく","よく","thường xuyên","phó từ",9); add(402,"だいたい","だいたい","đại khái","phó từ",9);
+  add(403,"たくさん","たくさん","nhiều","phó từ",9); add(404,"少し","すこし","một chút","phó từ",9); add(405,"全然","ぜんぜん","hoàn toàn không","phó từ",9);
+  add(406,"早く","はやく","nhanh","phó từ",9); add(407,"～から","～から","vì ~","trợ từ",9); add(408,"どうして","どうして","tại sao?","từ để hỏi",9);
+  add(409,"残念ですね","ざんねんですね","tiếc quá nhỉ","cụm từ",9); add(410,"もしもし","もしもし","a lô (khi nghe điện thoại)","thán từ",9);
+  add(411,"ああ","ああ","à!","thán từ",9); add(412,"一緒にいかがですか","いっしょにいかがですか","cùng đi nhé?","cụm từ",9);
+  add(413,"ちょっと…","ちょっと…","hơi...","cụm từ",9); add(414,"駄目ですか","だめですか","không được à?","cụm từ",9); add(415,"また今度お願いします","またこんどおねがいします","lần sau nhé","cụm từ",9);
+  
+  // ================= BÀI 10 (416-457) =================
+  add(416,"います","います","có (động vật)","động từ",10); add(417,"あります","あります","có (đồ vật)","động từ",10); add(418,"色々","いろいろ","nhiều loại","tính từ-na",10);
+  add(419,"男の人","おとこのひと","đàn ông","danh từ",10); add(420,"女の人","おんなのひと","phụ nữ","danh từ",10); add(421,"男の子","おとこのこ","bé trai","danh từ",10);
+  add(422,"女の子","おんなのこ","bé gái","danh từ",10); add(423,"犬","いぬ","chó","danh từ",10); add(424,"猫","ねこ","mèo","danh từ",10);
+  add(425,"魚","さかな","cá","danh từ",10); add(426,"物","もの","đồ vật","danh từ",10); add(427,"電池","でんち","pin","danh từ",10);
+  add(428,"箱","はこ","hộp","danh từ",10); add(429,"スイッチ","スイッチ","công tắc","danh từ",10); add(430,"冷蔵庫","れいぞうこ","tủ lạnh","danh từ",10);
+  add(431,"テーブル","テーブル","bàn","danh từ",10); add(432,"ベッド","ベッド","giường","danh từ",10); add(433,"棚","たな","kệ","danh từ",10);
+  add(434,"ドア","ドア","cửa","danh từ",10); add(435,"窓","まど","cửa sổ","danh từ",10); add(436,"ポスト","ポスト","hòm thư","danh từ",10);
+  add(437,"ビル","ビル","tòa nhà","danh từ",10); add(438,"公園","こうえん","công viên","danh từ",10); add(439,"喫茶店","きっさてん","quán cà phê","danh từ",10);
+  add(440,"本屋","ほんや","hiệu sách","danh từ",10); add(441,"～屋","～や","cửa hàng -","hậu tố",10); add(442,"乗り場","のりば","bến/tram","danh từ",10);
+  add(443,"県","けん","tỉnh","danh từ",10); add(444,"上","うえ","trên","danh từ",10); add(445,"下","した","dưới","danh từ",10);
+  add(446,"前","まえ","trước","danh từ",10); add(447,"後ろ","うしろ","sau","danh từ",10); add(448,"右","みぎ","phải","danh từ",10);
+  add(449,"左","ひだり","trái","danh từ",10); add(450,"中","なか","trong","danh từ",10); add(451,"外","そと","ngoài","danh từ",10);
+  add(452,"隣","となり","bên cạnh","danh từ",10); add(453,"近く","ちかく","gần","danh từ",10); add(454,"間","あいだ","giữa","danh từ",10);
+  add(455,"～や～など","～や～など","~ và ~ (v.v.)","trợ từ",10); add(456,"一番","いちばん","nhất","phó từ",10); add(457,"～段目","～だんめ","tầng thứ -","hậu tố",10);
+  
+  // ================= BÀI 11 (458-514) =================
+  add(458,"子供がいます","こどもがいます","có con","cụm từ",11); add(459,"日本にいます","にほんにいます","có ở Nhật Bản","cụm từ",11); add(460,"かかります","かかります","tốn (tiền/thời gian)","động từ",11);
+  add(461,"会社を休みます","かいしゃをやすみます","nghỉ làm","cụm từ",11); add(462,"一つ","ひとつ","một","danh từ",11); add(463,"二つ","ふたつ","hai","danh từ",11);
+  add(464,"三つ","みっつ","ba","danh từ",11); add(465,"四つ","よっつ","bốn","danh từ",11); add(466,"五つ","いつつ","năm","danh từ",11);
+  add(467,"六つ","むっつ","sáu","danh từ",11); add(468,"七つ","ななつ","bảy","danh từ",11); add(469,"八つ","やっつ","tám","danh từ",11);
+  add(470,"九つ","ここのつ","chín","danh từ",11); add(471,"十","とお","mười","danh từ",11); add(472,"いくつ","いくつ","mấy/bao nhiêu","từ để hỏi",11);
+  add(473,"一人","ひとり","một người","danh từ",11); add(474,"二人","ふたり","hai người","danh từ",11); add(475,"一人","いちにん","một người (cách đếm)","hậu tố",11);
+  add(476,"一台","いちだい","một cái (máy móc)","hậu tố",11); add(477,"一枚","いちまい","một tờ/tấm","hậu tố",11); add(478,"一回","いっかい","một lần","hậu tố",11);
+  add(479,"りんご","りんご","táo","danh từ",11); add(480,"みかん","みかん","quýt","danh từ",11); add(481,"サンドイッチ","サンドイッチ","bánh sandwich","danh từ",11);
+  add(482,"カレーライス","カレーライス","cà ri cơm","danh từ",11); add(483,"アイスクリーム","アイスクリーム","kem","danh từ",11); add(484,"切手","きって","tem","danh từ",11);
+  add(485,"葉書","はがき","bưu thiếp","danh từ",11); add(486,"封筒","ふうとう","phong bì","danh từ",11); add(487,"速達","そくたつ","chuyển phát nhanh","danh từ",11);
+  add(488,"書留","かきとめ","gửi bảo đảm","danh từ",11); add(489,"エアメール","エアメール","thư hàng không","danh từ",11); add(490,"航空便","こうくうびん","thư chuyển bằng máy bay","danh từ",11);
+  add(491,"船便","ふなびん","thư chuyển bằng tàu","danh từ",11); add(492,"両親","りょうしん","cha mẹ","danh từ",11); add(493,"兄弟","きょうだい","anh chị em","danh từ",11);
+  add(494,"兄","あに","anh trai (khiêm)","danh từ",11); add(495,"お兄さん","おにいさん","anh (kính ngữ)","danh từ",11); add(496,"姉","あね","chị gái (khiêm)","danh từ",11);
+  add(497,"お姉さん","おねえさん","chị (kính ngữ)","danh từ",11); add(498,"弟","おとうと","em trai","danh từ",11); add(499,"弟さん","おとうとさん","em trai (kính ngữ)","danh từ",11);
+  add(500,"妹","いもうと","em gái","danh từ",11); add(501,"妹さん","いもうとさん","em gái (kính ngữ)","danh từ",11); add(502,"外国","がいこく","nước ngoài","danh từ",11);
+  add(503,"一時間","いちじかん","một giờ","danh từ",11); add(504,"一週間","いっしゅうかん","một tuần","danh từ",11); add(505,"一ヶ月","いっかげつ","một tháng","danh từ",11);
+  add(506,"一年","いちねん","một năm","danh từ",11); add(507,"～くらい","～くらい","khoảng ~","hậu tố",11); add(508,"どれくらい","どれくらい","bao lâu/bao nhiêu","từ để hỏi",11);
+  add(509,"全部で","ぜんぶで","tổng cộng","phó từ",11); add(510,"みんな","みんな","mọi người","danh từ",11); add(511,"～だけ","～だけ","chỉ ~","trợ từ",11);
+  add(512,"いらっしゃいませ","いらっしゃいませ","xin kính chào quý khách","cụm từ",11); add(513,"いいお天気ですね","いいおてんきですね","thời tiết đẹp nhỉ","cụm từ",11);
+  add(514,"お出かけですか","おでかけですか","bị ra ngoài à?","cụm từ",11);
+  
+  // ================= BÀI 12 (515-558) =================
+  add(515,"簡単","かんたん","dễ dàng","tính từ-na",12); add(516,"近い","ちかい","gần","tính từ-i",12); add(517,"遠い","とおい","xa","tính từ-i",12);
+  add(518,"早い","はやい","nhanh","tính từ-i",12); add(519,"遅い","おそい","chậm","tính từ-i",12); add(520,"多い","おおい","nhiều","tính từ-i",12);
+  add(521,"少ない","すくない","ít","tính từ-i",12); add(522,"暖かい","あたたかい","ấm áp","tính từ-i",12); add(523,"涼しい","すずしい","mát mẻ","tính từ-i",12);
+  add(524,"甘い","あまい","ngọt","tính từ-i",12); add(525,"辛い","からい","cay","tính từ-i",12); add(526,"重い","おもい","nặng","tính từ-i",12);
+  add(527,"軽い","かるい","nhẹ","tính từ-i",12); add(528,"いい","いい","ngon (cà phê)","tính từ-i",12); add(529,"季節","きせつ","mùa","danh từ",12);
+  add(530,"春","はる","mùa xuân","danh từ",12); add(531,"夏","なつ","mùa hè","danh từ",12); add(532,"秋","あき","mùa thu","danh từ",12);
+  add(533,"冬","ふゆ","mùa đông","danh từ",12); add(534,"天気","てんき","thời tiết","danh từ",12); add(535,"雨","あめ","mưa","danh từ",12);
+  add(536,"雪","ゆき","tuyết","danh từ",12); add(537,"曇り","くもり","u ám","danh từ",12); add(538,"ホテル","ホテル","khách sạn","danh từ",12);
+  add(539,"空港","くうこう","sân bay","danh từ",12); add(540,"海","うみ","biển","danh từ",12); add(541,"世界","せかい","thế giới","danh từ",12);
+  add(542,"パーティー","パーティー","tiệc","danh từ",12); add(543,"お祭り","おまつり","lễ hội","danh từ",12); add(544,"試験","しけん","kỳ thi","danh từ",12);
+  add(545,"すき焼き","すきやき","lẩu Nhật","danh từ",12); add(546,"刺身","さしみ","sashimi","danh từ",12); add(547,"お寿司","おすし","sushi","danh từ",12);
+  add(548,"天ぷら","てんぷら","tempura","danh từ",12); add(549,"生け花","いけばな","cắm hoa","danh từ",12); add(550,"紅葉","もみじ","lá đỏ","danh từ",12);
+  add(551,"どちら","どちら","bên nào","đại từ",12); add(552,"どちらも","どちらも","cả hai","phó từ",12); add(553,"ずっと","ずっと","mãi","phó từ",12);
+  add(554,"初めて","はじめて","lần đầu","danh từ",12); add(555,"ただいま","ただいま","tôi về rồi","cụm từ",12); add(556,"お帰りなさい","おかえりなさい","chào mừng về nhà","cụm từ",12);
+  add(557,"すごいですね","すごいですね","tuyệt vời nhỉ","cụm từ",12); add(558,"でも","でも","nhưng","liên từ",12);
+  
+  // ================= BÀI 13 (559-595) =================
+  add(559,"遊びます","あそびます","chơi","động từ",13); add(560,"泳ぎます","およぎます","bơi","động từ",13); add(561,"迎えます","むかえます","đón","động từ",13);
+  add(562,"疲れます","つかれます","mệt","động từ",13); add(563,"出します","だします","gửi (thư)","động từ",13); add(564,"入ります","はいります","vào (quán)","động từ",13);
+  add(565,"出ます","でます","rời (quán)","động từ",13); add(566,"結婚します","けっこんします","kết hôn","động từ",13); add(567,"買い物します","かいものします","mua sắm","động từ",13);
+  add(568,"食事します","しょくじします","ăn uống","động từ",13); add(569,"散歩します","さんぽします","đi dạo","động từ",13); add(570,"大変","たいへん","vất vả","tính từ-na",13);
+  add(571,"欲しい","ほしい","muốn","tính từ-i",13); add(572,"寂しい","さびしい","cô đơn","tính từ-i",13); add(573,"広い","ひろい","rộng","tính từ-i",13);
+  add(574,"狭い","せまい","chật","tính từ-i",13); add(575,"市役所","しゃくしょ","văn phòng hành chính","danh từ",13); add(576,"プール","プール","bể bơi","danh từ",13);
+  add(577,"川","かわ","sông","danh từ",13); add(578,"経済","けいざい","kinh tế","danh từ",13); add(579,"美術","びじゅつ","mỹ thuật","danh từ",13);
+  add(580,"釣り","つり","câu cá","danh từ",13); add(581,"スキー","スキー","trượt tuyết","danh từ",13); add(582,"会議","かいぎ","hội nghị","danh từ",13);
+  add(583,"登録","とうろく","đăng ký","danh từ",13); add(584,"週末","しゅうまつ","cuối tuần","danh từ",13); add(585,"～ごろ","～ごろ","~ giờ","hậu tố",13);
+  add(586,"何か","なにか","gì đó","đại từ",13); add(587,"どこか","どこか","đâu đó","đại từ",13); add(588,"お腹が空きました","おなかがすきました","đói bụng rồi","cụm từ",13);
+  add(589,"お腹がいっぱいです","おなかがいっぱいです","no rồi","cụm từ",13); add(590,"喉が渇きました","のどがかわきました","khát nước rồi","cụm từ",13);
+  add(591,"そうですね","そうですね","ừ nhỉ","cụm từ",13); add(592,"そうしましょう","そうしましょう","làm thế đi","cụm từ",13); add(593,"ご注文","ごちゅうもん","gọi món","danh từ",13);
+  add(594,"定食","ていしょく","bữa ăn định suất","danh từ",13); add(595,"牛丼","ぎゅうどん","cơm thịt bò","danh từ",13);
+  
+  // ================= BÀI 14 (596-635) =================
+  add(596,"点けます","つけます","bật","động từ",14); add(597,"消します","けします","tắt","động từ",14); add(598,"開けます","あけます","mở","động từ",14);
+  add(599,"閉めます","しめます","đóng","động từ",14); add(600,"急ぎます","いそぎます","vội","động từ",14); add(601,"待ちます","まちます","chờ","động từ",14);
+  add(602,"止めます","とめます","dừng","động từ",14); add(603,"曲がります","まがります","rẽ","động từ",14); add(604,"持ちます","もちます","cầm","động từ",14);
+  add(605,"取ります","とります","lấy","động từ",14); add(606,"手伝います","てつだいます","giúp","động từ",14); add(607,"呼びます","よびます","gọi","động từ",14);
+  add(608,"話します","はなします","nói","động từ",14); add(609,"見せます","みせます","cho xem","động từ",14); add(610,"教えます","おしえます","dạy (địa chỉ)","động từ",14);
+  add(611,"始めます","はじめます","bắt đầu","động từ",14); add(612,"降ります","ふります","rơi (mưa)","động từ",14); add(613,"コピーします","コピーします","photocopy","động từ",14);
+  add(614,"エアコン","エアコン","điều hòa","danh từ",14); add(615,"パスポート","パスポート","hộ chiếu","danh từ",14); add(616,"名前","なまえ","tên","danh từ",14);
+  add(617,"住所","じゅうしょ","địa chỉ","danh từ",14); add(618,"地図","ちず","bản đồ","danh từ",14); add(619,"塩","しお","muối","danh từ",14);
+  add(620,"砂糖","さとう","đường","danh từ",14); add(621,"読み方","よみかた","cách đọc","danh từ",14); add(622,"～方","～かた","~ cách","hậu tố",14);
+  add(623,"ゆっくり","ゆっくり","từ từ","phó từ",14); add(624,"すぐ","すぐ","ngay","phó từ",14); add(625,"また","また","lại","phó từ",14);
+  add(626,"後で","あとで","sau","phó từ",14); add(627,"もう少し","もうすこし","thêm chút","phó từ",14); add(628,"もう～","もう～","đã ~","phó từ",14);
+  add(629,"いいですよ","いいですよ","được đấy","cụm từ",14); add(630,"さあ","さあ","nào","thán từ",14); add(631,"あれ？","あれ？","hả?","thán từ",14);
+  add(632,"信号を右へ曲がってください","しんごうをみぎへまがってください","xin rẽ phải ở đèn tín hiệu","cụm từ",14); add(633,"まっすぐ","まっすぐ","thẳng","phó từ",14);
+  add(634,"これでお願いします","これでおねがいします","thanh toán bằng này","cụm từ",14); add(635,"お釣り","おつり","tiền thừa","danh từ",14);
+  
+  // ================= BÀI 15 (636-661) =================
+  add(636,"立ちます","たちます","đứng","động từ",15); add(637,"座ります","すわります","ngồi","động từ",15); add(638,"使います","つかいます","dùng","động từ",15);
+  add(639,"置きます","おきます","đặt","động từ",15); add(640,"作ります","つくります","làm","động từ",15); add(641,"売ります","うります","bán","động từ",15);
+  add(642,"知ります","しります","biết","động từ",15); add(643,"住みます","すみます","sống","động từ",15); add(644,"研究します","けんきゅうします","nghiên cứu","động từ",15);
+  add(645,"資料","しりょう","tài liệu","danh từ",15); add(646,"カタログ","カタログ","catalog","danh từ",15); add(647,"時刻表","じこくひょう","bảng giờ tàu","danh từ",15);
+  add(648,"服","ふく","quần áo","danh từ",15); add(649,"製品","せいひん","sản phẩm","danh từ",15); add(650,"専門","せんもん","chuyên môn","danh từ",15);
+  add(651,"歯医者","はいしゃ","nha sĩ","danh từ",15); add(652,"床屋","とこや","tiệm cắt tóc","danh từ",15); add(653,"独身","どくしん","độc thân","danh từ",15);
+  add(654,"特に","とくに","đặc biệt","phó từ",15); add(655,"思い出します","おもいだします","nhớ lại","động từ",15); add(656,"ご家族","ごかぞく","gia đình bạn","danh từ",15);
+  add(657,"高校","こうこう","trường cấp 3","danh từ",15);
+  
+  // ================= BÀI 16 (658-703) =================
+  add(658,"乗ります","のります","lên (tàu)","động từ",16); add(659,"降ります","おります","xuống (tàu)","động từ",16); add(660,"乗り換えます","のりかえます","chuyển tàu","động từ",16);
+  add(661,"浴びます","あびます","tắm vòi sen","động từ",16); add(662,"入れます","いれます","cho vào","động từ",16); add(663,"出します","だします","lấy ra","động từ",16);
+  add(664,"入ります","はいります","vào (đại học)","động từ",16); add(665,"出ます","でます","tốt nghiệp","động từ",16); add(666,"辞めます","やめます","nghỉ việc","động từ",16);
+  add(667,"押します","おします","ấn","động từ",16); add(668,"若い","わかい","trẻ","tính từ-i",16); add(669,"長い","ながい","dài","tính từ-i",16);
+  add(670,"短い","みじかい","ngắn","tính từ-i",16); add(671,"明るい","あかるい","sáng","tính từ-i",16); add(672,"暗い","くらい","tối","tính từ-i",16);
+  add(673,"背が高い","せがたかい","cao","cụm từ",16); add(674,"頭がいい","あたまがいい","thông minh","cụm từ",16); add(675,"体","からだ","cơ thể","danh từ",16);
+  add(676,"頭","あたま","đầu","danh từ",16); add(677,"髪","かみ","tóc","danh từ",16); add(678,"顔","かお","mặt","danh từ",16);
+  add(679,"目","め","mắt","danh từ",16); add(680,"耳","みみ","tai","danh từ",16); add(681,"口","くち","miệng","danh từ",16);
+  add(682,"歯","は","răng","danh từ",16); add(683,"お腹","おなか","bụng","danh từ",16); add(684,"足","あし","chân","danh từ",16);
+  add(685,"サービス","サービス","dịch vụ","danh từ",16); add(686,"ジョギング","ジョギング","chạy bộ","danh từ",16); add(687,"シャワー","シャワー","vòi sen","danh từ",16);
+  add(688,"緑","みどり","màu xanh","danh từ",16); add(689,"お寺","おてら","chùa","danh từ",16); add(690,"神社","じんじゃ","đền","danh từ",16);
+  add(691,"留学生","りゅうがくせい","du học sinh","danh từ",16); add(692,"～番","～ばん","số ~","hậu tố",16); add(693,"どうやって","どうやって","bằng cách nào","phó từ",16);
+  add(694,"どの～","どの～","cái nào ~","định từ",16); add(695,"まだまだです","まだまだです","còn kém lắm","cụm từ",16); add(696,"お引き出しですか","おひきだしですか","rút tiền phải không?","cụm từ",16);
+  add(697,"まず","まず","đầu tiên","phó từ",16); add(698,"キャッシュカード","キャッシュカード","thẻ ATM","danh từ",16); add(699,"暗証番号","あんしょうばんごう","mã số","danh từ",16);
+  add(700,"次に","つぎに","tiếp theo","phó từ",16); add(701,"金額","きんがく","số tiền","danh từ",16); add(702,"確認","かくにん","xác nhận","danh từ",16);
+  add(703,"ボタン","ボタン","nút","danh từ",16);
+  
+  // ================= BÀI 17 (704-739) =================
+  add(704,"覚えます","おぼえます","nhớ","động từ",17); add(705,"忘れます","わすれます","quên","động từ",17); add(706,"無くします","なくします","làm mất","động từ",17);
+  add(707,"出します","だします","nộp (báo cáo)","động từ",17); add(708,"払います","はらいます","trả tiền","động từ",17); add(709,"返します","かえします","trả lại","động từ",17);
+  add(710,"出掛けます","でかけます","đi ra ngoài","động từ",17); add(711,"脱ぎます","ぬぎます","cởi ra","động từ",17); add(712,"持っていきます","もっていきます","mang đi","động từ",17);
+  add(713,"持ってきます","もってきます","mang đến","động từ",17); add(714,"心配します","しんぱいします","lo lắng","động từ",17); add(715,"残業します","ざんぎょうします","tăng ca","động từ",17);
+  add(716,"出張します","しゅっちょうします","đi công tác","động từ",17); add(717,"飲みます","のみます","uống (thuốc)","động từ",17); add(718,"入ります","はいります","vào (bồn tắm)","động từ",17);
+  add(719,"大切","たいせつ","quan trọng","tính từ-na",17); add(720,"大丈夫","だいじょうぶ","ổn","tính từ-na",17); add(721,"危ない","あぶない","nguy hiểm","tính từ-i",17);
+  add(722,"問題","もんだい","vấn đề","danh từ",17); add(723,"答え","こたえ","câu trả lời","danh từ",17); add(724,"禁煙","きんえん","cấm hút thuốc","danh từ",17);
+  add(725,"健康保険証","けんこうほけんしょう","bảo hiểm y tế","danh từ",17); add(726,"風邪","かぜ","cảm lạnh","danh từ",17); add(727,"熱","ねつ","sốt","danh từ",17);
+  add(728,"病気","びょうき","bệnh","danh từ",17); add(729,"薬","くすり","thuốc","danh từ",17); add(730,"お風呂","おふろ","bồn tắm","danh từ",17);
+  add(731,"上着","うわぎ","áo khoác","danh từ",17); add(732,"下着","したぎ","đồ lót","danh từ",17); add(733,"先生","せんせい","giáo viên","danh từ",17);
+  add(734,"2、3日","に、さんにち","2, 3 ngày","danh từ",17); add(735,"2、3～","に、さん～","2,3 ~","hậu tố",17); add(736,"～までに","～までに","trước khi ~","trợ từ",17);
+  add(737,"ですから","ですから","vì vậy","liên từ",17); add(738,"どうしましたか","どうしましたか","có chuyện gì vậy?","cụm từ",17);
+  add(739,"喉が痛いです","のどがいたいです","cổ họng đau","cụm từ",17);
+  
+  // ================= BÀI 18 (740-767) =================
+  add(740,"できます","できます","có thể","động từ",18); add(741,"洗います","あらいます","rửa","động từ",18); add(742,"弾きます","ひきます","kéo/gây/chơi","động từ",18);
+  add(743,"歌います","うたいます","hát","động từ",18); add(744,"集めます","あつめます","thu thập, sưu tầm","động từ",18); add(745,"捨てます","すてます","vứt bỏ","động từ",18);
+  add(746,"変えます","かえます","thay đổi","động từ",18); add(747,"運転します","うんてんします","lái xe","động từ",18); add(748,"予約します","よやくします","đặt trước","động từ",18);
+  add(749,"見学します","けんがくします","tham quan","động từ",18); add(750,"メートル","メートル","mét","danh từ",18); add(751,"国際","こくさい","quốc tế","danh từ",18);
+  add(752,"現金","げんきん","tiền mặt","danh từ",18); add(753,"趣味","しゅみ","sở thích","danh từ",18); add(754,"日記","にっき","nhật ký","danh từ",18);
+  add(755,"お祈り","おいのり","cầu nguyện","danh từ",18); add(756,"課長","かちょう","trưởng phòng","danh từ",18); add(757,"部長","ぶちょう","trưởng bộ phận","danh từ",18);
+  add(758,"社長","しゃちょう","giám đốc","danh từ",18); add(759,"動物","どうぶつ","động vật","danh từ",18); add(760,"馬","うま","ngựa","danh từ",18);
+  add(761,"へえ","へえ","hà?","thán từ",18); add(762,"なかなか","なかなか","khó mà","phó từ",18); add(763,"牧場","ぼくじょう","nông trại","danh từ",18);
+  add(764,"本当ですか","ほんとうですか","thật sao?","cụm từ",18); add(765,"ぜひ","ぜひ","nhất định","phó từ",18);
+  
+  // ================= BÀI 19 (766-795) =================
+  add(766,"登ります","のぼります","leo (núi)","động từ",19); add(767,"泊まります","とまります","ở/trọ (khách sạn)","động từ",19); add(768,"掃除します","そうじします","dọn dẹp","động từ",19);
+  add(769,"洗濯します","せんたくします","giặt giũ","động từ",19); add(770,"練習します","れんしゅうします","luyện tập","động từ",19); add(771,"なります","なります","trở nên/thành","động từ",19);
+  add(772,"眠い","ねむい","buồn ngủ","tính từ-i",19); add(773,"強い","つよい","mạnh","tính từ-i",19); add(774,"弱い","よわい","yếu","tính từ-i",19);
+  add(775,"調子がいい","ちょうしがいい","khỏe","cụm từ",19); add(776,"調子が悪い","ちょうしがわるい","mệt","cụm từ",19); add(777,"ゴルフ","ゴルフ","golf","danh từ",19);
+  add(778,"相撲","すもう","đấu vật sumo","danh từ",19); add(779,"パチンコ","パチンコ","pachinko","danh từ",19); add(780,"お茶","おちゃ","trà đạo","danh từ",19);
+  add(781,"日","ひ","ngày","danh từ",19); add(782,"一度","いちど","một lần","danh từ",19); add(783,"一度も","いちども","không một lần nào","phó từ",19);
+  add(784,"段々","だんだん","dần dần","phó từ",19); add(785,"もうすぐ","もうすぐ","sắp","phó từ",19); add(786,"お陰様で","おかげさまで","ơn trời","cụm từ",19);
+  add(787,"乾杯","かんぱい","cạn ly","danh từ",19); add(788,"実は","じつは","thực ra","phó từ",19); add(789,"ダイエット","ダイエット","giảm cân","danh từ",19);
+  add(790,"何回も","なんかいも","nhiều lần","phó từ",19); add(791,"しかし","しかし","tuy nhiên","liên từ",19); add(792,"無理","むり","quá sức","tính từ-na",19);
+  add(793,"体にいい","からだにいい","tốt cho sức khỏe","cụm từ",19); add(794,"ケーキ","ケーキ","bánh ngọt","danh từ",19);
+  
+  // ================= BÀI 20 (795-822) =================
+  add(795,"要ります","いります","cần (visa)","động từ",20); add(796,"調べます","しらべます","tìm kiếm","động từ",20); add(797,"直します","なおします","sửa","động từ",20);
+  add(798,"修理します","しゅうりします","sửa chữa","động từ",20); add(799,"電話します","でんわします","gọi điện","động từ",20); add(800,"僕","ぼく","tôi/tớ (nam)","đại từ",20);
+  add(801,"君","きみ","bạn (thân mật)","đại từ",20); add(802,"～君","～くん","bạn/em/cậu (gọi nam)","hậu tố",20); add(803,"うん","うん","ừ","thán từ",20);
+  add(804,"ううん","ううん","không","thán từ",20); add(805,"サラリーマン","サラリーマン","nhân viên văn phòng","danh từ",20); add(806,"言葉","ことば","ngôn ngữ, từ vựng","danh từ",20);
+  add(807,"物価","ぶっか","vật giá","danh từ",20); add(808,"着物","きもの","kimono","danh từ",20); add(809,"ビザ","ビザ","visa","danh từ",20);
+  add(810,"始め","はじめ","bắt đầu","danh từ",20); add(811,"終わり","おわり","kết thúc","danh từ",20); add(812,"こっち","こっち","bên này","đại từ",20);
+  add(813,"そっち","そっち","bên đó","đại từ",20); add(814,"あっち","あっち","bên kia","đại từ",20); add(815,"どっち","どっち","bên nào","đại từ",20);
+  add(816,"この間","このあいだ","mấy hôm trước","danh từ",20); add(817,"皆で","みんなで","mọi người cùng","phó từ",20); add(818,"～けど","～けど","nhưng~","liên từ",20);
+  add(819,"どうするの？","どうするの？","làm gì bây giờ?","cụm từ",20); add(820,"どうしようかな。","どうしようかな。","làm sao đây nhỉ?","cụm từ",20);
+  add(821,"良かったら","よかったら","nếu được","cụm từ",20); add(822,"色々","いろいろ","đa dạng","phó từ",20);
+  
+  // ================= BÀI 21 (823-850) =================
+  add(823,"思います","おもいます","nghĩ","động từ",21); add(824,"言います","いいます","nói","động từ",21); add(825,"足ります","たります","đủ","động từ",21);
+  add(826,"勝ちます","かちます","thắng","động từ",21); add(827,"負けます","まけます","thua","động từ",21); add(828,"役に立ちます","やくにたちます","hữu ích","cụm từ",21);
+  add(829,"無駄","むだ","lãng phí","tính từ-na",21); add(830,"不便","ふべん","bất tiện","tính từ-na",21); add(831,"同じ","おなじ","giống nhau","tính từ-na",21);
+  add(832,"凄い","すごい","tuyệt vời","tính từ-i",21); add(833,"首相","しゅしょう","thủ tướng","danh từ",21); add(834,"大統領","だいとうりょう","tổng thống","danh từ",21);
+  add(835,"政治","せいじ","chính trị","danh từ",21); add(836,"ニュース","ニュース","tin tức","danh từ",21); add(837,"スピーチ","スピーチ","bài phát biểu","danh từ",21);
+  add(838,"試合","しあい","trận đấu","danh từ",21); add(839,"アルバイト","アルバイト","làm thêm","danh từ",21); add(840,"意見","いけん","ý kiến","danh từ",21);
+  add(841,"お話","おはなし","câu chuyện","danh từ",21); add(842,"ユーモア","ユーモア","hài hước","danh từ",21); add(843,"デザイン","デザイン","thiết kế","danh từ",21);
+  add(844,"交通","こうつう","giao thông","danh từ",21); add(845,"ラッシュ","ラッシュ","giờ cao điểm","danh từ",21); add(846,"最近","さいきん","gần đây","phó từ",21);
+  add(847,"多分","たぶん","có lẽ","phó từ",21); add(848,"きっと","きっと","chắc chắn","phó từ",21); add(849,"本当に","ほんとうに","thật sự","phó từ",21);
+  add(850,"そんなに","そんなに","đến thế","phó từ",21);
+  
+  // ================= BÀI 22 (851-870) =================
+  add(851,"着ます","きます","mặc (áo)","động từ",22); add(852,"履きます","はきます","đi (giày)","động từ",22); add(853,"被ります","かぶります","đội (mũ)","động từ",22);
+  add(854,"掛けます","かけます","đeo (kính)","động từ",22); add(855,"生まれます","うまれます","được sinh ra","động từ",22); add(856,"コート","コート","áo khoác","danh từ",22);
+  add(857,"スーツ","スーツ","bộ vest","danh từ",22); add(858,"セーター","セーター","áo len","danh từ",22); add(859,"帽子","ぼうし","mũ","danh từ",22);
+  add(860,"眼鏡","めがね","kính","danh từ",22); add(861,"よく","よく","tốt","phó từ",22); add(862,"おめでとうございます","おめでとうございます","chúc mừng","cụm từ",22);
+  add(863,"こちら","こちら","đây","đại từ",22); add(864,"家賃","やちん","tiền thuê nhà","danh từ",22); add(865,"うーん","うーん","hmm...","thán từ",22);
+  add(866,"ダイニングキッチン","ダイニングキッチン","bếp ăn","danh từ",22); add(867,"和室","わしつ","phòng kiểu Nhật","danh từ",22); add(868,"押し入れ","おしいれ","tủ tường","danh từ",22);
+  add(869,"布団","ふとん","chăn đệm","danh từ",22); add(870,"アパート","アパート","căn hộ","danh từ",22);
+  
+  // ================= BÀI 23 (871-898) =================
+  add(871,"聞きます","ききます","hỏi (giáo viên)","động từ",23); add(872,"回します","まわします","xoay","động từ",23); add(873,"引きます","ひきます","kéo","động từ",23);
+  add(874,"換えます","かえます","thay đổi","động từ",23); add(875,"触ります","さわります","chạm (vào cửa)","động từ",23); add(876,"出ます","でます","ra (tiền thừa)","động từ",23);
+  add(877,"動きます","うごきます","chạy, hoạt động","động từ",23); add(878,"歩きます","あるきます","đi bộ (trên đường)","động từ",23); add(879,"渡ります","わたります","qua (cầu)","động từ",23);
+  add(880,"気を付けます","きをつけます","cẩn thận, chú ý","động từ",23); add(881,"引っ越しします","ひっこしします","chuyển nhà","động từ",23); add(882,"電気屋","でんきや","cửa hàng điện","danh từ",23);
+  add(883,"サイズ","サイズ","kích cỡ","danh từ",23); add(884,"音","おと","âm thanh","danh từ",23); add(885,"機械","きかい","máy móc","danh từ",23);
+  add(886,"つまみ","つまみ","nút vặn","danh từ",23); add(887,"故障","こしょう","hỏng hóc","danh từ",23); add(888,"道","みち","đường phố","danh từ",23);
+  add(889,"交差点","こうさてん","ngã tư","danh từ",23); add(890,"信号","しんごう","đèn tín hiệu","danh từ",23); add(891,"角","かど","góc phố","danh từ",23);
+  add(892,"橋","はし","cây cầu","danh từ",23); add(893,"駐車場","ちゅうしゃじょう","bãi đỗ xe","danh từ",23); add(894,"～目","～め","thứ ~","hậu tố",23);
+  add(895,"お正月","おしょうがつ","tết","danh từ",23); add(896,"ご馳走様でした","ごちそうさまでした","cảm ơn vì bữa ăn","cụm từ",23);
+  add(897,"建物","たてもの","tòa nhà","danh từ",23); add(898,"外国人登録証","がいこくじんとうろくしょう","thẻ đăng ký người nước ngoài","danh từ",23);
+  
+  // ================= BÀI 24 (899-915) =================
+  add(899,"くれます","くれます","cho","động từ",24); add(900,"連れて行きます","つれていきます","dẫn đi","động từ",24); add(901,"連れて来ます","つれてきます","dẫn về","động từ",24);
+  add(902,"送ります","おくります","tiễn","động từ",24); add(903,"紹介します","しょうかいします","giới thiệu","động từ",24); add(904,"案内します","あんないします","hướng dẫn","động từ",24);
+  add(905,"説明します","せつめいします","giải thích","động từ",24); add(906,"入れます","いれます","pha (cà phê)","động từ",24); add(907,"おじいさん","おじいさん","ông","danh từ",24);
+  add(908,"おばあさん","おばあさん","bà","danh từ",24); add(909,"準備","じゅんび","chuẩn bị","danh từ",24); add(910,"意味","いみ","ý nghĩa","danh từ",24);
+  add(911,"お菓子","おかし","bánh kẹo","danh từ",24); add(912,"全部","ぜんぶ","tất cả","danh từ",24); add(913,"自分で","じぶんで","tự mình","phó từ",24);
+  add(914,"他に","ほかに","ngoài ra","phó từ",24); add(915,"お弁当","おべんとう","cơm hộp","danh từ",24);
+  
+  // ================= BÀI 25 (916-931) =================
+  add(916,"考えます","かんがえます","suy nghĩ","động từ",25); add(917,"着きます","つきます","đến (ga)","động từ",25); add(918,"留学します","りゅうがくします","đi du học","động từ",25);
+  add(919,"年を取ります","としをとります","thêm tuổi","động từ",25); add(920,"田舎","いなか","nông thôn","danh từ",25); add(921,"大使館","たいしかん","đại sứ quán","danh từ",25);
+  add(922,"グループ","グループ","nhóm","danh từ",25); add(923,"チャンス","チャンス","cơ hội","danh từ",25); add(924,"奥","おく","phía sau","danh từ",25);
+  add(925,"もし～たら","もし～たら","nếu ~ thì","liên từ",25); add(926,"いくら～ても","いくら～ても","dù ~ bao nhiêu","liên từ",25); add(927,"転勤","てんきん","chuyển công tác","danh từ",25);
+  add(928,"事","こと","việc","danh từ",25); add(929,"お世話になりました","おせわになりました","được giúp đỡ","cụm từ",25);
+  add(930,"頑張ります","がんばります","sẽ cố gắng","động từ",25); add(931,"どうぞお元気で","どうぞおげんきで","chúc sức khỏe","cụm từ",25);
+  
+  console.log("✅ Tổng số từ đã tải:", vocabData.length); // 931
+  
+  // Danh sách bài học (tên gợi nhớ)
+  const lessons = [
+    { id:1, title:"Bài 1: Chào hỏi cơ bản", icon:"👋" }, { id:2, title:"Bài 2: Đồ vật", icon:"📚" }, { id:3, title:"Bài 3: Địa điểm, giá cả", icon:"🏢" },
+    { id:4, title:"Bài 4: Thời gian", icon:"⏰" }, { id:5, title:"Bài 5: Đi lại, lịch", icon:"🚗" }, { id:6, title:"Bài 6: Hành động thường ngày", icon:"🍚" },
+    { id:7, title:"Bài 7: Cho nhận, đồ dùng", icon:"🎁" }, { id:8, title:"Bài 8: Tính từ, màu sắc", icon:"🌈" }, { id:9, title:"Bài 9: Sở thích, lý do", icon:"🎤" },
+    { id:10, title:"Bài 10: Vị trí, đồ vật", icon:"📍" }, { id:11, title:"Bài 11: Đếm, gia đình", icon:"🔢" }, { id:12, title:"Bài 12: So sánh, mùa", icon:"🌸" },
+    { id:13, title:"Bài 13: Hoạt động, cảm xúc", icon:"🏊" }, { id:14, title:"Bài 14: Thao tác hàng ngày", icon:"🚦" }, { id:15, title:"Bài 15: Nghiên cứu, chuyên môn", icon:"👔" },
+    { id:16, title:"Bài 16: Di chuyển, cơ thể", icon:"🚉" }, { id:17, title:"Bài 17: Sức khỏe, công việc", icon:"💊" }, { id:18, title:"Bài 18: Khả năng, sở thích", icon:"🎨" },
+    { id:19, title:"Bài 19: Sức khỏe, luyện tập", icon:"🏋️" }, { id:20, title:"Bài 20: Công việc, giao tiếp", icon:"💼" }, { id:21, title:"Bài 21: Suy nghĩ, ý kiến", icon:"💭" },
+    { id:22, title:"Bài 22: Trang phục, nhà ở", icon:"👘" }, { id:23, title:"Bài 23: Hành động, đường phố", icon:"🚶" }, { id:24, title:"Bài 24: Giúp đỡ, giải thích", icon:"🤝" },
+    { id:25, title:"Bài 25: Du học, tương lai", icon:"🎓" }
+  ];
+  
+  // ==================== PHẦN XỬ LÝ CHUNG (SRS, VIEW, ...) ====================
+  const STORAGE_KEY = 'n5_srs_v8';
+  const SETTINGS_KEY = 'n5_settings_v8';
+  let srsState = {};
+  let settings = { defaultLesson: 1 };
+  
+  function loadData() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) srsState = JSON.parse(saved);
+    vocabData.forEach(v => { if (!srsState[v.id]) srsState[v.id] = { interval:0, nextReview: new Date().toISOString().slice(0,10), efactor:2.5, repCount:0 }; });
+    const savedSettings = localStorage.getItem(SETTINGS_KEY);
+    if (savedSettings) settings = JSON.parse(savedSettings);
+  }
+  function saveSRS() { localStorage.setItem(STORAGE_KEY, JSON.stringify(srsState)); }
+  function saveSettings() { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+  function todayStr() { return new Date().toISOString().slice(0,10); }
+  function shuffleArray(arr) { for (let i=arr.length-1; i>0; i--) { const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+  
+  const views = {
+    dashboard: document.getElementById('dashboardView'),
+    wordlist: document.getElementById('wordListView'),
+    flashcard: document.getElementById('flashcardView'),
+    quiz: document.getElementById('quizView'),
+    lessons: document.getElementById('lessonsView')
+  };
+  function showView(name) {
+    Object.keys(views).forEach(k => views[k].classList.add('hidden'));
+    views[name].classList.remove('hidden');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[data-tab="${name}"]`)?.classList.add('active');
+    if (name === 'dashboard') renderDashboard();
+    else if (name === 'wordlist') renderWordList();
+    else if (name === 'lessons') renderLessons();
+    else if (name === 'flashcard') initFlashcardSession();
+    else if (name === 'quiz') initQuizSession();
+  }
+  document.getElementById('tabBar').addEventListener('click', e => { const tab = e.target.closest('.tab'); if(tab && tab.dataset.tab) showView(tab.dataset.tab); });
+  
+  function renderDashboard() {
+    const today = todayStr();
+    const dueWords = vocabData.filter(v => srsState[v.id].nextReview <= today);
+    const learned = vocabData.filter(v => srsState[v.id].repCount > 0).length;
+    const mastered = vocabData.filter(v => srsState[v.id].repCount >= 5).length;
+    document.getElementById('statsContainer').innerHTML = `
+      <div class="stat-box"><div class="num">${vocabData.length}</div><div class="lbl">Tổng từ</div></div>
+      <div class="stat-box"><div class="num">${learned}</div><div class="lbl">Đã học</div></div>
+      <div class="stat-box"><div class="num">${mastered}</div><div class="lbl">Thành thạo</div></div>
+      <div class="stat-box"><div class="num">${dueWords.length}</div><div class="lbl">Cần ôn hôm nay</div></div>
+    `;
+    document.getElementById('dailyMessage').textContent = dueWords.length > 0 ? `📌 Bạn có ${dueWords.length} từ cần ôn tập.` : '✨ Tất cả từ đã được ôn xong. Hãy học từ mới!';
+    document.getElementById('btnStartReview').onclick = () => { const dueNow = vocabData.filter(v => srsState[v.id].nextReview <= todayStr()); if(dueNow.length===0) return alert('Không có từ nào cần ôn.'); startFlashcardSession(shuffleArray([...dueNow])); };
+    document.getElementById('btnLearnNew').onclick = () => { const newWords = vocabData.filter(v => srsState[v.id].repCount===0 && v.lesson===settings.defaultLesson); if(newWords.length===0) return alert(`Bài ${settings.defaultLesson} không còn từ mới.`); startFlashcardSession(shuffleArray(newWords).slice(0,10)); };
+    const select = document.getElementById('defaultLessonSelect');
+    select.innerHTML = lessons.map(l => `<option value="${l.id}" ${l.id==settings.defaultLesson?'selected':''}>${l.icon} ${l.title}</option>`).join('');
+    select.onchange = (e) => { settings.defaultLesson = parseInt(e.target.value); saveSettings(); };
+  }
+  
+  function renderWordList() {
+    const lessonFilter = document.getElementById('lessonFilter');
+    const searchInput = document.getElementById('searchInput');
+    lessonFilter.innerHTML = '<option value="all">Tất cả bài học</option>' + lessons.map(l => `<option value="${l.id}">${l.icon} ${l.title}</option>`).join('');
+    function filterWords() {
+      const lessonVal = lessonFilter.value;
+      const searchVal = searchInput.value.toLowerCase();
+      let filtered = vocabData;
+      if(lessonVal !== 'all') filtered = filtered.filter(v => v.lesson == lessonVal);
+      if(searchVal) filtered = filtered.filter(v => v.kanji.includes(searchVal) || v.hiragana.includes(searchVal) || v.meaning.toLowerCase().includes(searchVal));
+      const container = document.getElementById('wordListContainer');
+      container.innerHTML = filtered.map(v => {
+        const s = srsState[v.id];
+        const isDue = s.nextReview <= todayStr();
+        const hasKanji = v.kanji && v.kanji !== "～" && v.kanji !== "～さん" && !v.kanji.startsWith("～") && v.kanji !== v.hiragana;
+        let mainDisplay = '';
+        if (hasKanji) {
+          mainDisplay = `<div class="word-main">${v.kanji}</div><div class="word-reading">${v.hiragana}</div>`;
+        } else {
+          mainDisplay = `<div class="word-main">${v.hiragana}</div>`;
+        }
+        return `
+          <div class="word-item">
+            <div class="word-info">
+              ${mainDisplay}
+              <div class="word-meaning">${v.meaning}</div>
+              <div class="word-sub">
+                <span>${v.type}</span> · <span>Bài ${v.lesson}</span>
+                <span style="color:${isDue?'#dc2626':'#16a34a'};">${isDue?'🔴 Cần ôn':'🟢 Đã ôn'}</span>
+              </div>
+            </div>
+            <button class="speaker" onclick="speak('${(v.kanji || v.hiragana).replace(/'/g, "\\'")}')">🔊</button>
+          </div>
+        `;
+      }).join('');
+    }
+    lessonFilter.onchange = filterWords;
+    searchInput.oninput = filterWords;
+    filterWords();
+  }
+  
+  let flashcardQueue=[], flashcardIndex=0, currentCard=null;
+  function startFlashcardSession(words){ if(!words||words.length===0) return alert('Không có từ để học.'); flashcardQueue=words; flashcardIndex=0; showView('flashcard'); }
+  function initFlashcardSession(){ if(flashcardQueue.length===0||flashcardIndex>=flashcardQueue.length){ const due=vocabData.filter(v=>srsState[v.id].nextReview<=todayStr()); flashcardQueue=shuffleArray(due.length?due:vocabData.slice()); flashcardIndex=0; } if(flashcardQueue.length===0){ alert('Không có từ nào!'); showView('dashboard'); return; } showCurrentCard(); }
+  function showCurrentCard(){ if(flashcardIndex>=flashcardQueue.length){ alert('🎉 Hoàn thành phiên ôn tập!'); flashcardQueue=[]; showView('dashboard'); return; } currentCard=flashcardQueue[flashcardIndex]; document.getElementById('fcFront').innerHTML=`<span>${currentCard.kanji||currentCard.hiragana}</span><br><small style="font-size:1.2rem; color:#64748b;">${currentCard.hiragana}</small>`; document.getElementById('fcBack').innerHTML=`<strong>${currentCard.meaning}</strong><br><small>${currentCard.type}</small>`; document.getElementById('flashcard').classList.remove('flipped'); document.getElementById('fcProgress').textContent=`Từ ${flashcardIndex+1}/${flashcardQueue.length} · Bài ${currentCard.lesson}`; }
+  document.getElementById('flashcardContainer').addEventListener('click',()=>{ document.getElementById('flashcard').classList.toggle('flipped'); });
+  function updateSRS(wordId,remembered){ const s=srsState[wordId]; if(remembered){ if(s.repCount===0) s.interval=1; else if(s.repCount===1) s.interval=3; else s.interval=Math.round(s.interval*s.efactor); s.efactor=Math.min(2.5,s.efactor+0.1); s.repCount++; }else{ s.interval=0; s.repCount=0; s.efactor=Math.max(1.3,s.efactor-0.2); } const next=new Date(); next.setDate(next.getDate()+s.interval); s.nextReview=next.toISOString().slice(0,10); saveSRS(); }
+  document.getElementById('btnRemembered').onclick=()=>{ if(currentCard){ updateSRS(currentCard.id,true); flashcardIndex++; showCurrentCard(); } };
+  document.getElementById('btnForgot').onclick=()=>{ if(currentCard){ updateSRS(currentCard.id,false); flashcardIndex++; showCurrentCard(); } };
+  document.getElementById('btnEndFlashcard').onclick=()=>{ flashcardQueue=[]; showView('dashboard'); };
+  
+  let quizWord=null, quizAnswered=false;
+  function initQuizSession(){ const due=vocabData.filter(v=>srsState[v.id].nextReview<=todayStr()); const pool=due.length?due:vocabData; quizWord=shuffleArray(pool)[0]; renderQuiz(); }
+  function renderQuiz(){ quizAnswered=false; document.getElementById('quizQuestion').textContent=(quizWord.kanji||quizWord.hiragana)+' ('+quizWord.hiragana+')'; const wrongs=shuffleArray(vocabData.filter(v=>v.id!==quizWord.id)).slice(0,3); const options=shuffleArray([quizWord,...wrongs]); const container=document.getElementById('quizOptions'); container.innerHTML=''; options.forEach(opt=>{ const div=document.createElement('div'); div.className='quiz-option'; div.textContent=opt.meaning; div.onclick=()=>handleQuizAnswer(opt,div); container.appendChild(div); }); document.getElementById('quizFeedback').textContent=''; document.getElementById('btnNextQuiz').classList.add('hidden'); }
+  function handleQuizAnswer(selected,div){ if(quizAnswered) return; quizAnswered=true; const isCorrect=selected.id===quizWord.id; if(isCorrect){ div.classList.add('correct'); updateSRS(quizWord.id,true); document.getElementById('quizFeedback').textContent='✅ Chính xác!'; }else{ div.classList.add('wrong'); document.querySelectorAll('.quiz-option').forEach(el=>{ if(el.textContent===quizWord.meaning) el.classList.add('correct'); }); updateSRS(quizWord.id,false); document.getElementById('quizFeedback').textContent='❌ Sai rồi! Đáp án đúng: '+quizWord.meaning; } document.getElementById('btnNextQuiz').classList.remove('hidden'); }
+  document.getElementById('btnNextQuiz').onclick=()=>{ const due=vocabData.filter(v=>srsState[v.id].nextReview<=todayStr()); const pool=due.length?due:vocabData; quizWord=shuffleArray(pool)[0]; renderQuiz(); };
+  
+  function renderLessons(){
+    const container=document.getElementById('lessonsContainer');
+    container.innerHTML=lessons.map(l=>{ const wordsInLesson=vocabData.filter(v=>v.lesson===l.id); const learned=wordsInLesson.filter(v=>srsState[v.id].repCount>0).length; const due=wordsInLesson.filter(v=>srsState[v.id].nextReview<=todayStr()).length; return `<div class="card" style="display:flex; align-items:center; gap:14px;"><div style="font-size:2rem;">${l.icon}</div><div style="flex:1;"><h3>${l.title}</h3><div style="font-size:0.9rem; color:#64748b;">${wordsInLesson.length} từ · Đã học ${learned} · Cần ôn ${due}</div></div><div><button class="btn btn-sm btn-outline" data-lesson="${l.id}" data-type="new">🆕 5 từ mới</button><button class="btn btn-sm" data-lesson="${l.id}" data-type="review" style="margin-top:4px;">🔄 Ôn</button></div></div>`; }).join('');
+    document.querySelectorAll('#lessonsContainer button').forEach(btn=>{ btn.addEventListener('click',(e)=>{ e.stopPropagation(); const lessonId=parseInt(btn.dataset.lesson); const type=btn.dataset.type; if(type==='new'){ const newWords=vocabData.filter(v=>v.lesson===lessonId && srsState[v.id].repCount===0); if(newWords.length===0) return alert(`Bài ${lessonId} không còn từ mới!`); startFlashcardSession(shuffleArray(newWords).slice(0,5)); } else if(type==='review'){ const dueWordsLesson=vocabData.filter(v=>v.lesson===lessonId && srsState[v.id].nextReview<=todayStr()); if(dueWordsLesson.length===0) return alert(`Bài ${lessonId} không có từ cần ôn.`); startFlashcardSession(shuffleArray(dueWordsLesson)); } }); });
+  }
+  
+  window.speak=function(text){ if(!window.speechSynthesis) return; const utterance=new SpeechSynthesisUtterance(text); utterance.lang='ja-JP'; utterance.rate=0.9; window.speechSynthesis.cancel(); window.speechSynthesis.speak(utterance); };
+  document.getElementById('speakFront').addEventListener('click',(e)=>{ e.stopPropagation(); if(currentCard) speak(currentCard.kanji||currentCard.hiragana); });
+  document.getElementById('speakBack').addEventListener('click',(e)=>{ e.stopPropagation(); if(currentCard) speak(currentCard.kanji||currentCard.hiragana); });
+  
+  loadData();
+  renderDashboard();
+  showView('dashboard');
+</script>
+</body>
+</html>
